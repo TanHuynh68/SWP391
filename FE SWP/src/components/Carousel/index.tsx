@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useEffect, useState, useRef } from "react";
 
+
+
 interface CarouselsProps {
   className?: string;
   children: React.ReactNode;

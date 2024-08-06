@@ -1,4 +1,5 @@
-import Header from "../../components/Layout/Header";
+import Header from "@components/Layout/Header";
+
 
 
 
@@ -6,7 +7,7 @@ const Home = ()=>{
 
     return(
         <>
-        <Header/>
+        <Header />
         </>
     )
 }
