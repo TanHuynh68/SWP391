@@ -1,0 +1,78 @@
+.containerCarousels {
+    position: relative;
+    padding: 0px !important;
+  
+    .liveList {
+      grid-auto-flow: column;
+      gap: 10px;
+      grid-template-rows: 1fr;
+      overflow-x: auto;
+      white-space: nowrap;
+      width: 100%;
+      overflow-x: hidden;
+      margin: 0px !important;
+    }
+  
+    .arrowIcon {
+      display: flex;
+      align-items: center;
+      color: rgb(97, 97, 97);
+      background-color: rgb(241, 229, 229);
+      font-size: 20px;
+      padding: 10px;
+      border-radius: 3px;
+      position: absolute;
+      cursor: pointer;
+    }
+  
+    .arrowIcon:hover {
+      background-color: rgb(255, 82, 82) !important;
+      color: white;
+    }
+  
+    .arrowLeft {
+      /* top: 190px; */
+      left: 0px;
+    }
+  
+    .arrowRight {
+      /* top: 90px; */
+      right: 0px;
+    }
+  
+    .endLeft {
+      color: white;
+      background-color: rgb(128, 128, 128) !important;
+      opacity: 0.5;
+    }
+  
+    .endRight {
+      color: white;
+      background-color: rgb(128, 128, 128) !important;
+      opacity: 0.5;
+    }
+  
+    .liveList div,
+    .div {
+      -webkit-user-select: none;
+  
+      -moz-user-select: none;
+  
+      -ms-user-select: none;
+  
+      user-select: none;
+  
+      -webkit-touch-callout: none;
+  
+      -webkit-user-drag: none;
+  
+      -khtml-user-drag: none;
+  
+      -moz-user-select: none;
+  
+      -ms-user-select: none;
+  
+      user-select: none;
+    }
+  }
+  
