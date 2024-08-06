@@ -1,9 +1,12 @@
+import Header from "../../components/Layout/Header";
+
+
 
 const Home = ()=>{
 
     return(
         <>
-        Hello
+        <Header/>
         </>
     )
 }
