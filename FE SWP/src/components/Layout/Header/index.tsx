@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
+
 const Header: React.FC = () => {
+    const [sidebarVisible, setSidebarVisible] = useState(false);
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+    };
+
     return (
-        <header className={styles.header}>
+        <header className={styles.header}>      
+
             <div className={styles.container}>
+            <button className={styles.sidebarToggle} onClick={toggleSidebar}>
+            ☰
+            </button>
                 <div className={styles.logo}>
+                    
                     <a href="/">
                         <img src={logo} alt="Logo" />
                     </a>
