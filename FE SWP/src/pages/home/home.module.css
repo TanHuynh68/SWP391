@@ -9,11 +9,21 @@
 }
 
 .mainContent {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch; /* Đảm bảo các phần tử con có chiều ngang full màn hình */
+}
+
+.section {
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    width: 100%; /* Chiều ngang full màn hình */
 }
 
 .footer {
