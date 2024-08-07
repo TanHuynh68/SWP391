@@ -1,122 +1,119 @@
+  /* background-image: url('../../assets/loginimg/image.png');  */
 
-
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url('../../assets/loginimg/image.png'); 
-  background-color: #8da8b8;
-  width:full;
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #8da8b8;
+    width: 100%;
+  }
   
+  .loginBox {
+    background-color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    text-align: center;
+    width: 100%;
 
-}
-
-
-.loginBox {
-  background-color: white;
-  padding: 20px 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  text-align: center;
-}
-
-.logo img {
-  max-width: 100px;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 20px;
-  color: #383737;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 20px;
-}
-
-.socialButtons {
-  margin-bottom: 20px;
-}
-
-.socialButton {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.facebook {
-  background-color: #3b5998;
-  color: white;
-}
-
-.twitter {
-  background-color: #1da1f2;
-  color: white;
-}
-
-.google {
-  background-color: #db4437;
-  color: white;
-}
-
-.loginForm {
-  margin-bottom: 20px;
-}
-
-.inputField {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.rememberMe {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  color:rgb(44, 43, 43);
-}
-
-.rememberMe input {
-  margin-right: 10px;
-}
-
-.loginButton {
-  background-color: #d9534f;
-  color: white;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.footer {
-  margin-top: 20px;
-
-}
-
-.forgotPassword {
-  color: #d9534f;
-  text-decoration: none;
-}
-
-.signUp {
-  color: #d9534f;
-  text-decoration: none;
-}
+  }
+  
+  .logo img {
+    max-width: 100px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #383737;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  .socialButtons {
+    margin-bottom: 20px;
+  }
+  
+  .socialButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .facebook {
+    background-color: #3b5998;
+    color: white;
+  }
+  
+  .twitter {
+    background-color: #1da1f2;
+    color: white;
+  }
+  
+  .google {
+    background-color: #db4437;
+    color: white;
+  }
+  
+  .loginForm {
+    margin-bottom: 20px;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .rememberMe {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    color: rgb(44, 43, 43);
+  }
+  
+  .rememberMe input {
+    margin-right: 10px;
+  }
+  
+  .loginButton {
+    background-color: #d9534f;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .footer {
+    margin-top: 20px;
+  }
+  
+  .forgotPassword {
+    color: #d9534f;
+    text-decoration: none;
+  }
+  
+  .signUp {
+    color: #d9534f;
+    text-decoration: none;
+  }
+  
