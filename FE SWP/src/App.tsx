@@ -1,13 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import AppRouter from "./router/AppRouter"
+import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { NormalRouters } from './router/AppRouter'; 
 
 const App: React.FC = () => {
-  return (
-    <Router>
-      <AppRouter/>
-    </Router>
-  );
+    return (
+        <BrowserRouter>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                    {NormalRouters.map((route, index) => (
+                        <Route key={index} path={route.path} element={route.element} />
+                    ))}
+                </Routes>
+            </Suspense>
+        </BrowserRouter>
+    );
 };
 
 export default App;
