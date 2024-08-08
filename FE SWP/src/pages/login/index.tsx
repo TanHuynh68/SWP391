@@ -1,7 +1,8 @@
+
+
 import React from 'react';
 import styles from './Login.module.css';
-import img1 from "../../assets/home-img/logo.jpg"
-
+import img1 from "@assets/home-img/logo.jpg"
 const Login: React.FC = () => {
   return (
     <div className={styles.container}>
@@ -34,5 +35,4 @@ const Login: React.FC = () => {
 
   );
 };
-
-export default Login;
+export default Login
