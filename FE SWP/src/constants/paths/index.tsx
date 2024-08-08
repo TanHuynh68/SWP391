@@ -7,6 +7,7 @@ const Paths = {
    REGISTER: "/register",
 
    /* ADMIN PATHS */
+   ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",
    ADMIN_MANAGE_USER: "manage-user",
    ADMIN_MANAGE_CLINIC: "manage-clinic",
