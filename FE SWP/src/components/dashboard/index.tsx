@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
     DesktopOutlined,
     FileOutlined,
-    SmileOutlined,
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
@@ -37,6 +36,7 @@ const Dashboard: React.FC = () => {
 
     const loadItems = async () => {
         setItems([
+            getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
             getItem('Manage User', '/admin/manage-user', <UserOutlined />),
             getItem('Manage Clinic ', '/admin/manage-clinic', <DesktopOutlined />),
             getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
@@ -53,34 +53,18 @@ const Dashboard: React.FC = () => {
         {
             key: '1',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-                    1st menu item
-                </a>
+                <p rel="noopener noreferrer">
+                   Profile
+                </p>
             ),
         },
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    2nd menu item (disabled)
-                </a>
+                <p rel="noopener noreferrer" >
+                   Log out
+                </p>
             ),
-            icon: <SmileOutlined />,
-            disabled: true,
-        },
-        {
-            key: '3',
-            label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                    3rd menu item (disabled)
-                </a>
-            ),
-            disabled: true,
-        },
-        {
-            key: '4',
-            danger: true,
-            label: 'a danger item',
         },
     ];
 
@@ -114,7 +98,7 @@ const Dashboard: React.FC = () => {
                     <Dropdown
                         overlay={<Menu items={menuItems} />}
                         trigger={['click']}
-                        className="dropdown-center" // Add custom class
+                        className="dropdown-center float-right" // Add custom class
                     >
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
