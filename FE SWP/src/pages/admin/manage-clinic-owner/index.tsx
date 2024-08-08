@@ -1,17 +1,11 @@
 import { Button, Col, DatePicker, GetProps, Modal, Row, Table } from "antd";
 import Input from "antd/es/input";
 import { useState } from "react";
-import {
-    Cascader,
-    Form,
-    InputNumber,
-    Mentions,
-    Select,
-    TreeSelect,
-} from 'antd';
+import { Form, Select } from 'antd';
 
 const ManageClinicOwner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -23,7 +17,9 @@ const ManageClinicOwner = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        form.setFieldsValue([]);
     };
+
     const dataSource = [
         {
             key: '1',
@@ -81,15 +77,13 @@ const ManageClinicOwner = () => {
                             </Button>
                         </Col>
                     </Row>
-
                 </>
             )
         },
     ];
+
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
-
-    const { RangePicker } = DatePicker;
 
     const formItemLayout = {
         labelCol: {
@@ -103,76 +97,87 @@ const ManageClinicOwner = () => {
     };
 
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
     return (
         <div>
             <Modal
-            footer={""}
-            width={800}
-            title="Add New Clinic Owner" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div className=" flex justify-center">
-                <Form className="w-full" {...formItemLayout} variant="filled" style={{ maxWidth: 600 }}>
-                    <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Gender"
-                        name="DatePicker"
-                        rules={[{ required: true, message: 'Please input!' }]}
+                footer={null}
+                width={800}
+                title="Add New Clinic Owner"
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+            >
+                <div className="flex justify-center">
+                    <Form
+                        form={form} // Kết nối form với trạng thái
+                        className="w-full"
+                        {...formItemLayout}
+                        variant="filled"
+                        style={{ maxWidth: 600 }}
                     >
-                        <Select                    
-                        defaultValue="Please Choose Gender"
-                        style={{ width: 151 }}
-                        options={[
-                            { value: 'male', label: 'Male' },
-                            { value: 'female', label: 'Female' },
-                        ]}
-                    />
-                    </Form.Item>
-                    
-                    <Form.Item
-                        label="Birth Day"
-                        name="DatePicker"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item
-                        label="Phone Number"
-                        name="InputNumber"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <Input type="number" style={{ width: '100%' }} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Email"
-                        name="email"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <Input type="email" style={{ width: '100%' }} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <Input type="password" style={{ width: '100%' }} />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Confirm Password"
-                        name="password"
-                        rules={[{ required: true, message: 'Please input!' }]}
-                    >
-                        <Input type="password" style={{ width: '100%' }} />
-                    </Form.Item>
-                    <Form.Item className="flex justify-center" wrapperCol={{ offset: 6, span: 16 }}>
-                        <Button  type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
+                        <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Gender"
+                            name="gender"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Select
+                                defaultValue="Please Choose Gender"
+                                style={{ width: 151 }}
+                                options={[
+                                    { value: 'male', label: 'Male' },
+                                    { value: 'female', label: 'Female' },
+                                ]}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label="Birth Day"
+                            name="birthDay"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <DatePicker />
+                        </Form.Item>
+                        <Form.Item
+                            label="Phone Number"
+                            name="phoneNumber"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Input type="number" style={{ width: '100%' }} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Input type="email" style={{ width: '100%' }} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Password"
+                            name="password"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Input type="password" style={{ width: '100%' }} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Confirm Password"
+                            name="confirmPassword"
+                            rules={[{ required: true, message: 'Please input!' }]}
+                        >
+                            <Input type="password" style={{ width: '100%' }} />
+                        </Form.Item>
+                        <Form.Item className="flex justify-center" wrapperCol={{ offset: 6, span: 16 }}>
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
@@ -183,14 +188,14 @@ const ManageClinicOwner = () => {
                     <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={12}>
-                    <Button onClick={showModal} type="primary" className=" float-right">
+                    <Button onClick={showModal} type="primary" className="float-right">
                         Add new
                     </Button>
                 </Col>
             </Row>
-
             <Table dataSource={dataSource} columns={columns} />
         </div>
-    )
+    );
 }
+
 export default ManageClinicOwner;
