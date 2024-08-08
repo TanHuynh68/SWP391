@@ -1,0 +1,91 @@
+.searchContainer {
+    width: 100%;
+    height: 400px;
+    background-image: url('../../../assets/home-img/search.png'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Thêm để xử lý vị trí của dropdown */
+}
+
+.background {
+    background: rgba(92, 72, 72, 0.5); /* Hiệu ứng mờ cho hình nền */
+    padding: 50px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Thêm để xử lý vị trí của dropdown */
+    margin-top: -82px;
+}
+
+.searchContent {
+    text-align: center;
+    color: white;
+    position: relative; /* Thêm để xử lý vị trí của dropdown */
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 50px;
+    padding: 10px 20px;
+    width: 400px;
+    margin-bottom: 20px;
+    cursor: pointer; /* Thêm thuộc tính cursor */
+}
+
+.searchIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.searchInput {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.dropdown {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    width: 400px;
+    text-align: left;
+    position: absolute; /* Đảm bảo dropdown hiển thị dưới thanh tìm kiếm */
+    top: 100%; /* Vị trí dưới thanh tìm kiếm */
+    left: 0;
+    z-index: 1;
+}
+
+.dropdownTitle {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.dropdownList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdownItem {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    color: #333;
+}
+
+.dropdownItem:hover {
+    background: #f0f0f0;
+}
