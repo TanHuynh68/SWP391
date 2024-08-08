@@ -19,6 +19,7 @@
     "antd": "^5.20.0",
     "antd-style": "^3.6.2",
     "axios": "^1.7.3",
+    "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
     "debounce": "^2.1.0",
