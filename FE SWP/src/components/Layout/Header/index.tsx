@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from '../../../assets/home-img/logo.jpg';
+import logo from '@assets/home-img/logo.jpg';
 
 const Header: React.FC = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
