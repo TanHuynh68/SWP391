@@ -7,6 +7,10 @@ const Paths = {
    REGISTER: "/register",
 
    /* ADMIN PATHS */
+   DENTIST_DASHBOARD: "dashboard",
+   DENTIST_CHAT_WINDOW: "chat-window",
+   /* ADMIN PATHS */
+   ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",
    ADMIN_MANAGE_USER: "manage-user",
    ADMIN_MANAGE_CLINIC: "manage-clinic",
