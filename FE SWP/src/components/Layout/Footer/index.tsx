@@ -20,7 +20,8 @@ const Footer: React.FC = () => {
                     <p className={styles.support}>support@bookingcare.vn</p>
                 </div>
                 <div className={styles.bottomRight}>
-                    <img src="path-to-image/robot.png" alt="Support Robot" className={styles.robotImage} />  {/* co time thi lam sau */}
+                    {/* <img src="path-to-image/robot.png" alt="Support Robot" className={styles.robotImage} />  */}
+                     {/* co time thi lam sau */}
                 </div>
             </div>
         </footer>

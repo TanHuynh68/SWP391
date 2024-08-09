@@ -14,8 +14,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: stretch; /* Đảm bảo các phần tử con có chiều ngang full màn hình */
+    align-items: stretch; 
 }
+
 
 .section {
     flex-grow: 1;

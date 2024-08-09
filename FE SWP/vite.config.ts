@@ -16,6 +16,7 @@ export default defineConfig({
       "@service": path.resolve(__dirname, "src/service"),
       "@interface": path.resolve(__dirname, "src/interface"),
       "@assets": path.resolve(__dirname, "src/assets"),
+      "@data": path.resolve(__dirname, "src/data"),
     },
   },
   plugins: [react()],
