@@ -4,6 +4,7 @@ import Footer from "@/components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import styles from './home.module.css';
 import Search from '@/components/Content/Seach';
+import SpecialPackages from '@/components/Content/SpecialPackages';
 
 
 const Home: React.FC = () => {
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
             </div>
             <div className={styles.mainContent}>
                     <Search/>
+                    <SpecialPackages/>
 
                 {/* <div className={styles.section}>
                     <SpecialPackages />
