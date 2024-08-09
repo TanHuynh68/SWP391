@@ -40,8 +40,10 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.26.0",
     "react-router-hash-link": "^2.4.3",
+    "react-slick": "^0.30.2",
     "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^10.0.5",
+    "slick-carousel": "^1.8.1",
     "tinymce": "^7.2.1"
   },
   "devDependencies": {
