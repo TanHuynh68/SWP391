@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     DesktopOutlined,
-    FileOutlined,
-    TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
@@ -40,8 +38,7 @@ const Dashboard: React.FC = () => {
             getItem('Manage User', '/admin/manage-user', <UserOutlined />),
             getItem('Manage Clinic ', '/admin/manage-clinic', <DesktopOutlined />),
             getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
-            getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-            getItem('Files', '9', <FileOutlined />),
+
         ]);
     };
 
@@ -88,6 +85,7 @@ const Dashboard: React.FC = () => {
                 <Menu
                     theme="dark"
                     mode="inline"
+                    // className='w-96 pr-10'
                     defaultSelectedKeys={['4']}
                     items={items}
                     onClick={handleClick} // Add onClick handler

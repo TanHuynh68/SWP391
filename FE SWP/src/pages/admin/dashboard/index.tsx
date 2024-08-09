@@ -1,7 +1,8 @@
 
-import { Card, Col, Row } from 'antd';
+import { Card, Col, DatePicker, DatePickerProps, Row } from 'antd';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Statistic, Typography } from 'antd';
+import { FilterOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -15,10 +16,24 @@ const data = [
   { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
 ];
 
+const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  console.log(date, dateString);
+};
+
 const AdminDashboard = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <Title level={2} className="mb-6">Dashboard</Title>
+      <div className="flex justify-center items-center">
+        <Row gutter={10}>
+          <Col className='mt-1'>
+            <FilterOutlined />
+          </Col>
+          <Col>
+            <DatePicker className="mb-10" onChange={onChange} />
+          </Col>
+        </Row>
+      </div>
       <Row gutter={[16, 16]}>
         <Col span={8}>
           <Card>
