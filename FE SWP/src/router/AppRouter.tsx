@@ -1,8 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { paths } from "../constants";
-import { AdminDashboard, AdminLogin, ChatWindow, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageUser,
-   NotFound } from "../pages";
+import {
+  AdminDashboard, AdminLogin, ChatWindow, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageUser,
+  NotFound
+} from "../pages";
 import SignUp from "@/pages/Register";
 
 
@@ -15,6 +17,10 @@ const AppRouter: React.FC = () => {
       <Route path="/login/*" element={<Login />} />
       <Route path="/sign-up/*" element={<SignUp />} />
       <Route path={paths.HOME} element={<Home />} />
+      {/* Customer */}
+      <Route path="/customer/*" element={<CustomerLayout />}>
+        <Route path={paths.BOOKING_PAGE} element={<CustomerBookingPage />} />
+      </Route>
 
       {/* Dentist */}
       <Route path="/dentist/*" element={<Dashboard />}>
