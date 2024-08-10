@@ -1,0 +1,47 @@
+.sidebar {
+    position: fixed;
+    /* top: 0; */
+    left: -250px; 
+    width: 250px;
+    height: 100%;
+    background-color: #ffffff;
+    color: rgb(255, 255, 255);
+    transition: left 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar.visible {
+    left: 0; 
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.sidebarList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebarItem {
+    margin: 20px 0;
+}
+
+.sidebarItem a {
+    color: rgb(8, 93, 250);
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.sidebarItem a:hover {
+    text-decoration: underline;
+}

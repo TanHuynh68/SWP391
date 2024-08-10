@@ -1,0 +1,69 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+  }
+  .content {
+    /* display: flex;
+      padding: 0;
+      justify-content: space-between;
+      align-items: center; */
+    position: relative;
+    display: flex;
+    width: Calc(100% - max(230px, 12%));
+    margin-left: max(230px, 12%);
+    animation-name: ani-display;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    /* box-sizing: border-box; */
+    opacity: 1;
+  }
+  
+  .contentSidebarDisabled {
+    animation-name: ani-disable;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    width: 100%;
+  }
+  
+  /* .sidebar{
+      width: 230px;
+      animation-name:ani-display;
+      animation-duration: 1s;
+      background-color: rgb(56, 59, 58);
+      position: fixed;
+  }  */
+  
+  .children {
+    margin-top: 65px;
+    width: 100%;
+    min-width: 70%;
+  }
+  
+  @keyframes ani-display {
+    from {
+      width: 100%;
+      margin-left: 0;
+      opacity: 1;
+    }
+  
+    to {
+      width: Calc(100% - max(230px, 12%));
+      margin-left: max(230px, 12%);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes ani-disable {
+    from {
+      width: Calc(100% - max(230px, 12%));
+      margin-left: max(230px, 12%);
+      opacity: 1;
+    }
+  
+    to {
+      width: 100%;
+      margin-left: 0%;
+      opacity: 1;
+    }
+  }
+  
