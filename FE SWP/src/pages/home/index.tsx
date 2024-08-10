@@ -6,6 +6,7 @@ import styles from './home.module.css';
 import Search from '@/components/Content/Seach';
 import SpecialPackages from '@/components/Content/SpecialPackages';
 import Layout from '@/components/Layout';
+import DentalGuiDe from '@/components/Content/DentalGuide';
 
 
 const Home: React.FC = () => {
@@ -18,6 +19,7 @@ const Home: React.FC = () => {
             <div className={styles.mainContent}>
                     <Search/>
                     <SpecialPackages/>
+                    <DentalGuiDe/>
                     
             </div>
             {/* <div className={styles.footer}>
