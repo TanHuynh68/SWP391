@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from '../../../assets/home-img/logo.jpg';
+import logo from '@assets/home-img/logo.jpg';
+import Sidebar from '../Sidebar/index'; 
+
 
 const Header: React.FC = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -20,7 +22,7 @@ const Header: React.FC = () => {
     };
 
     return (
-        <div >
+        <div>
             <header className={styles.header}>
                 <div className={styles.container}>
                     <button className={styles.sidebarToggle} onClick={toggleSidebar}>
@@ -53,6 +55,7 @@ const Header: React.FC = () => {
                     </div>
                 </div>
             </header>
+            <Sidebar isVisible={sidebarVisible} toggleSidebar={toggleSidebar} />
         </div>
     );
 };
