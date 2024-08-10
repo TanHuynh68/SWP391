@@ -5,38 +5,26 @@ import Header from "@components/Layout/Header";
 import styles from './home.module.css';
 import Search from '@/components/Content/Seach';
 import SpecialPackages from '@/components/Content/SpecialPackages';
+import Layout from '@/components/Layout';
 
 
 const Home: React.FC = () => {
     return (
-        <div className={styles.pageContainer}>
-            <div className={styles.header}>
+        <Layout>
+                    <div className={styles.pageContainer}>
+            {/* <div className={styles.header}>
                 <Header />
-            </div>
+            </div> */}
             <div className={styles.mainContent}>
                     <Search/>
                     <SpecialPackages/>
-
-                {/* <div className={styles.section}>
-                    <SpecialPackages />
-                </div>
-                <div className={styles.section}>
-                    <DentalGuide />
-                </div>
-                <div className={styles.section}>
-                    <FeaturedSpecialties />
-                </div>
-                <div className={styles.section}>
-                    <PrestigiousDentalClinics />
-                </div>
-                <div className={styles.section}>
-                    <FeaturedDentists />
-                </div> */}
+                    
             </div>
-            <div className={styles.footer}>
+            {/* <div className={styles.footer}>
                 <Footer />
-            </div>
+            </div> */}
         </div>
+        </Layout>
     );
 }
 
