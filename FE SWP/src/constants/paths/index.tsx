@@ -9,6 +9,8 @@ const Paths = {
    /* ADMIN PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",
+   // CUSTOMER
+   BOOKING_PAGE: "booking-page",
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",

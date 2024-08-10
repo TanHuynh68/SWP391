@@ -1,6 +1,8 @@
 export { default as Home } from './home'
 export { default as Dashboard } from '../components/Dashboard'
+export { default as CustomerLayout } from '../components/Customer-layout'
 export { default as Login } from './login'
+export { default as CustomerBookingPage } from './booking-page'
 export { default as ChatWindow } from './dentist/chat-box'
 export { default as ManageUser } from './admin/manage-user'
 export { default as AdminLogin } from './admin/login'
