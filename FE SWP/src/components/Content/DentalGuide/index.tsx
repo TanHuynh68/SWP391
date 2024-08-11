@@ -11,7 +11,7 @@ const DentalGuide: React.FC = () => {
   const carouselRef = useRef<any>(null);
 
   const handleAllPostsClick = () => {
-    navigate('/all');
+    navigate('/dental-handbook');
   };
 
   const handleCarouselClick = () => {
@@ -61,53 +61,4 @@ const DentalGuide: React.FC = () => {
 };
 
 export default DentalGuide;
-
-
-
-// <div>
-//   <h2>Cẩm nang răng miệng</h2>
-//   <Carousel autoplay>
-//     <div className={styles['carousel-slide']}>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//       <div className={styles['carousel-item']}>
-//         <img src="/path/to/your/image1.png" alt="Cẩm nang 1" />
-//         <p>Top 7 reputable wisdom tooth extraction addresses in Hanoi</p>
-//       </div>
-//     </div>
-//   </Carousel>
-//   <Button type="primary" onClick={handleAllPostsClick} style={{ marginTop: '20px' }}>
-//     Tất cả bài viết
-//   </Button>
-// </div>
 
