@@ -5,7 +5,10 @@ const Paths = {
    LOGIN: "/login",
    ABOUT: "/about",
    REGISTER: "/register",
-
+   // CLINIC_OWNER
+   REGISTER_CLINIC:"register-clinic",
+   MANAGE_DOCTOR:"manage-doctor",
+   MANAGE_PATIENT:"manage-patient",
    /* ADMIN PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",

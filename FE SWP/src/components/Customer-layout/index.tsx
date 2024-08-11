@@ -1,17 +1,12 @@
 
-import Header from '../Layout/Header';
-import Footer from '../Layout/Footer';
-import { Outlet } from 'react-router-dom';
 
+import { Outlet } from 'react-router-dom';
+import Layout from '@/components/Layout';
 const CustomerLayout = () => {
     return (
-        <nav>
-            <ul>
-                <Header />
-                <Outlet />
-                <Footer />
-            </ul>
-        </nav>
+        <Layout>
+            <Outlet />
+        </Layout>
     );
 };
 

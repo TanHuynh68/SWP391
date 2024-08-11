@@ -18,14 +18,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     };
 
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper}`}>
             <Header />
             <Sidebar isVisible={sidebarVisible} toggleSidebar={toggleSidebar} />
             <div className={sidebarVisible ? styles.content : styles.contentSidebarDisabled}>
-                <div className={styles.children}>
+                <div className={`${styles.children} container mx-auto`}>
                     {children}
-                    <Footer />
                 </div>
+                <Footer />
             </div>
         </div>
     );
