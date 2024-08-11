@@ -1,18 +1,21 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { paths } from "../constants";
 import {
   AdminDashboard, AdminLogin, ChatWindow, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageUser,
   NotFound
 } from "../pages";
+
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { paths } from "../constants";
+
 import SignUp from "@/pages/Register";
-import DentalGuiDe from "@/components/Content/DentalGuide";
+import DentalHandbook from "@/pages/dentalHandbook";
 
 
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      <Route path="dental-guide" element={<DentalGuiDe/>} />
+      <Route path="dental-handbook" element={<DentalHandbook/>} />
+
       <Route path="/status-404" element={<NotFound />} />
       <Route path="/status-500" element={<InternalServerError />} />
       <Route path={paths.LOGIN} element={<Login />} />
