@@ -7,7 +7,7 @@ const DentalHandbook: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackToHome = () => {
-    navigate('/'); // Assumes your home route is '/'
+    navigate('/'); 
   };
 
   return (
