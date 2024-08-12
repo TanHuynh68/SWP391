@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '@redux/store/Store';
 import { registerUser } from '@redux/auth/registerSlice';
 import styles from './register.module.css';
+
+
 
 const SignUp: React.FC = () => {
   const [fullName, setFullName] = useState('');
@@ -83,7 +85,10 @@ const SignUp: React.FC = () => {
         {error && <p className={styles.error}>{error}</p>}
         {success && <p className={styles.success}>Registration successful!</p>}
         <p>By signing up, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
-        <p>Already have an account? <a href="#">Log In</a></p>
+        <p>Already have an account? 
+          
+          <Link to="/login" className={styles.login}>Log In</Link> 
+          </p>
       </div>
 
       
