@@ -34,7 +34,7 @@ const AppRouter: React.FC = () => {
         <Route path={paths.DENTIST_CHAT_WINDOW} element={<ChatWindow />} />
       </Route>
       {/* Admin */}
-      <Route path={paths.ADMIN_LOGIN} element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/*" element={<Dashboard />}>
         <Route path={paths.ADMIN_DASHBOARD} element={<AdminDashboard />} />
         <Route path={paths.ADMIN_MANAGE_USER} element={<ManageUser />} />
