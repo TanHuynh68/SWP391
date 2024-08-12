@@ -1,20 +1,21 @@
-
 const Paths = {
    /* GUEST PATHS */
    HOME: "/",
    LOGIN: "/login",
    ABOUT: "/about",
-   REGISTER: "/register",
+   REGISTER: "/sign-up",
+
    // CLINIC_OWNER
    REGISTER_CLINIC:"register-clinic",
    MANAGE_DOCTOR:"manage-doctor",
    MANAGE_PATIENT:"manage-patient",
    MANAGE_MEDICAL_EXAMINATION_SCHEDULE:"manage-medical-examination-schedule",
+
    /* ADMIN PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",
-   // CUSTOMER
    BOOKING_PAGE: "booking-page",
+
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",
