@@ -46,7 +46,9 @@ const Dashboard: React.FC = () => {
                 getItem('Register Clinic', '/clinic-owner/register-clinic', <DesktopOutlined />),
                 getItem('Register Doctor', '/clinic-owner/manage-doctor', <UserOutlined />),
                 getItem('Manage Patient', '/clinic-owner/manage-patient', <UserOutlined />),
+                getItem('Quản lý lịch khám bệnh', '/clinic-owner/manage-medical-examination-schedule', <UserOutlined />),
                 // getItem('Manage Clinic', '/admin/manage-clinic', <DesktopOutlined />),
+                
                 // getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
             ]);
         }

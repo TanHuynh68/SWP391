@@ -9,6 +9,7 @@ const Paths = {
    REGISTER_CLINIC:"register-clinic",
    MANAGE_DOCTOR:"manage-doctor",
    MANAGE_PATIENT:"manage-patient",
+   MANAGE_MEDICAL_EXAMINATION_SCHEDULE:"manage-medical-examination-schedule",
    /* ADMIN PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",

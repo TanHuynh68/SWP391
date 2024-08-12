@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { paths } from "../constants";
 import {
-  AdminDashboard, AdminLogin, ChatWindow, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageDoctor, ManagePatient, ManageUser,
+  AdminDashboard, AdminLogin, ChatWindow, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
   NotFound,
   RegisterClinic
 } from "../pages";
@@ -27,6 +27,7 @@ const AppRouter: React.FC = () => {
         <Route path={paths.REGISTER_CLINIC} element={<RegisterClinic />} />
         <Route path={paths.MANAGE_DOCTOR} element={<ManageDoctor />} />
         <Route path={paths.MANAGE_PATIENT} element={<ManagePatient />} />
+        <Route path={paths.MANAGE_MEDICAL_EXAMINATION_SCHEDULE} element={<ManageMedicalExaminationSchedule/>} />
       </Route>
       {/* Dentist */}
       <Route path="/dentist/*" element={<Dashboard />}>
