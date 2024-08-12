@@ -41,15 +41,15 @@ export default function Login() {
             console.log("adminLogin", response);
 
             // Kiểm tra xem phản hồi có thuộc tính token hay không
-            if ( 'token' in response) {
+            if ('token' in response) {
                 const { token } = response as DataLogin;  // Type assertion
                 if (token) {
-                    const decodeToken =decodeJWT(token);
-                    if(decodeToken.role === "ADMIN"){
+                    const decodeToken = decodeJWT(token);
+                    if (decodeToken.role === "ADMIN") {
                         message.success("Admin Login Successfully")
                         localStorage.setItem("token", token);
                         navigate("/admin/dashboard");
-                    }else{
+                    } else {
                         message.error("Unauthorized!")
                         navigate("/");
                     }
