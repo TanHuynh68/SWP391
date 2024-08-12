@@ -1,18 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
-import { useState } from "react";
-
-interface ClinicData {
-    key: string;
-    no: string;
-    name: string;
-    address: string;
-}
-
-const RegisterClinic = () => {
+import { Button, Col, GetProps, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
+import { useState, } from "react";
+const ManageDoctor = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form] = Form.useForm(); 
-
+    const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -24,19 +15,20 @@ const RegisterClinic = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
-    const dataSource: ClinicData[] = [
+    const dataSource = [
         {
             key: '1',
             no: '1',
-            name: "Phòng Khám Bình An",
-            address: '10 Downing Street',
+            name: "Trương Mỹ Lan",
+            birthday: '10/9/1978',
+            gender: "Nữ"
         },
         {
             key: '2',
             no: '1',
-            name: "Phòng Khám An Hòa",
-            address: '10 Downing Street',
+            name: "Lê Thị Hồng Gấm",
+            birthday: '9/10/1975',
+            gender: "Nữ"
         },
     ];
 
@@ -47,16 +39,24 @@ const RegisterClinic = () => {
             key: 'no',
         },
         {
-            title: 'Tên Phòng Khám',
+            title: 'Tên Bác Sĩ',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Địa Chỉ',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Ngày Tháng Năm Sinh',
+            dataIndex: 'birthday',
+            key: 'birthday',
         },
+        {
+            title: 'Giới Tính',
+            dataIndex: 'gender',
+            key: 'gender',
+        },
+       
     ];
+    type SearchProps = GetProps<typeof Input.Search>;
+    const { Search } = Input;
 
     const formItemLayout = {
         labelCol: {
@@ -68,58 +68,63 @@ const RegisterClinic = () => {
             sm: { span: 14 },
         },
     };
+    // const options: SelectProps['options'] = [{ value: 'dentistry', label: 'Nha khoa' },
+    // { value: 'cardiology', label: 'Tim mạch' },
+    // { value: 'neurology', label: 'Thần kinh' },
+    // { value: 'orthopedics', label: 'Chấn thương chỉnh hình' },];
 
-    const options = [
-        { value: 'dentistry', label: 'Nha khoa' },
-        { value: 'cardiology', label: 'Tim mạch' },
-        { value: 'neurology', label: 'Thần kinh' },
-        { value: 'orthopedics', label: 'Chấn thương chỉnh hình' },
-    ];
+
+    // const handleChange = (value: string[]) => {
+    //     console.log(`selected ${value}`);
+    // };
 
     const normFile = (e: React.ChangeEvent<HTMLInputElement>): File[] => {
         return e.target.files ? Array.from(e.target.files) : [];
     };
 
-    const handleChange = (value: string[]) => {
-        console.log(`selected ${value}`);
-    };
-
-    const onSearch = (value: string) => console.log(value);
-
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
-            <Modal width={750} footer="" title="Đăng Ký Phòng Khám" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" width={900} title="Đăng Ký Bác Sĩ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div className="flex justify-center">
                     <Form
-                        form={form}
+                        form={form} // Kết nối form với trạng thái
                         className="w-full"
                         {...formItemLayout}
-                        style={{ maxWidth: 650 }}
+                        variant="filled"
+                        style={{ maxWidth: 800 }}
                     >
                         <Form.Item
-                            label="Tên Phòng Khám"
+                            label="Tên Bác Sĩ"
                             name="name"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Mô Tả"
-                            name="description"
+                            label="Ngày Tháng Năm Sinh"
+                            name="name"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Địa Chỉ"
-                            name="address"
+                            label="Giới Tính"
+                            name="name"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
-                            <Input />
+                            <Select
+                                defaultValue="Chọn Giới Tính"
+                                style={{ width: 151 }}
+                                options={[
+                                    { value: 'male', label: 'Male' },
+                                    { value: 'female', label: 'Female' },
+                                ]}
+                            />
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             label="Chuyên Khoa"
-                            name="specialty"
+                            name="gender"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Select
@@ -130,7 +135,7 @@ const RegisterClinic = () => {
                                 onChange={handleChange}
                                 options={options}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item
                             label="Email"
                             name="email"
@@ -152,11 +157,11 @@ const RegisterClinic = () => {
                         >
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>
-                        <Form.Item label="Hình ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
+                        <Form.Item label="Ảnh đại diện" valuePropName="fileList" getValueFromEvent={normFile}>
                             <Upload action="/upload.do" listType="picture-card">
                                 <button style={{ border: 0, background: 'none' }} type="button">
                                     <PlusOutlined />
-                                    <div style={{ marginTop: 8 }}>Hình ảnh của phòng khám</div>
+                                    <div style={{ marginTop: 8 }}>Ảnh đại diện</div>
                                 </button>
                             </Upload>
                         </Form.Item>
@@ -169,11 +174,11 @@ const RegisterClinic = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-                Đăng Ký Phòng Khám
+                Quản Lý Bác Sĩ
             </h1>
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
-                    <Input.Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
+                    <Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={12}>
                     <Button type="primary" onClick={showModal} className=" float-right">
@@ -184,7 +189,8 @@ const RegisterClinic = () => {
 
             <Table dataSource={dataSource} columns={columns} />
         </div>
-    );
-};
+    )
 
-export default RegisterClinic;
+}
+
+export default ManageDoctor;

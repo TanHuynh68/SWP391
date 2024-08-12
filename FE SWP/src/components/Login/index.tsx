@@ -1,54 +1,86 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { loginFields } from "../../constants/form";
 import Input from "@components/Input";
 import FormExtra from '../FormExtra';
 import FormAction from '../FormAction';
+import { login } from '@/services/auth.service';
+import { useNavigate } from 'react-router-dom';
+import { decodeJWT } from '@/configs/decode-jwt';
+import { message } from 'antd';
 
-const fields=loginFields;
-const fieldsState = {};
-fields.forEach(field=>fieldsState[field.id]='');
 
-export default function Login(){
-    const [loginState,setLoginState]=useState(fieldsState);
+interface LoginState {
+    [key: string]: string;
+}
 
-    const handleChange=(e)=>{
-        setLoginState({...loginState,[e.target.id]:e.target.value})
-    }
+interface DataLogin {
+    token?: string;
+}
 
-    const handleSubmit=(e)=>{
+const fields = loginFields;
+const fieldsState: LoginState = {};
+fields.forEach(field => fieldsState[field.id] = '');
+
+export default function Login() {
+    const navigate = useNavigate();
+    const [loginState, setLoginState] = useState<LoginState>(fieldsState);
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setLoginState({ ...loginState, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        authenticateUser();
-    }
+        authenticateUser(loginState);
+    };
 
-    //Handle Login API Integration here
-    const authenticateUser = () =>{
+    const authenticateUser = async (loginData: LoginState) => {
+        try {
+            console.log("adminLogin", loginData);
+            const response = await login(loginData.email, loginData.password);
+            console.log("adminLogin", response);
 
-    }
-
-    return(
-        <form className="mt-8 ">
-        <div className="-space-y-px">
-            {
-                fields.map(field=>
-                        <Input
-                            key={field.id}
-                            handleChange={handleChange}
-                            value={loginState[field.id]}
-                            labelText={field.labelText}
-                            labelFor={field.labelFor}
-                            id={field.id}
-                            name={field.name}
-                            type={field.type}
-                            isRequired={field.isRequired}
-                            placeholder={field.placeholder}
-                    />
-                
-                )
+            // Kiểm tra xem phản hồi có thuộc tính token hay không
+            if ( 'token' in response) {
+                const { token } = response as DataLogin;  // Type assertion
+                if (token) {
+                    const decodeToken =decodeJWT(token);
+                    if(decodeToken.role === "ADMIN"){
+                        message.success("Admin Login Successfully")
+                        localStorage.setItem("token", token);
+                        navigate("/admin/dashboard");
+                    }else{
+                        message.error("Unauthorized!")
+                        navigate("/");
+                    }
+                }
             }
-        </div>
+        } catch (error) {
+            console.error("Login failed", error);
+        }
+    };
 
-        <FormExtra/>
-        <FormAction handleSubmit={handleSubmit} text="Login"/>
-      </form>
-    )
+    return (
+        <form className="mt-8" onSubmit={handleSubmit}>
+            <div className="-space-y-px">
+                {fields.map(field => (
+                    <Input
+                        key={field.id}
+                        handleChange={handleChange}
+                        value={loginState[field.id]}
+                        labelText={field.labelText}
+                        labelFor={field.labelFor}
+                        id={field.id}
+                        name={field.name}
+                        type={field.type}
+                        isRequired={field.isRequired}
+                        placeholder={field.placeholder}
+                    />
+                ))}
+            </div>
+
+            <FormExtra />
+            <FormAction handleSubmit={handleSubmit} text="Login" />
+        </form>
+    );
 }

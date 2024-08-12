@@ -33,13 +33,25 @@ const Dashboard: React.FC = () => {
     }, []);
 
     const loadItems = async () => {
-        setItems([
-            getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
-            getItem('Manage User', '/admin/manage-user', <UserOutlined />),
-            getItem('Manage Clinic ', '/admin/manage-clinic', <DesktopOutlined />),
-            getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
-
-        ]);
+        const currentPath = window.location.pathname;
+        if (currentPath.startsWith('/admin')) {
+            setItems([
+                getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
+                getItem('Manage User', '/admin/manage-user', <UserOutlined />),
+                getItem('Manage Clinic', '/admin/manage-clinic', <DesktopOutlined />),
+                getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
+            ]);
+        }else if(currentPath.startsWith('/clinic-owner')) {
+            setItems([
+                getItem('Register Clinic', '/clinic-owner/register-clinic', <DesktopOutlined />),
+                getItem('Register Doctor', '/clinic-owner/manage-doctor', <UserOutlined />),
+                getItem('Manage Patient', '/clinic-owner/manage-patient', <UserOutlined />),
+                getItem('Quản lý lịch khám bệnh', '/clinic-owner/manage-medical-examination-schedule', <UserOutlined />),
+                // getItem('Manage Clinic', '/admin/manage-clinic', <DesktopOutlined />),
+                
+                // getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
+            ]);
+        }
     };
 
     const handleClick = (e: { key: React.Key }) => {
@@ -109,7 +121,7 @@ const Dashboard: React.FC = () => {
                     <Outlet />
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    ©2024 FPTeeth
                 </Footer>
             </Layout>
         </Layout>
