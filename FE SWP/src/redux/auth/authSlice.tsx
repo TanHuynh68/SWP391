@@ -21,6 +21,7 @@ export const login = createAsyncThunk<string, { email: string; password: string 
       email,
       password,
     });
+    console.log('API call response:', response.data); 
     return response.data.token;
   }
 );
@@ -36,14 +37,17 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
+        console.log('Login API call pending...'); 
         state.status = 'loading';
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log('Login API call succeeded:', action.payload);  
         state.status = 'succeeded';
         state.token = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        console.log('Login API call failed:', action.error.message); 
         state.status = 'failed';
         state.error = action.error.message || 'Failed to login';
       });

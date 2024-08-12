@@ -3,7 +3,7 @@ const Paths = {
    HOME: "/",
    LOGIN: "/login",
    ABOUT: "/about",
-   REGISTER: "/register",
+   REGISTER: "/sign-up",
 
    /* ADMIN PATHS */
    DENTIST_DASHBOARD: "dashboard",

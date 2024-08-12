@@ -2,19 +2,41 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@redux/auth/authSlice';
 import { RootState, AppDispatch } from '@redux/store/Store';
+import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import img1 from "@assets/home-img/logo.jpg";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const dispatch = useDispatch<AppDispatch>(); 
-  const authStatus = useSelector((state: RootState) => state.auth.status);
   const authError = useSelector((state: RootState) => state.auth.error);
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    const resultAction = await dispatch(login({ email, password }));
+
+    console.log('Result of login dispatch:', resultAction);  // Log the result of the dispatch action
+
+    if (login.fulfilled.match(resultAction)) {
+      setPopupMessage("Login thành công");
+    } else if (login.rejected.match(resultAction)) {
+      setPopupMessage(authError || "Đăng nhập thất bại");
+    }
+
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+
+    
+    if (popupMessage === "Login thành công") {
+      navigate('/'); 
+    }
   };
 
   return (
@@ -51,13 +73,21 @@ const Login: React.FC = () => {
           </div>
           <button type="submit" className={styles.loginButton}>Log In</button>
         </form>
-        {authStatus === 'loading' && <p>Loading...</p>}
-        {authStatus === 'failed' && <p>{authError}</p>}
         <div className={styles.footer}>
           <a href="/forgot-password" className={styles.forgotPassword}>Forgot Password?</a>
           <a href="/sign-up" className={styles.signUp}>Sign Up</a>
         </div>
       </div>
+
+      {/* Popup */}
+      {showPopup && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <p>{popupMessage}</p>
+            <button onClick={closePopup} className={styles.popupButton}>Xác nhận</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
