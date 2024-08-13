@@ -12,7 +12,7 @@ import DentalHandbook from "@/pages/dentalHandbook";
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      <Route path="dental-handbook" element={<DentalHandbook />} />
+      <Route path={paths.DENTAL_HANDBOOK} element={<DentalHandbook />} />
       <Route path="/status-404" element={<NotFound />} />
       <Route path="/status-500" element={<InternalServerError />} />
       <Route path={paths.LOGIN} element={<Login />} />

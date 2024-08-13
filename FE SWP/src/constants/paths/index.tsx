@@ -4,6 +4,7 @@ const Paths = {
    LOGIN: "/login",
    ABOUT: "/about",
    REGISTER: "/sign-up",
+   DENTAL_HANDBOOK: "/dental-handbook",
 
    // CLINIC_OWNER
    REGISTER_CLINIC:"register-clinic",
