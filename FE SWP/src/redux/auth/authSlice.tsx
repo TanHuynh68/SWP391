@@ -13,7 +13,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Define the async thunk for login
+
 export const login = createAsyncThunk<string, { email: string; password: string }>(
   'auth/login',
   async ({ email, password }) => {
@@ -32,6 +32,7 @@ const authSlice = createSlice({
   reducers: {
     logout(state) {
       state.token = null;
+      localStorage.removeItem('token'); // Xóa token khỏi Local Storage khi đăng xuất chưa làm
     },
   },
   extraReducers: (builder) => {
@@ -45,6 +46,7 @@ const authSlice = createSlice({
         console.log('Login API call succeeded:', action.payload);  
         state.status = 'succeeded';
         state.token = action.payload;
+        localStorage.setItem('token', action.payload); // Lưu token vào Local Storage
       })
       .addCase(login.rejected, (state, action) => {
         console.log('Login API call failed:', action.error.message); 

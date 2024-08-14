@@ -1,15 +1,17 @@
 .sidebar {
     position: fixed;
-    /* top: 0; */
     left: -250px; 
     width: 250px;
     height: 100%;
-    background-color: #ffffff;
-    color: rgb(255, 255, 255);
+    background-color: #f8f9fa; /* Màu nền sáng hơn */
+    color: #333; /* Màu chữ đậm */
     transition: left 0.3s ease;
     z-index: 1000;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sidebar.visible {
@@ -19,7 +21,7 @@
 .closeButton {
     background: none;
     border: none;
-    color: white;
+    color: #333;
     font-size: 24px;
     cursor: pointer;
     position: absolute;
@@ -27,21 +29,31 @@
     right: 20px;
 }
 
-.sidebarList {
-    list-style-type: none;
-    padding: 0;
+.nav {
+    flex-grow: 1;
 }
 
-.sidebarItem {
-    margin: 20px 0;
-}
-
-.sidebarItem a {
-    color: rgb(8, 93, 250);
-    text-decoration: none;
+.item {
+    display: block;
+    padding: 10px 0;
     font-size: 18px;
+    color: #007bff; /* Màu xanh cho liên kết */
+    text-decoration: none;
+    border-bottom: 1px solid #ddd;
 }
 
-.sidebarItem a:hover {
+.item:hover {
+    color: #0056b3;
     text-decoration: underline;
+}
+
+.social {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.socialIcon img {
+    width: 30px;
+    height: 30px;
 }

@@ -10,36 +10,43 @@ import img8 from "@assets/fetch-data/services/image8.png";
 export const specialPackagesData = [
 
     {
+        id:'1',
         name: 'Nha khoa',
         link: '#',
         imageUrl: img1,
     },
     {
+        id:'2',
         name: 'Niềng răng',
         link: '#',
         imageUrl: img2,
     },
     {
+        id:'3',
         name: 'Bọc răng sứ',
         link: '#',
         imageUrl: img3,
     },
     {
+        id:'4',
         name: 'Trông răng imlpant',
         link: '#',
         imageUrl: img4,
     },
     {
+        id:'5',
         name: 'Nhổ răng khôn',
         link: '#',
         imageUrl: img5,
     },
     {
+        id:'6',
         name: 'Nha khoa tổng quát',
         link: '#',
         imageUrl: img6,
     },
     {
+        id:'7',
         name: 'Nha khoa trẻ em',
         link: '#',
         imageUrl: img8,

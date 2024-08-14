@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './SpecialtyPage.module.css';
-import { specialPackagesData } from '@data/services';
+import { specialPackagesData } from '@/data/servicesData';
 
 const SpecialtyPage: React.FC = () => {
   const navigate = useNavigate();
