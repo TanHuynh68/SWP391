@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h1>Welcome to FPTeeth</h1>
-        <p>Sign Up and Start Using The Service!</p>
+        <p>Đăng ký và bắt đầu sử dụng dịch vụ!</p>
         <form onSubmit={handleSignUp}>
           <input
             type="text"
@@ -70,22 +70,22 @@ const SignUp: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <select className={styles.input}>
-            <option>Select your role</option>
-            <option>Customer</option>
-            <option>Dentist</option>
+            <option>Chọn vai trò của bạn</option>
+            <option>Khách Hàng</option>
+            <option>Nha Sĩ</option>
           </select>
           <div className={styles.checkboxContainer}>
             <input type="checkbox" id="emailOptIn" />
-            <label htmlFor="emailOptIn">I'm in for emails with exciting discounts and personalized recommendations</label>
+            <label htmlFor="emailOptIn">Tôi muốn nhận email với các chương trình giảm giá hấp dẫn và các khuyến nghị được cá nhân hóa</label>
           </div>
           <button type="submit" className={styles.submitButton} disabled={loading}>
             {loading ? 'Signing Up...' : 'Next'}
           </button>
         </form>
         {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>Registration successful!</p>}
-        <p>By signing up, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
-        <p>Already have an account? 
+        {success && <p className={styles.success}>Đăng ký thành công!</p>}
+        <p>Bằng cách đăng ký, bạn đồng ý với chúng tôi <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>.</p>
+        <p>Đã có tài khoản?
           
           <Link to="/login" className={styles.login}>Log In</Link> 
           </p>
@@ -98,7 +98,7 @@ const SignUp: React.FC = () => {
             <h2>Registration Successful!</h2>
             <p>Your account has been created successfully. Please login to continue.</p>
             <div className={styles.buttonContainer}>
-              <button onClick={handleLoginRedirect} className={styles.loginButton}>Login</button>
+              <button onClick={handleLoginRedirect} className={styles.loginButton}>Đăng Nhập</button>
               <button onClick={handleCloseModal} className={styles.closeButton}>Close</button>
             </div>
           </div>

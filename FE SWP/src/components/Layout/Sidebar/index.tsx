@@ -11,10 +11,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, toggleSidebar }) => {
         <div className={`${styles.sidebar} ${isVisible ? styles.visible : ''}`}>
             <button className={styles.closeButton} onClick={toggleSidebar}>×</button>
             <ul className={styles.sidebarList}>
-                <li className={styles.sidebarItem}><a href="#home">Home</a></li>
-                <li className={styles.sidebarItem}><a href="#dental-handbook">Dental handbook</a></li>
-                <li className={styles.sidebarItem}><a href="#contact-cooperation">Contact for Cooperation</a></li>
-                <li className={styles.sidebarItem}><a href="#for-dentists">For Dentists</a></li>
+                <li className={styles.sidebarItem}><a href="#home">Trang Chủ</a></li>
+                <li className={styles.sidebarItem}><a href="#dental-handbook">Cẩm Nang Răng Miêng</a></li>
+                <li className={styles.sidebarItem}><a href="#contact-cooperation">Liên Hệ Hợp Tác</a></li>
+                <li className={styles.sidebarItem}><a href="#for-dentists">Cho Nha Sĩ</a></li>
             </ul>
         </div>
     );

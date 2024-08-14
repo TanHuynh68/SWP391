@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     const resultAction = await dispatch(login({ email, password }));
 
-    console.log('Result of login dispatch:', resultAction);  // Log the result of the dispatch action
+    console.log('Result of login dispatch:', resultAction);  
 
     if (login.fulfilled.match(resultAction)) {
       setPopupMessage("Login thành công");
@@ -45,11 +45,11 @@ const Login: React.FC = () => {
           <img src={img1} alt="logo" />
         </div>
         <h2 className={styles.title}>Welcome Back</h2>
-        <p className={styles.subtitle}>Log in to Your Account!</p>
+        <p className={styles.subtitle}>Đăng Nhập vào tài khoản của bạn!</p>
         <div className={styles.socialButtons}>
-          <button className={`${styles.socialButton} ${styles.facebook}`}>Continue with Facebook</button>
-          <button className={`${styles.socialButton} ${styles.twitter}`}>Continue with Twitter</button>
-          <button className={`${styles.socialButton} ${styles.google}`}>Continue with Google</button>
+          <button className={`${styles.socialButton} ${styles.facebook}`}>Tiếp Tục với Facebook</button>
+          <button className={`${styles.socialButton} ${styles.twitter}`}>Tiếp Tục với Twitter</button>
+          <button className={`${styles.socialButton} ${styles.google}`}>Tiếp Tục với Google</button>
         </div>
         <form className={styles.loginForm} onSubmit={handleSubmit}>
           <input
@@ -73,8 +73,8 @@ const Login: React.FC = () => {
           <button type="submit" className={styles.loginButton}>Log In</button>
         </form>
         <div className={styles.footer}>
-          <a href="/forgot-password" className={styles.forgotPassword}>Forgot Password?</a>
-          <Link to="/sign-up" className={styles.signUp}>Sign Up</Link> 
+          <a href="/forgot-password" className={styles.forgotPassword}>Quên Mật Khẩu?</a>
+          <Link to="/sign-up" className={styles.signUp}>Đăng Ký</Link> 
         </div>
       </div>
 
