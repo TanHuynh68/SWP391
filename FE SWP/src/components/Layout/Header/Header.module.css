@@ -8,6 +8,9 @@
     left: 0;
     right: 0;
     z-index: 1000; /* Ensure header is on top */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .container {
@@ -19,6 +22,7 @@
     margin: 0 auto;
     height: 100%;
     flex-wrap: nowrap; /* Prevent wrapping */
+    width: 100%;
 }
 
 .sidebarToggle {
@@ -57,8 +61,8 @@
 .navList {
     display: flex;
     list-style: none;
-    margin: 9px;
-    padding: 100px;
+    margin: 0;
+    padding: 0;
     width: 100%; 
     justify-content: space-evenly;
 }
@@ -86,6 +90,7 @@
 .actions {
     display: flex;
     align-items: center;
+    margin-left: auto;
 }
 
 .loginButton, .signupButton {
@@ -110,6 +115,17 @@
 
 .signupButton:hover {
     background-color: #0056b3;
+}
+
+.header_profile {
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: auto;
+    position: relative;
+    z-index: 1100; /* Ensure profile popup is on top */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 768px) {

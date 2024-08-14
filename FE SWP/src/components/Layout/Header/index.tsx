@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
-import Sidebar from '../Sidebar/index'; 
+import Sidebar from '../Sidebar/index';
+import { ProfilePopUp } from '../PopUpProfile';
 
 
 const Header: React.FC = () => {
@@ -53,8 +54,13 @@ const Header: React.FC = () => {
                         <button className={styles.loginButton} onClick={handleLoginClick}>Đăng Nhập</button>
                         <button className={styles.signupButton} onClick={handleSignUpClick}>Đăng Ký</button>
                     </div>
+                    <div className={styles.header_profile}>
+                        <ProfilePopUp />
+                    </div>
                 </div>
+                
             </header>
+
             <Sidebar isVisible={sidebarVisible} toggleSidebar={toggleSidebar} />
         </div>
     );
