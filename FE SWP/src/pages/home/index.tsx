@@ -6,6 +6,7 @@ import Search from '@/components/Content/Seach';
 import SpecialPackages from '@/components/Content/SpecialPackages';
 import Layout from '@/components/Layout';
 import DentalGuide from '@/components/Content/DentalGuide';
+import Services from '@/components/Content/AllServices';
 const Home: React.FC = () => {
     return (
         <Layout>
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
                     <Search />
                     <SpecialPackages />
                     <DentalGuide/>
+                    <Services/>
         
                 </div>
             </div>

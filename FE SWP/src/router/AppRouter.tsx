@@ -8,10 +8,13 @@ import {
 } from "../pages";
 import SignUp from "@/pages/Register";
 import DentalHandbook from "@/pages/dentalHandbook";
+import SpecialPackages from "@/components/Content/SpecialPackages";
+import SpecialtyPage from "@/pages/specialty-page";
 
 const AppRouter: React.FC = () => {
   return (
     <Routes>
+      <Route path={paths.SPECIAL_PACKAGE} element={<SpecialtyPage/>} />
       <Route path={paths.DENTAL_HANDBOOK} element={<DentalHandbook />} />
       <Route path="/status-404" element={<NotFound />} />
       <Route path="/status-500" element={<InternalServerError />} />

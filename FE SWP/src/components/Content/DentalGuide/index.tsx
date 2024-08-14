@@ -1,64 +1,61 @@
-// import { Carousel, Button } from 'antd';
-
-import React, { useRef } from 'react';
-import { Carousel } from 'antd';
+import React from 'react';
+import { useSpring, animated } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
 import { useNavigate } from 'react-router-dom';
 import styles from './DentalGuide.module.css';
 import { dentalGuideData } from '@data/dentalGuideData';
 
 const DentalGuide: React.FC = () => {
   const navigate = useNavigate();
-  const carouselRef = useRef<any>(null);
+  const [index, setIndex] = React.useState(0);
+  const [props, set] = useSpring(() => ({
+    x: 0,
+  }));
+
+  const bind = useDrag(({ direction: [xDir], distance, cancel }) => {
+    if (distance > window.innerWidth / 4) cancel();
+
+    if (xDir < 0 && index < dentalGuideData.length - 4) {
+      setIndex(index + 1);
+    } else if (xDir > 0 && index > 0) {
+      setIndex(index - 1);
+    }
+
+    set({
+      x: -index * (window.innerWidth / 4),
+    });
+  });
 
   const handleAllPostsClick = () => {
     navigate('/dental-handbook');
   };
 
-  const handleCarouselClick = () => {
-    if (carouselRef.current) {
-      carouselRef.current.next();
-    }
-  };
+  const GuideCard: React.FC<{ title: string; imageUrl: string; link: string }> = ({ title, imageUrl, link }) => (
+    <div className={styles.serviceCard}>
+      <img src={imageUrl} alt={title} className={styles.icon} />
+      <p>
+        <a href={link}>{title}</a>
+      </p>
+    </div>
+  );
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.head}>
-          <h2>Cẩm nang răng miệng</h2>
-          <button onClick={handleAllPostsClick} className={styles.allPostsButton}>
-            Tất cả bài viết
-          </button>
-        </div>
-
-        <Carousel
-          dots={false}
-          slidesToShow={2}
-          slidesToScroll={1}
-          className={styles.carousel}
-          ref={carouselRef}
-        >
+    <div className={styles.servicesContainer}>
+      <div className={styles.head}>
+        <h2>Cẩm nang răng miệng</h2>
+        <button onClick={handleAllPostsClick} className={styles.allPostsButton}>
+          Tất cả bài viết
+        </button>
+      </div>
+      <div className={styles.carouselContainer}>
+        <animated.div {...bind()} className={styles.servicesList} style={{ x: props.x }}>
           {dentalGuideData.map((item, index) => (
-            <div
-              key={index}
-              className={styles.data}
-              onClick={handleCarouselClick}
-            >
-              <div className={styles.ba}>
-                <div className={styles.img}>
-                  <img src={item.imageUrl} alt={item.title} />
-                </div>
-                <div className={styles.title}>
-                  <a href={item.link}>{item.title}</a>
-                </div>
-              </div>
-
-            </div>
+            <GuideCard key={index} title={item.title} imageUrl={item.imageUrl} link={item.link} />
           ))}
-        </Carousel>
+        </animated.div>
       </div>
     </div>
   );
 };
 
 export default DentalGuide;
-

@@ -1,0 +1,52 @@
+.servicesContainer {
+  text-align: center;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.carouselContainer {
+  overflow: hidden;
+  width: 100%;
+}
+
+.servicesList {
+  display: flex;
+  will-change: transform;
+  transition: transform 0.3s ease-out;
+}
+
+.serviceCard {
+  min-width: 25%; 
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.icon {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.allPostsButton {
+  margin-left: auto;
+  padding: 10px 20px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.allPostsButton:hover {
+  background-color: #ccc;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
