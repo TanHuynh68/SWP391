@@ -36,19 +36,20 @@ export default function Login() {
 
     const authenticateUser = async (loginData: LoginState) => {
         try {
-            console.log("adminLogin", loginData);
             const response = await login(loginData.email, loginData.password);
-            console.log("adminLogin", response);
 
             // Kiểm tra xem phản hồi có thuộc tính token hay không
             if ('token' in response) {
                 const { token } = response as DataLogin;  // Type assertion
                 if (token) {
-                    const decodeToken = decodeJWT(token);
+                    const decodeToken =  decodeJWT(token);
+                    console.log("decodeToken: ", decodeToken)
                     if (decodeToken.role === "ADMIN") {
-                        message.success("Admin Login Successfully")
+                        console.log("decodeToken: ", decodeToken)
                         localStorage.setItem("token", token);
+                        localStorage.setItem("user", JSON.stringify(decodeToken));
                         navigate("/admin/dashboard");
+                        message.success("Admin Login Successfully")
                     } else {
                         message.error("Unauthorized!")
                         navigate("/");

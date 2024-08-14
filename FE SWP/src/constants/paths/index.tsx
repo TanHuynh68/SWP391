@@ -11,7 +11,7 @@ const Paths = {
    MANAGE_PATIENT:"manage-patient",
    MANAGE_MEDICAL_EXAMINATION_SCHEDULE:"manage-medical-examination-schedule",
 
-   /* ADMIN PATHS */
+   /* DENTIST PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",
    BOOKING_PAGE: "booking-page",
@@ -19,6 +19,7 @@ const Paths = {
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",
+   ADMIN_HOME: "/admin/dashboard",
    ADMIN_MANAGE_USER: "manage-user",
    ADMIN_MANAGE_CLINIC: "manage-clinic",
    ADMIN_MANAGE_CLINIC_OWNER: "manage-clinic-owner",

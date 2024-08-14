@@ -39,7 +39,7 @@ const ManageMedicalExaminationSchedule = () => {
                     />
                 </div>
             </div>
-            <div className="grid 2xl:grid-cols-8 xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 mt-10">
+            <div className="grid 2xl:grid-cols-8 xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 mt-10">
                 <Card className="bg-gray-200" style={{ width: 150 }}>
                     <div className="text-center">
                         8:00 - 8:45
