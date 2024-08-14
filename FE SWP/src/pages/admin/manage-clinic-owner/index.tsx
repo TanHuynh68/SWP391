@@ -1,14 +1,16 @@
-import { Button, Col, GetProps, Modal, Row, Table } from "antd";
+import { Button, Col, GetProps, Modal, Row, Table, Tag } from "antd";
 import Input from "antd/es/input";
 import { useEffect, useState } from "react";
 import { Form, Select } from 'antd';
 import { ClinicOwner } from "@/models/clinicOwner.model";
 import { addClinicOwner, getAllClinicOwner, searchUser } from "@/services/admin.service";
+import { statusColor, statusName } from "@/constants/consts";
 
 const ManageClinicOwner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
     const [clinicOwners, setClinicOwner] = useState<ClinicOwner[]>([])
+
     useEffect(() => {
         getAllClinicOwnerFromAdmin();
     }, [])
@@ -31,16 +33,7 @@ const ManageClinicOwner = () => {
         setIsModalOpen(false);
     };
 
-        const status = (status: number) => {
-        switch (status) {
-            case 1:
-                return "Pending"
-            case 2:
-                return "Active"
-            case 3:
-             return "Inactive"
-        }
-    }
+    
     const columns = [
         {
             title: 'Full Name',
@@ -68,25 +61,40 @@ const ManageClinicOwner = () => {
             key: 'email',
         },
         {
-            title: 'Action',
-            render: () => (
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: number) => (
                 <>
-                    <Row>
-                        <Col span={12}>
-                            <Button className="bg-blue-500">
-                                Accept
-                            </Button>
-                        </Col>
-                        <Col span={12}>
-                            <Button className="bg-red-500">
-                                Reject
-                            </Button>
-                        </Col>
-                    </Row>
+                    <Tag color={statusColor(status)}>
+                        {statusName(status)}
+                    </Tag>
                 </>
-            ),
-            key: 'action',
+            )
         },
+        ([
+            {
+                title: 'Action',
+                render: (record: ClinicOwner) => (
+                    record.status === 1 && <>
+                        <Row>
+                            <Col span={12}>
+                                <Button className="bg-blue-500">
+                                    Accept
+                                </Button>
+                            </Col>
+                            <Col span={12}>
+                                <Button className="bg-red-500">
+                                    Delete
+                                </Button>
+                            </Col>
+                        </Row>
+                    </>
+                ),
+                key: 'action',
+            },
+        ])
+
     ];
 
 
@@ -111,7 +119,7 @@ const ManageClinicOwner = () => {
     const onFinish = async (value: ClinicOwner) => {
         console.log("value: ", value)
         const res = await addClinicOwner(value.fullName, value.gender, value.email, value.password);
-        console.log("onFinish: ", res)  
+        console.log("onFinish: ", res)
         setIsModalOpen(false);
         getAllClinicOwnerFromAdmin();
     }
@@ -155,20 +163,6 @@ const ManageClinicOwner = () => {
                                 ]}
                             />
                         </Form.Item>
-                        {/* <Form.Item
-                            label="Birth Day"
-                            name="birthDay"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <DatePicker />
-                        </Form.Item>
-                        <Form.Item
-                            label="Phone Number"
-                            name="phoneNumber"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="number" style={{ width: '100%' }} />
-                        </Form.Item> */}
                         <Form.Item
                             label="Email"
                             name="email"
@@ -183,13 +177,6 @@ const ManageClinicOwner = () => {
                         >
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>
-                        {/* <Form.Item
-                            label="Confirm Password"
-                            name="confirmPassword"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="password" style={{ width: '100%' }} />
-                        </Form.Item> */}
                         <Form.Item className="flex justify-center" wrapperCol={{ offset: 6, span: 16 }}>
                             <Button type="primary" htmlType="submit">
                                 Submit
@@ -201,6 +188,7 @@ const ManageClinicOwner = () => {
             <h1 className="font-bold text-2xl text-center">
                 Manage Clinic Owner
             </h1>
+        
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
                     <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />

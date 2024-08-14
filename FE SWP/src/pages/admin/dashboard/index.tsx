@@ -47,7 +47,7 @@ const AdminDashboard = () => {
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic title="Revenue" value={112893} prefix="$" />
+            <Statistic title="Revenue" value={112893} prefix="đ" />
           </Card>
         </Col>
       </Row>

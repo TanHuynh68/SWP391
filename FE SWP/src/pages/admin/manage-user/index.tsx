@@ -1,13 +1,12 @@
 import { User } from "@/models/user.model";
-import { filterUserbyNameAndRole, getAllUser } from "@/services/user.service";
-import { Button, Col, GetProps, Image, message, Modal, Row, Select, Switch, Table, Tag } from "antd";
+import { filterUserbyNameAndRole, getAllUser, getPendingUser, getUserActiveAndInactive } from "@/services/user.service";
+import { Button, Col, GetProps, Image, message, Modal, Row, Select, Switch, Table, Tabs, Tag } from "antd";
 import Input from "antd/es/input";
-import { TableProps } from "antd/es/table";
+import type { TabsProps } from 'antd';
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { deleteUserPending, updateStatusUserActiveOrInactive, updateStatusUserPendingToActive } from "@/services/admin.service";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-
+import { DeleteOutlined } from "@ant-design/icons";
 
 const ManageUser = () => {
     const [user, setUser] = useState<User>();
@@ -73,6 +72,7 @@ const ManageUser = () => {
         }
         console.log("user", users)
     };
+
     const handleUpdateStatusPendingToActive = async (id: number) => {
         console.log("handleUpdateStatusPendingToActive: ", id);
         const res = await updateStatusUserPendingToActive(id);
@@ -189,6 +189,34 @@ const ManageUser = () => {
         setUsers(res);
     }
 
+    const onChangeStatus = async (key: string) => {
+        console.log(key);
+        if (key === "2") {
+            const res = await getUserActiveAndInactive();
+            console.log('onChangeStatus: ', res)
+            if (res) {
+                setUsers(res);
+            }
+        }else{
+            const res = await getPendingUser();
+            console.log('onChangeStatus: ', res)
+            if (res) {
+                setUsers(res);
+            }
+        }
+    };
+
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: 'Pending',
+        },
+        {
+            key: '2',
+            label: 'Active And Inactive',
+        },
+    ];
+
     return (
         <div>
             <Modal title="Delete confirm" open={isModalOpenDeleteModal} onOk={handleOk} onCancel={handleCancel}>
@@ -209,6 +237,7 @@ const ManageUser = () => {
             <h1 className="font-bold text-2xl text-center">
                 Manage Users
             </h1>
+            <Tabs defaultActiveKey="1" items={items} onChange={onChangeStatus} />
             <Row gutter={10} className="my-10 float-left">
                 <Col span={12}>
                     <Select

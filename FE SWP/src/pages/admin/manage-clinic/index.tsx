@@ -1,6 +1,6 @@
 import { Clinic } from "@/models/clinic.model";
 import { getAllClinic, getClinicByName, searchUser } from "@/services/admin.service";
-import { Button, Col, GetProps, Image, Modal, Row, Table } from "antd";
+import { Button, Col, GetProps, Image, Modal, Row, Switch, Table, Tag } from "antd";
 import Input from "antd/es/input";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -26,7 +26,16 @@ const ManageClinic = () => {
     useEffect(() => {
         getAllClinicFromAdmin();
     }, [])
-
+    const statusName = (status: number) => {
+        switch (status) {
+            case 1:
+                return "Pending"
+            case 2:
+                return "Active"
+            case 3:
+                return "Inactive"
+        }
+    }
     const getAllClinicFromAdmin = async () => {
         const res = await getAllClinic();
         if (res) {
@@ -42,6 +51,16 @@ const ManageClinic = () => {
                 return "Active"
             case 3:
              return "Inactive"
+        }
+    }
+    const statusColor = (status: number) => {
+        switch (status) {
+            case 1:
+                return "red"
+            case 2:
+                return "green"
+            case 3:
+                return "purple"
         }
     }
     const columns = [
@@ -64,31 +83,36 @@ const ManageClinic = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (status: number) => (
+                <div className="flex justify-between">
+                    <Tag color={statusColor(status)}>
+                        {statusName(status)}
+                    </Tag>
+                </div>
+            )
         },
         {
             title: 'Owner',
             dataIndex: ['owner', 'fullName'], // Assuming owner is an object with a fullName property
             key: 'owner',
         },
-        {
-            title: 'Action',
-            render: () => (
-                <>
-                    <Row>
-                        <Col span={12}>
-                            <Button className="bg-blue-500">
-                                Accept
-                            </Button>
-                        </Col>
-                        <Col span={12}>
-                            <Button className="bg-red-500">
-                                Reject
-                            </Button>
-                        </Col>
-                    </Row>
-                </>
-            ),
-        },
+        // {
+        //     title: 'Action',
+        //     render: (record:Clinic) => (
+        //         record.status===1&&<Row>
+        //                 <Col span={12}>
+        //                     <Button className="bg-blue-500">
+        //                         Accept
+        //                     </Button>
+        //                 </Col>
+        //                 <Col span={12}>
+        //                     <Button className="bg-red-500">
+        //                         Reject
+        //                     </Button>
+        //                 </Col>
+        //             </Row>
+        //     ),
+        // },
     ];
 
     type SearchProps = GetProps<typeof Input.Search>;
