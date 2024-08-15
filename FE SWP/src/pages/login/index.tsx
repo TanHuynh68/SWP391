@@ -5,37 +5,44 @@ import { RootState, AppDispatch } from '@redux/store/Store';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import img1 from "@assets/home-img/logo.jpg";
+import { decodeJWT } from '@/configs/decode-jwt';
+import { message } from 'antd';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
-  const dispatch = useDispatch<AppDispatch>(); 
+  const dispatch = useDispatch<AppDispatch>();
   const authError = useSelector((state: RootState) => state.auth.error);
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const resultAction = await dispatch(login({ email, password }));
-
-    console.log('Result of login dispatch:', resultAction);  // Log the result of the dispatch action
-
-    if (login.fulfilled.match(resultAction)) {
-      setPopupMessage("Login thành công");
-    } else if (login.rejected.match(resultAction)) {
-      setPopupMessage(authError || "Đăng nhập thất bại");
+    const decodeToken = decodeJWT(resultAction.payload + "");
+    if (decodeToken.role === "CUSTOMER") {
+      console.log("decodeToken: ", decodeToken)
+      localStorage.setItem("token", resultAction.payload + "");
+      localStorage.setItem("user", JSON.stringify(decodeToken));
+      if (login.fulfilled.match(resultAction)) {
+        setPopupMessage("Login thành công");
+      } else if (login.rejected.match(resultAction)) {
+        setPopupMessage(authError || "Đăng nhập thất bại");
+      }
+      setShowPopup(true);
+      navigate("/");
+    } else {
+      message.error("You are not customer!")
     }
-
-    setShowPopup(true);
   };
 
   const closePopup = () => {
     setShowPopup(false);
 
-    
+
     if (popupMessage === "Login thành công") {
-      navigate('/'); 
+      navigate('/');
     }
   };
 

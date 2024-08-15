@@ -14,7 +14,7 @@ const Paths = {
    /* DENTIST PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",
-   BOOKING_PAGE: "booking-page",
+   BOOKING_PAGE: "booking-page/:clinic_id",
 
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",

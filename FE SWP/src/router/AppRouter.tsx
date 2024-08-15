@@ -21,11 +21,11 @@ const AppRouter: React.FC = () => {
       <Route path={paths.REGISTER} element={<SignUp />} />
       <Route path={paths.HOME} element={<Home />} />
       {/* Customer */}
-      <Route path="/customer/*" element={<CustomerLayout />}>
-        <Route path={paths.BOOKING_PAGE} element={<CustomerBookingPage />} />
+      <Route path="/customer/*" element={canAccess([role.CUSTOMER]) ? <CustomerLayout /> : <Navigate to={paths.HOME}/>}>
+        <Route path={paths.BOOKING_PAGE} element={canAccess([role.CUSTOMER]) ? <CustomerBookingPage /> : <Navigate to={paths.HOME}/>} />
       </Route>
       {/* Clinic Owner */}
-      <Route path="/clinic-owner/*" element={<Dashboard />}>
+      <Route path="/clinic-owner/*" element={canAccess([role.CLINIC_OWNER]) ? <Dashboard /> : <Navigate to={paths.HOME}/>}>
         <Route path={paths.REGISTER_CLINIC} element={<RegisterClinic />} />
         <Route path={paths.MANAGE_DOCTOR} element={<ManageDoctor />} />
         <Route path={paths.MANAGE_PATIENT} element={<ManagePatient />} />
