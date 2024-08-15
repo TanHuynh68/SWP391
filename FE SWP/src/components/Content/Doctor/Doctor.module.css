@@ -1,11 +1,11 @@
-.servicesContainer {
+.doctorContainer {
   text-align: center;
   padding: 20px;
-  background-color: #f5f5f5; 
+  background-color: #ffffff;
 }
 
 h2 {
-  font-size: 26px; /* Đồng bộ với kích thước tiêu đề của Specialty */
+  font-size: 26px;
   margin-bottom: 20px;
 }
 
@@ -14,29 +14,34 @@ h2 {
   width: 100%;
 }
 
-.servicesList {
+.doctorList {
   display: flex;
   will-change: transform;
   transition: transform 0.3s ease-out;
 }
 
-.serviceCard {
+.doctorCard {
   min-width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Căn giữa nội dung theo chiều ngang */
+  justify-content: center; /* Căn giữa nội dung theo chiều dọc */
   text-align: center;
   padding: 10px;
   box-sizing: border-box;
 }
 
 .icon {
-  width: 310px; 
-  height: 221px; 
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
 }
 
-.serviceCard p {
-  font-size: 20px; /* Đồng bộ với kích thước chữ trong Specialty */
-  color: #333;
+.doctorCard p {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .allPostsButton {
@@ -57,11 +62,3 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
-
-.serviceCard p a {
-  text-decoration: none; /* Loại bỏ gạch chân */
-  color: #333; /* Đặt màu văn bản thành màu đen hoặc một màu khác tùy chọn */
-}
-
-
-

@@ -20,6 +20,13 @@
 
   }
   
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; 
+  }
+  
   .logo img {
     max-width: 100px;
   }

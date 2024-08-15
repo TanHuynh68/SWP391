@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
-import Sidebar from '../Sidebar/index'; 
+import Sidebar from '../Sidebar/index';
+import { ProfilePopUp } from '../PopUpProfile';
 
 
 const Header: React.FC = () => {
@@ -36,25 +37,30 @@ const Header: React.FC = () => {
                     <nav className={styles.nav}>
                         <ul className={styles.navList}>
                             <li className={styles.navItem}>
-                                <a href="#home" className={styles.navLink}>Home</a>
+                                <a href="#home" className={styles.navLink}>Trang Chủ</a>
                             </li>
                             <li className={styles.navItem}>
-                                <a href="#services" className={styles.navLink}>Services</a>
+                                <a href="#services" className={styles.navLink}>Dịch Vụ</a>
                             </li>
                             <li className={styles.navItem}>
-                                <a href="#about" className={styles.navLink}>About</a>
+                                <a href="#about" className={styles.navLink}>Giới Thiệu</a>
                             </li>
                             <li className={styles.navItem}>
-                                <a href="#contact" className={styles.navLink}>Contact</a>
+                                <a href="#contact" className={styles.navLink}>Liên Hệ</a>
                             </li>
                         </ul>
                     </nav>
                     <div className={styles.actions}>
-                        <button className={styles.loginButton} onClick={handleLoginClick}>Login</button>
-                        <button className={styles.signupButton} onClick={handleSignUpClick}>Sign Up</button>
+                        <button className={styles.loginButton} onClick={handleLoginClick}>Đăng Nhập</button>
+                        <button className={styles.signupButton} onClick={handleSignUpClick}>Đăng Ký</button>
+                    </div>
+                    <div className={styles.header_profile}>
+                        <ProfilePopUp />
                     </div>
                 </div>
+                
             </header>
+
             <Sidebar isVisible={sidebarVisible} toggleSidebar={toggleSidebar} />
         </div>
     );
