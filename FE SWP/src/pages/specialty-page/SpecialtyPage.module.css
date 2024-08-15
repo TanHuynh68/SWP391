@@ -1,0 +1,75 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.homeButton {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.homeButton:hover {
+    background-color: #005fa3;
+}
+
+h2 {
+    font-size: 32px; /* Tăng kích thước tiêu đề */
+    color: #333;
+    margin: 0;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Tăng khoảng cách giữa các mục */
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding: 20px 0; /* Tăng padding giữa các mục */
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.imageContainer {
+    flex-shrink: 0;
+    margin-right: 20px; /* Tăng khoảng cách giữa ảnh và chữ */
+}
+
+.image {
+    width: 100px; /* Tăng kích thước ảnh */
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.titleContainer {
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 22px; /* Tăng kích thước chữ */
+    color: #007acc;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.title:hover {
+    text-decoration: underline;
+}

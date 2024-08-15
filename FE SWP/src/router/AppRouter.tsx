@@ -10,11 +10,14 @@ import SignUp from "@/pages/Register";
 import DentalHandbook from "@/pages/dentalHandbook";
 import { role} from "@/redux/hooks/usRedirect";
 import useRedirect from "@/redux/hooks/usRedirect";
+import SpecialtyPage from "@/pages/specialty-page";
+
 const AppRouter: React.FC = () => {
   const {canAccess} = useRedirect();
   return (
     <Routes>
-      <Route path="dental-handbook" element={<DentalHandbook />} />
+      <Route path={paths.SPECIAL_PACKAGE} element={<SpecialtyPage/>} />
+      <Route path={paths.DENTAL_HANDBOOK} element={<DentalHandbook />} />
       <Route path="/status-404" element={<NotFound />} />
       <Route path="/status-500" element={<InternalServerError />} />
       <Route path={paths.LOGIN} element={<Login />} />
