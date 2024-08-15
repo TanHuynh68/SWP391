@@ -13,14 +13,24 @@ const initialState: RegisterState = {
   success: false,
 };
 
+interface UserData {
+  fullName: string;
+  email: string;
+  password: string;
+  gender: string;
+  phone: string;
+  doB: string;
+  address: string;
+}
 
 export const registerUser = createAsyncThunk(
   'register/registerUser',
-  async (userData: { fullName: string; email: string; password: string }, thunkAPI) => {
+  async (userData: UserData, thunkAPI) => {
     try {
       const response = await axios.post('http://localhost:5105/Account/register', userData);
       return response.data;
     } catch (error: any) {
+      // Xử lý lỗi và gửi về Redux state
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }

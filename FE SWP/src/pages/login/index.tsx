@@ -78,7 +78,6 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      
       {showPopup && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
