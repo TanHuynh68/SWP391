@@ -4,9 +4,10 @@ import {
     DesktopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
+import { Avatar, Dropdown, Layout, Menu, MenuProps, message, Space } from 'antd';
 import { Outlet } from 'react-router-dom';
 import "./dashboard.css";
+import { paths } from '@/constants';
 
 const Dashboard: React.FC = () => {
     const [items, setItems] = useState<MenuItem[]>([]);
@@ -58,6 +59,12 @@ const Dashboard: React.FC = () => {
         navigate(e.key as string); // Navigate to the selected key
     };
 
+    const handleLogout=()=>{
+        localStorage.removeItem("token");
+        localStorage.removeItem("user"); 
+        navigate(paths.HOME)
+        message.success("Logout Successfully")
+    }
     const menuItems = [
         {
             key: '1',
@@ -70,7 +77,7 @@ const Dashboard: React.FC = () => {
         {
             key: '2',
             label: (
-                <p rel="noopener noreferrer" >
+                <p onClick={handleLogout} rel="noopener noreferrer" >
                    Log out
                 </p>
             ),

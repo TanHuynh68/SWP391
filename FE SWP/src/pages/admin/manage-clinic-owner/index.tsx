@@ -1,12 +1,26 @@
-import { Button, Col, DatePicker, GetProps, Modal, Row, Table } from "antd";
+import { Button, Col, GetProps, Modal, Row, Table, Tag } from "antd";
 import Input from "antd/es/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Select } from 'antd';
+import { ClinicOwner } from "@/models/clinicOwner.model";
+import { addClinicOwner, getAllClinicOwner, searchUser } from "@/services/admin.service";
+import { statusColor, statusName } from "@/constants/consts";
 
 const ManageClinicOwner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
+    const [clinicOwners, setClinicOwner] = useState<ClinicOwner[]>([])
 
+    useEffect(() => {
+        getAllClinicOwnerFromAdmin();
+    }, [])
+
+    const getAllClinicOwnerFromAdmin = async () => {
+        const res = await getAllClinicOwner("", "CLINICOWNER");
+        if (res) {
+            setClinicOwner(res);
+        }
+    }
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -17,70 +31,72 @@ const ManageClinicOwner = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
-        form.setFieldsValue([]);
     };
 
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
-
+    
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Full Name',
+            dataIndex: 'fullName',
+            key: 'fullName',
         },
         {
             title: 'Gender',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'gender',
+            key: 'gender',
         },
-        {
-            title: 'Birth Day',
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: 'Phone Number',
-            dataIndex: 'address',
-            key: 'address',
-        },
+        // {
+        //     title: 'Birth Day',
+        //     dataIndex: 'birthDay',
+        //     key: 'birthDay',
+        // },
+        // {
+        //     title: 'Phone Number',
+        //     dataIndex: 'phoneNumber',
+        //     key: 'phoneNumber',
+        // },
         {
             title: 'Email',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
-            title: 'Action',
-            render: () => (
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: number) => (
                 <>
-                    <Row>
-                        <Col span={12}>
-                            <Button className="bg-blue-500">
-                                Accept
-                            </Button>
-                        </Col>
-                        <Col span={12}>
-                            <Button className="bg-red-500">
-                                Reject
-                            </Button>
-                        </Col>
-                    </Row>
+                    <Tag color={statusColor(status)}>
+                        {statusName(status)}
+                    </Tag>
                 </>
             )
         },
+        ([
+            {
+                title: 'Action',
+                render: (record: ClinicOwner) => (
+                    record.status === 1 && <>
+                        <Row>
+                            <Col span={12}>
+                                <Button className="bg-blue-500">
+                                    Accept
+                                </Button>
+                            </Col>
+                            <Col span={12}>
+                                <Button className="bg-red-500">
+                                    Delete
+                                </Button>
+                            </Col>
+                        </Row>
+                    </>
+                ),
+                key: 'action',
+            },
+        ])
+
     ];
+
 
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
@@ -96,8 +112,17 @@ const ManageClinicOwner = () => {
         },
     };
 
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-
+    const onSearch: SearchProps['onSearch'] = async (value) => {
+        const res = await searchUser(value, "CLINICOWNER");
+        setClinicOwner(res);
+    };
+    const onFinish = async (value: ClinicOwner) => {
+        console.log("value: ", value)
+        const res = await addClinicOwner(value.fullName, value.gender, value.email, value.password);
+        console.log("onFinish: ", res)
+        setIsModalOpen(false);
+        getAllClinicOwnerFromAdmin();
+    }
     return (
         <div>
             <Modal
@@ -115,10 +140,11 @@ const ManageClinicOwner = () => {
                         {...formItemLayout}
                         variant="filled"
                         style={{ maxWidth: 600 }}
+                        onFinish={onFinish}
                     >
                         <Form.Item
                             label="Name"
-                            name="name"
+                            name="fullName"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Input />
@@ -132,24 +158,10 @@ const ManageClinicOwner = () => {
                                 defaultValue="Please Choose Gender"
                                 style={{ width: 151 }}
                                 options={[
-                                    { value: 'male', label: 'Male' },
-                                    { value: 'female', label: 'Female' },
+                                    { value: '1', label: 'Male' },
+                                    { value: '2', label: 'Female' },
                                 ]}
                             />
-                        </Form.Item>
-                        <Form.Item
-                            label="Birth Day"
-                            name="birthDay"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <DatePicker />
-                        </Form.Item>
-                        <Form.Item
-                            label="Phone Number"
-                            name="phoneNumber"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="number" style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
                             label="Email"
@@ -165,13 +177,6 @@ const ManageClinicOwner = () => {
                         >
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>
-                        <Form.Item
-                            label="Confirm Password"
-                            name="confirmPassword"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="password" style={{ width: '100%' }} />
-                        </Form.Item>
                         <Form.Item className="flex justify-center" wrapperCol={{ offset: 6, span: 16 }}>
                             <Button type="primary" htmlType="submit">
                                 Submit
@@ -183,6 +188,7 @@ const ManageClinicOwner = () => {
             <h1 className="font-bold text-2xl text-center">
                 Manage Clinic Owner
             </h1>
+        
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
                     <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />
@@ -193,7 +199,7 @@ const ManageClinicOwner = () => {
                     </Button>
                 </Col>
             </Row>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={clinicOwners} columns={columns} />
         </div>
     );
 }
