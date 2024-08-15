@@ -1,3 +1,11 @@
+import { User } from '@/models/user.model';
+import dayjs from 'dayjs';
+
+export const getUserDataFromLocalStorage = () => {
+    const user = localStorage.getItem("user");
+    const userData: User = JSON.parse(user)
+    return userData;
+}
 export const statusColor = (status: number) => {
     switch (status) {
         case 1:
@@ -19,6 +27,65 @@ export const statusName = (status: number) => {
             return "Inactive"
     }
 }
+export const isPastSlotTimeToday = (slot: number, workingDayOfWeek: number) => {
+    const today = dayjs();
+    const currentDayOfWeek = today.day(); // Sunday = 0, Monday = 1, etc.
+
+    // Chỉ kiểm tra nếu workingDayOfWeek trùng với ngày hôm nay
+    if (currentDayOfWeek !== workingDayOfWeek) {
+        return false;
+    }
+
+    let slotHour, slotMinute;
+
+    switch (slot) {
+        case 1:
+            slotHour = 8;
+            slotMinute = 0;
+            break;
+        case 2:
+            slotHour = 8;
+            slotMinute = 45;
+            break;
+        case 3:
+            slotHour = 9;
+            slotMinute = 30;
+            break;
+        case 4:
+            slotHour = 10;
+            slotMinute = 15;
+            break;
+        case 5:
+            slotHour = 11;
+            slotMinute = 0;
+            break;
+        case 6:
+            slotHour = 13;
+            slotMinute = 0;
+            break;
+        case 7:
+            slotHour = 13;
+            slotMinute = 45;
+            break;
+        case 8:
+            slotHour = 14;
+            slotMinute = 30;
+            break;
+        case 9:
+            slotHour = 15;
+            slotMinute = 15;
+            break;
+        case 10:
+            slotHour = 16;
+            slotMinute = 0;
+            break;
+        default:
+            return false;
+    }
+
+    const slotTime = dayjs().hour(slotHour).minute(slotMinute);
+    return today.isAfter(slotTime);
+};
 
 export const slotTime = (slot: number) => {
     switch (slot) {

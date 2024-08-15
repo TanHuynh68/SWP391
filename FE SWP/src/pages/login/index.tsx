@@ -5,6 +5,8 @@ import { RootState, AppDispatch } from '@redux/store/Store';
 import { useNavigate, Link } from 'react-router-dom'; 
 import styles from './Login.module.css';
 import img1 from "@assets/home-img/logo.jpg";
+import { decodeJWT } from '@/configs/decode-jwt';
+import { message } from 'antd';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,16 +20,21 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const resultAction = await dispatch(login({ email, password }));
-
-    console.log('Result of login dispatch:', resultAction);  
-
-    if (login.fulfilled.match(resultAction)) {
-      setPopupMessage("Login thành công");
-    } else if (login.rejected.match(resultAction)) {
-      setPopupMessage(authError || "Đăng nhập thất bại");
+    const decodeToken = decodeJWT(resultAction.payload + "");
+    if (decodeToken.role === "CUSTOMER") {
+      console.log("decodeToken: ", decodeToken)
+      localStorage.setItem("token", resultAction.payload + "");
+      localStorage.setItem("user", JSON.stringify(decodeToken));
+      if (login.fulfilled.match(resultAction)) {
+        setPopupMessage("Login thành công");
+      } else if (login.rejected.match(resultAction)) {
+        setPopupMessage(authError || "Đăng nhập thất bại");
+      }
+      setShowPopup(true);
+      navigate("/");
+    } else {
+      message.error("You are not customer!")
     }
-
-    setShowPopup(true);
   };
 
   const closePopup = () => {

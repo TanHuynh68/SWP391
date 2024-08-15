@@ -1,5 +1,5 @@
 export class User {
-  id: number;
+  Id: number;
   fullName: string | null;
   password: string;
   email: string;
@@ -11,7 +11,7 @@ export class User {
   role: Role;
 
   constructor(
-    id: number = 1,
+    Id: number = 1,
     fullName: string | null = null,
     password: string = "",
     email: string = "",
@@ -22,7 +22,7 @@ export class User {
     createdAt: string = "",
     role: Role = new Role()
   ) {
-    this.id = id;
+    this.Id = Id;
     this.fullName = fullName;
     this.password = password;
     this.email = email;
