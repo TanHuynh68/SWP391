@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     const resultAction = await dispatch(login({ email, password }));
     const decodeToken = decodeJWT(resultAction.payload + "");
-    if (decodeToken.role === "CUSTOMER") {
+    if (decodeToken.role === "CUSTOMER" ||decodeToken.role === "CLINICOWNER") {
       console.log("decodeToken: ", decodeToken)
       localStorage.setItem("token", resultAction.payload + "");
       localStorage.setItem("user", JSON.stringify(decodeToken));
@@ -31,9 +31,13 @@ const Login: React.FC = () => {
         setPopupMessage(authError || "Đăng nhập thất bại");
       }
       setShowPopup(true);
+    if(decodeToken.role === "CUSTOMER"){
       navigate("/");
+    }else{
+      navigate("/clinic-owner/register-clinic");
+    }
     } else {
-      message.error("You are not customer!")
+      message.error("You are not customer or clinic owner!")
     }
   };
 
