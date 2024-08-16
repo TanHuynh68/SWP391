@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
 import Sidebar from '../Sidebar/index';
 import { ProfilePopUp } from '../PopUpProfile';
-
+import type { RootState } from '@redux/store/store';
 
 const Header: React.FC = () => {
-    const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [sidebarVisible, setSidebarVisible] = React.useState(false);
     const navigate = useNavigate();
+    const token = useSelector((state: RootState) => state.auth.token); // Lấy token từ Redux store
 
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
@@ -51,14 +53,19 @@ const Header: React.FC = () => {
                         </ul>
                     </nav>
                     <div className={styles.actions}>
-                        <button className={styles.loginButton} onClick={handleLoginClick}>Đăng Nhập</button>
-                        <button className={styles.signupButton} onClick={handleSignUpClick}>Đăng Ký</button>
+                        {!token && (
+                            <>
+                                <button className={styles.loginButton} onClick={handleLoginClick}>Đăng Nhập</button>
+                                <button className={styles.signupButton} onClick={handleSignUpClick}>Đăng Ký</button>
+                            </>
+                        )}
                     </div>
-                    <div className={styles.header_profile}>
-                        <ProfilePopUp />
-                    </div>
+                    {token && (
+                        <div className={styles.header_profile}>
+                            <ProfilePopUp />
+                        </div>
+                    )}
                 </div>
-                
             </header>
 
             <Sidebar isVisible={sidebarVisible} toggleSidebar={toggleSidebar} />

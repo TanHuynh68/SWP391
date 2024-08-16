@@ -21,6 +21,7 @@ import servicesSlice from '../Slice/servicesSlice';
 import profileSlice from "../auth/profileSlice";
 import specialtyReducer from '../Slice/specialtySlice';
 import doctorReducer from '../Slice/doctorSlice'; 
+import logoutReducer from '../auth/logoutSlice'; 
 
 const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ const store = configureStore({
     profile: profileSlice,
     specialty: specialtyReducer, 
     doctor: doctorReducer, 
+    logout: logoutReducer, 
   },
 });
 
@@ -37,6 +39,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
+
 
 
 
