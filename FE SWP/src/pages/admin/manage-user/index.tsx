@@ -230,7 +230,7 @@ const ManageUser = () => {
                     {/* <p>Role: <span className="font-bold">{user?.role.name}</span></p> */}
                     <p>Status: <span className="font-bold">{statusName(user?.status)}</span></p>
                     <p>Created At: <span className="font-bold">{user?.createdAt ? format(new Date(user.createdAt), "dd/MM/yyyy") : 'N/A'}</span></p>
-                    <p>Created At: <span className="font-bold">{user?.createdAt ? format(new Date(user.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
+                    <p>Created At: <span className="font-bold">{user?.updateAt ? format(new Date(user.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
                     <Image src={user?.image} />
                 </div>
             </Modal>

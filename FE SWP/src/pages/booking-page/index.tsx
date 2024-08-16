@@ -1,109 +1,158 @@
-import { slotTime } from "@/constants/consts";
+import { isPastSlotTimeToday, slotTime } from "@/constants/consts";
 import { Clinic } from "@/models/clinic.model";
 import { Doctor } from "@/models/doctor.model";
 import { WorkingTime } from "@/models/workingTime.model";
 import { createBooking, getAllDoctorByClinic, getAllServicesOfClinic, getClinicById } from "@/services/customer.service";
 import { getWorkingOfDoctor, getWorkingTimeDoctor } from "@/services/workingTime.service";
 import { CalendarOutlined } from "@ant-design/icons";
-import { Card, Col, Button, Image, Row, Select, Typography } from "antd";
+import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from 'dayjs';
+import { ServiceDetail } from "@/models/service.model";
+import { User } from "@/models/user.model";
 
 const { Title } = Typography;
 
-const getDateForDayOfWeek = (dayOfWeek: number) => {
-    const today = dayjs();
-    const currentDayOfWeek = today.day(); // Sunday = 0, Monday = 1, etc.
-    const targetDayOfWeek = (dayOfWeek === 8 ? 0 : dayOfWeek - 1); // Adjust for Sunday
-    const daysDiff = targetDayOfWeek - currentDayOfWeek;
+// const getDateForDayOfWeek = (dayOfWeek: number) => {
+//     const today = dayjs();
+//     const currentDayOfWeek = today.day(); // Sunday = 0, Monday = 1, etc.
+//     const targetDayOfWeek = (dayOfWeek === 8 ? 0 : dayOfWeek - 1); // Adjust for Sunday
+//     const daysDiff = targetDayOfWeek - currentDayOfWeek;
 
-    return today.add(daysDiff, 'day').format('DD/MM/YYYY');
-};
+//     return today.add(daysDiff, 'day').format('DD/MM/YYYY');
+// };
 
 const CustomerBookingPage = () => {
     const { clinic_id } = useParams<{ clinic_id: string }>();
     const [clinic, setClinic] = useState<Clinic>();
     const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const [accountIdDoctor, setAccountIdDoctor] = useState<number>(0);
     const [doctorIdSelected, setDoctorIdSelected] = useState<number>(0);
     const [workingTimeA, setWorkingTimeA] = useState<WorkingTime[]>([]);
     const [workingTimeB, setWorkingTimeB] = useState<WorkingTime[]>([]);
     const [workingDayOfWeek, setWorkingDayOfWeek] = useState<number>(0);
     const [service, setService] = useState<string>('');
-    const [services, setServices] = useState<string[]>([]);
-    const [slotChecked, setSlotChecked] = useState<boolean>(false);
+    const [services, setServices] = useState<ServiceDetail[]>([]);
+    const [slotChecked, setSlotChecked] = useState<number>(0);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
+    const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
 
+    const user = localStorage.getItem("user");
+    const userData: User = JSON.parse(user)
+    const customerId = userData.Id;
     const handleSetDoctor = (value: string) => {
-        console.log(`selected ${value}`);
         setDoctorIdSelected(parseInt(value));
+        const selectedDoctor = doctors.find(doctor => doctor.id === parseInt(value));
+        if (selectedDoctor) {
+            const {id, account  } = selectedDoctor;
+            console.log("id: ",id)
+            console.log("account: ",account)
+            setAccountIdDoctor(account.id);
+            // Xử lý accountId và doctorId ở đây
+        }
     };
 
-    const handleChangeTime = (value: string) => {
-        console.log(`selected ${value}`);
-        setWorkingDayOfWeek(parseInt(value));
-    };
+    // const handleChangeTime = (value: {}) => {
+    //     setSlotTimeToBooking(parseInt(value.do));
+    // };
 
     const handleChangeService = (value: string) => {
-        console.log(`selected ${value}`);
         setService(value);
-
     };
 
+    const handleAddBooking = async () => {
+        console.log("slotChecked", slotChecked)
+        console.log("selectedDate", selectedDate.toISOString())
+        console.log("customerId", customerId)
+        console.log("clinic_id", clinic_id)
+        console.log("service", service)
+        console.log("doctorIdSelected", doctorIdSelected)
+        const res = await createBooking(slotChecked, 0, new Date(selectedDate.toISOString()), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
+        console.log("handleAddBooking: ", res);
+        if(res){
+            message.success("Đặt lịch thành công")
+        }
+    }
     useEffect(() => {
         if (clinic_id) {
             getAllDoctorsOfClinicFromCustomer();
             getClinicByIdFromCustomer();
             getAllServicesOfClinicFromCustomer();
         }
+    }, [clinic_id]);
+
+    useEffect(() => {
         if (doctorIdSelected) {
             getWorkingTimeDoctorByCustomer();
-            if (workingTimeA.length > 0) {
-                setWorkingTimeA(workingTimeA.filter(workingTime => workingTime.slot.slotTime))
-            }
         }
-        if (doctorIdSelected && workingDayOfWeek) {
+    }, [doctorIdSelected]);
+
+    useEffect(() => {
+        if (selectedDate && doctorIdSelected) {
+            const dayOfWeek = selectedDate.day();
+            setWorkingDayOfWeek(dayOfWeek);
             getWorkingTimeDoctorFromCustomer();
         }
-    }, [clinic_id, doctorIdSelected, workingDayOfWeek]);
+    }, [selectedDate, doctorIdSelected]);
 
     const getAllServicesOfClinicFromCustomer = async () => {
         const res = await getAllServicesOfClinic(parseInt(clinic_id));
         setServices(res);
-    }
+    };
+
     const getClinicByIdFromCustomer = async () => {
         const res = await getClinicById(parseInt(clinic_id));
         if (res) {
             setClinic(res);
         }
-        console.log("clinic: ", clinic);
     };
 
     const getWorkingTimeDoctorByCustomer = async () => {
-        console.log("doctorIdSelected: ", doctorIdSelected);
         const res = await getWorkingOfDoctor(doctorIdSelected);
-        console.log("getWorkingTimeDoctorByCustomer: ", res);
         if (res) {
             setWorkingTimeA(res);
         }
     };
 
     const getWorkingTimeDoctorFromCustomer = async () => {
-        const res = await getWorkingTimeDoctor(doctorIdSelected, workingDayOfWeek);
-        console.log("getWorkingTimeDoctorFromCustomer: ", res);
-        if (res) {
-            setWorkingTimeB(res);
+        if (selectedDate && doctorIdSelected) {
+            const res = await getWorkingTimeDoctor(doctorIdSelected, workingDayOfWeek);
+            console.log("doctorIdSelected: ", doctorIdSelected)
+            console.log("workingDayOfWeek: ", workingDayOfWeek)
+            if (res) {
+                setWorkingTimeB(res);
+            }
         }
     };
 
     const getAllDoctorsOfClinicFromCustomer = async () => {
         const res = await getAllDoctorByClinic(parseInt(clinic_id));
-        console.log("getAllDoctorsOfClinicFromCustomer: ", res);
         setDoctors(res);
     };
 
-    const handleSetSlotTime = (slotTime: number) => {
-        setSlotTimeToBooking(slotTime);
+    const handleDateChange = (date: dayjs.Dayjs | null) => {
+        setSelectedDate(date);
+        if (date && doctorIdSelected) {
+            const dayOfWeek = date.day();
+            setWorkingDayOfWeek(dayOfWeek);
+            getWorkingTimeDoctorFromCustomer();
+        }
+    };
+
+    const handleSetSlotTime = (workingTime: WorkingTime) => {
+        if (!isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek)) {
+            setSlotChecked(workingTime.slot.slotTime);
+            console.log("handleSetSlotTime", workingTime)
+        } else {
+            message.error("Slot Time Invalid!")
+        }
+
+    };
+
+    const disabledDate = (current: dayjs.Dayjs) => {
+        // Disable dates before today
+        return current && current < dayjs().startOf('day');
     };
 
     return (
@@ -126,8 +175,8 @@ const CustomerBookingPage = () => {
                                 defaultValue="Chọn chuyên khoa"
                                 className="w-full"
                                 onChange={handleChangeService}
-                                options={services.map(service => (
-                                    { label: service, value: service }
+                                options={services?.map(service => (
+                                    { label: service.services.name, value: service.id }
                                 ))}
                             />
                         </div>
@@ -138,19 +187,19 @@ const CustomerBookingPage = () => {
                                 className="w-full"
                                 onChange={handleSetDoctor}
                                 options={doctors?.map(doctor => (
-                                    { value: doctor.id.toString(), label: doctor.account.fullName }
+                                    { value: doctor.id, label: doctor.account.fullName }
                                 ))}
                             />
                         </div>
                         <div>
-                            <Title level={5}>Chọn thời gian</Title>
-                            <Select
-                                defaultValue={"Chọn thời gian"}
+                            <Title level={5}>Chọn ngày</Title>
+                            <DatePicker
                                 className="w-full"
-                                onChange={handleChangeTime}
-                                options={workingTimeA.map(workingTime => (
-                                    { value: workingTime.workingDayOfWeek.toString(), label: getDateForDayOfWeek(workingTime.workingDayOfWeek) }
-                                ))}
+                                onChange={handleDateChange}
+                                format="DD/MM/YYYY"
+                                disabledDate={disabledDate}
+                                placeholder={doctorIdSelected ? "Chọn Ngày" : "Chọn bác sĩ trước"}
+                                disabled={doctorIdSelected ? false : true}
                             />
                         </div>
                     </div>
@@ -163,22 +212,23 @@ const CustomerBookingPage = () => {
                         </Col>
                     </Row>
                     <div className="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-1">
-                        {workingTimeB.map(workingTime =>
-                        (
-                            <Card
-                                onClick={() => handleSetSlotTime(workingTime.slot.slotTime)}
-                                className={slotChecked ? "bg-yellow-500" : "bg-gray-200"}
-                                style={{ width: 150 }}
-                            >
-                                <div className="text-center">
-                                    {slotTime(workingTime.slot.slotTime)}
-                                </div>
-                            </Card>
-                        )
-                        )}
+                        {workingTimeB?.map(workingTime => (
+                            <div key={workingTime.id}>
+                                <Card
+                                    key={workingTime.id}
+                                    onClick={() => handleSetSlotTime(workingTime)}
+                                    className={` ${isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek) ? "bg-red-500" : (slotChecked === workingTime.slot.slotTime ? "bg-yellow-500 cursor-pointer" : "bg-gray-200 cursor-pointer")}`}
+                                    style={{ width: 150 }}
+                                >
+                                    <div className="text-center">
+                                        {slotTime(workingTime.slot.slotTime)}
+                                    </div>
+                                </Card>
+                            </div>
+                        ))}
                     </div>
                     <div className="text-center my-2">
-                        <Button type="primary">Đặt Ngay</Button>
+                        <Button onClick={handleAddBooking} type="primary">Đặt Ngay</Button>
                     </div>
                 </div>
             </div>
@@ -187,7 +237,7 @@ const CustomerBookingPage = () => {
             </div>
             <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mb-2">
                 {
-                    doctors.map(doctor => (
+                    doctors?.map(doctor => (
                         <div key={doctor.id}>
                             <Card style={{ width: 300 }}>
                                 <Row>

@@ -6,7 +6,8 @@ const Paths = {
    REGISTER: "/sign-up",
    DENTAL_HANDBOOK: "/dental-handbook",
    SPECIAL_PACKAGE:"/specialty",
-
+   // CUSTOMER
+   BOOKING_HISTORY: "booking-history",
    // CLINIC_OWNER
    REGISTER_CLINIC:"register-clinic",
    MANAGE_DOCTOR:"manage-doctor",
