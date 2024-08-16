@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@redux/auth/authSlice';
-import { RootState, AppDispatch } from '@redux/store/Store';
+import { RootState, AppDispatch } from '@redux/store/store';
 import { useNavigate, Link } from 'react-router-dom'; 
 import styles from './Login.module.css';
 import img1 from "@assets/home-img/logo.jpg";
@@ -15,7 +15,7 @@ const Login: React.FC = () => {
   const [popupMessage, setPopupMessage] = useState('');
   const dispatch = useDispatch<AppDispatch>(); 
   const authError = useSelector((state: RootState) => state.auth.error);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

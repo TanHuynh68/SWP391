@@ -1,30 +1,37 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./PopUpProfile.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa6";
-// import { deleteCookie } from "@/service/cookies";
-// import { getCookie } from "@/service/cookies";
-import type { RootState } from "@redux/store/Store";
+import type { RootState } from "@redux/store/store";
+import { logout } from '@redux/auth/logoutSlice';
 
-export const ProfilePopUp = () => {
+export const ProfilePopUp: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.profile.user);
-//   const token = getCookie("token");
+  const token = localStorage.getItem('token'); // Lấy token từ localStorage
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
+
   const handleSignOut = () => {
-    // deleteCookie("token");
-    navigate("/login");
+    dispatch(logout()); // Thực hiện hành động logout
+    navigate("/login"); // Điều hướng đến trang đăng nhập
   };
 
   return (
     <div className={styles.profiledropdown}>
       <div onClick={handleOpen} className={styles.opts_account}>
-        <div className={styles.avtpopup}>{(profile && <img src={profile.avatar} />) || <img src="https://i.pinimg.com/564x/d0/7b/a6/d07ba6dcf05fa86c0a61855bc722cb7a.jpg" />} </div>
+        <div className={styles.avtpopup}>
+          {profile ? (
+            <img src={profile.avatar} alt="User Avatar" />
+          ) : (
+            <img src="https://i.pinimg.com/564x/d0/7b/a6/d07ba6dcf05fa86c0a61855bc722cb7a.jpg" alt="Default Avatar" />
+          )}
+        </div>
         {isOpen && (
           <div className={styles.dropdown_menu} style={{ position: "absolute" }}>
             <div className={styles.channel_my}>
@@ -34,16 +41,14 @@ export const ProfilePopUp = () => {
                     <img src={profile.avatar} alt="User Avatar" />
                     <div className={styles.pd_content}>
                       <div className={styles.name3}>
-                        <div>
-                          <h6>{profile ? profile.name : "Guest"}</h6>
-                        </div>
+                        <h6>{profile.name}</h6>
                         <div className={styles.ver2} title="Verify" style={{ marginBottom: "12px" }}>
                           <i>
                             <FaCheck />
                           </i>
                         </div>
                       </div>
-                      <span>{profile ? profile.email : "Guest"}</span>
+                      <span>{profile.email}</span>
                     </div>
                   </>
                 ) : (
@@ -51,19 +56,17 @@ export const ProfilePopUp = () => {
                     <img src="https://i.pinimg.com/564x/d0/7b/a6/d07ba6dcf05fa86c0a61855bc722cb7a.jpg" alt="Default Avatar" />
                     <div className={styles.pd_content}>
                       <div className={styles.name3}>
-                        <div>
-                          <h6>Guest</h6>
-                        </div>
+                        <h6>Guest</h6>
                       </div>
                     </div>
                   </>
                 )}
               </div>
-              {profile ? (
+              {profile && (
                 <Link to="/instructor-profile" className={styles.dp_link_12}>
                   View My Profile
                 </Link>
-              ) : null}
+              )}
             </div>
             <div className={styles.night_mode_switch__btn}>
             </div>
@@ -76,15 +79,11 @@ export const ProfilePopUp = () => {
             <Link to="/send-feedback" className={styles.item}>
               Send Feedback
             </Link>
-            {/* {token ? (
+            {token && (
               <a onClick={handleSignOut} className={styles.item}>
-                Sign Out
+                Đăng Xuất
               </a>
-            ) : ( */}
-              <Link to="/login" className={styles.item}>
-                Login
-              </Link>
-            {/* )} */}
+            )}
           </div>
         )}
       </div>
