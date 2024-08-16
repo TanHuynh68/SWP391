@@ -5,16 +5,18 @@ import { AppDispatch, RootState } from '@redux/store/Store';
 import { registerUser } from '@redux/auth/registerSlice';
 import styles from './register.module.css';
 
-
-
 const SignUp: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState(''); // Thêm trường giới tính
+  const [phone, setPhone] = useState(''); // Thêm trường điện thoại
+  const [doB, setDob] = useState(''); // Thêm trường ngày sinh
+  const [address, setAddress] = useState(''); // Thêm trường địa chỉ
   const [showModal, setShowModal] = useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
   const { loading, error, success } = useSelector((state: RootState) => state.register);
 
   useEffect(() => {
@@ -22,15 +24,19 @@ const SignUp: React.FC = () => {
       setShowModal(true);
     }
     if (error) {
-      alert(`Registration failed: ${error}`);
+      alert('Registration failed: ' + error); // Sửa lỗi hiển thị alert
     }
   }, [success, error]);
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(registerUser({ fullName, email, password })).then((result: any) => {
-      console.log('Registration status:', result);
-    });
+    dispatch(registerUser({ fullName, email, password, gender, phone, doB, address }))
+      .then((result: any) => {
+        console.log('Registration status:', result);
+      })
+      .catch((error: any) => {
+        console.log('Registration error:', error);
+      });
   };
 
   const handleCloseModal = () => {
@@ -69,11 +75,37 @@ const SignUp: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <select className={styles.input}>
-            <option>Chọn vai trò của bạn</option>
-            <option>Khách Hàng</option>
-            <option>Nha Sĩ</option>
+          <select
+            className={styles.input}
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option value="">Chọn giới tính</option>
+            <option value="0">Nam</option>
+            <option value="1">Nữ</option>
+            <option value="2">Khác</option>
           </select>
+          <input
+            type="text"
+            placeholder="Số điện thoại"
+            className={styles.input}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <input
+            type="date"
+            placeholder="Ngày sinh"
+            className={styles.input}
+            value={doB}
+            onChange={(e) => setDob(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Địa chỉ"
+            className={styles.input}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
           <div className={styles.checkboxContainer}>
             <input type="checkbox" id="emailOptIn" />
             <label htmlFor="emailOptIn">Tôi muốn nhận email với các chương trình giảm giá hấp dẫn và các khuyến nghị được cá nhân hóa</label>
@@ -86,12 +118,10 @@ const SignUp: React.FC = () => {
         {success && <p className={styles.success}>Đăng ký thành công!</p>}
         <p>Bằng cách đăng ký, bạn đồng ý với chúng tôi <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>.</p>
         <p>Đã có tài khoản?
-          
           <Link to="/login" className={styles.login}>Log In</Link> 
-          </p>
+        </p>
       </div>
 
-      
       {showModal && (
         <div className={styles.modalBackdrop}>
           <div className={styles.modalContent}>

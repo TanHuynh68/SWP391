@@ -1,34 +1,16 @@
-import React, { useState } from 'react';
-import { useSpring, animated } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDoctors } from '@redux/Slice/doctorSlice';
+import { RootState, AppDispatch } from '@redux/store/Store';
 import styles from './Doctor.module.css';
-import { doctorData } from '@data/doctorData';
 
 const Doctor: React.FC = () => {
-  const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
-  const [props, set] = useSpring(() => ({
-    x: 0,
-  }));
+  const dispatch: AppDispatch = useDispatch();
+  const doctors = useSelector((state: RootState) => state.doctor.doctors);
 
-  const bind = useDrag(({ direction: [xDir], distance, cancel }) => {
-    if (distance > window.innerWidth / 4) cancel();
-
-    if (xDir < 0 && index < doctorData.length - 4) {
-      setIndex(index + 1);
-    } else if (xDir > 0 && index > 0) {
-      setIndex(index - 1);
-    }
-
-    set({
-      x: -index * (window.innerWidth / 4),
-    });
-  });
-
-  const handleAllPostsClick = () => {
-    navigate('/doctors');
-  };
+  useEffect(() => {
+    dispatch(fetchDoctors());
+  }, [dispatch]);
 
   const DoctorCard: React.FC<{ name: string; imageUrl: string }> = ({ name, imageUrl }) => (
     <div className={styles.doctorCard}>
@@ -41,16 +23,17 @@ const Doctor: React.FC = () => {
     <div className={styles.doctorContainer}>
       <div className={styles.head}>
         <h2>Nha sĩ nổi bật</h2>
-        <button onClick={handleAllPostsClick} className={styles.allPostsButton}>
+        <button className={styles.allPostsButton}>
+        {/* onClick={() => navigate('/doctors')} */}
           Tìm kiếm
         </button>
       </div>
       <div className={styles.carouselContainer}>
-        <animated.div {...bind()} className={styles.doctorList} style={{ x: props.x }}>
-          {doctorData.map((doctor, i) => (
-            <DoctorCard key={i} name={doctor.name} imageUrl={doctor.imageUrl} />
+        <div className={styles.doctorList}>
+          {doctors.map((doctor, i) => (
+            <DoctorCard key={i} name={doctor.account.fullName} imageUrl={doctor.image} />
           ))}
-        </animated.div>
+        </div>
       </div>
     </div>
   );

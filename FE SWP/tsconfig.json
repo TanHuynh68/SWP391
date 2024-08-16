@@ -30,15 +30,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   }
-   // "files": [],
-  // "references": [
-  // {
-  // "path": "./tsconfig.app.json"
-  // },
-  // {
-  // "path": "./tsconfig.node.json"
-  // }
-  // ]
 }
