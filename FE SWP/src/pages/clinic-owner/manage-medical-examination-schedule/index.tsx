@@ -11,7 +11,20 @@ const ManageMedicalExaminationSchedule = () => {
             <h1 className="font-bold text-2xl text-center">
                 Quản Lý Lịch Khám
             </h1>
-            <div className="grid grid-cols-2 gap-10 mt-10">
+            <div className="grid grid-cols-3 gap-10 mt-10">
+                <div>
+                    <Title level={5}>Chọn phòng khám</Title>
+                    <Select
+                        className="w-full"
+                        defaultValue="lucy"
+                        onChange={handleChange}
+                        options={[
+                            { value: 'jack', label: 'Jack' },
+                            { value: 'lucy', label: 'Lucy' },
+                            { value: 'Yiminghe', label: 'yiminghe' },
+                        ]}
+                    />
+                </div>
                 <div>
                     <Title level={5}>Chọn bác sĩ</Title>
                     <Select

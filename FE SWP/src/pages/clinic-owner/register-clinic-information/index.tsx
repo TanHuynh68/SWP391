@@ -131,27 +131,6 @@ const RegisterClinic = () => {
                                 options={options}
                             />
                         </Form.Item>
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="email" style={{ width: '100%' }} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Mật khẩu"
-                            name="password"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="password" style={{ width: '100%' }} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Nhập lại mật khẩu"
-                            name="confirmPassword"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Input type="password" style={{ width: '100%' }} />
-                        </Form.Item>
                         <Form.Item label="Hình ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
                             <Upload action="/upload.do" listType="picture-card">
                                 <button style={{ border: 0, background: 'none' }} type="button">
@@ -169,7 +148,7 @@ const RegisterClinic = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-                Đăng Ký Phòng Khám
+               Quản Lý Phòng Khám
             </h1>
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
@@ -177,7 +156,7 @@ const RegisterClinic = () => {
                 </Col>
                 <Col span={12}>
                     <Button type="primary" onClick={showModal} className=" float-right">
-                        Add new
+                        Đăng ký phòng khám
                     </Button>
                 </Col>
             </Row>

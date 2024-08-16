@@ -1,6 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Col, GetProps, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
 import { useState, } from "react";
+
 const ManageDoctor = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
@@ -53,7 +54,7 @@ const ManageDoctor = () => {
             dataIndex: 'gender',
             key: 'gender',
         },
-       
+
     ];
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
@@ -81,7 +82,9 @@ const ManageDoctor = () => {
     const normFile = (e: React.ChangeEvent<HTMLInputElement>): File[] => {
         return e.target.files ? Array.from(e.target.files) : [];
     };
-
+    const handleChange = (value: string) => {
+        console.log(`selected ${value}`);
+    };
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
@@ -176,11 +179,26 @@ const ManageDoctor = () => {
             <h1 className="font-bold text-2xl text-center">
                 Quản Lý Bác Sĩ
             </h1>
-            <Row gutter={10} className="my-10 flex justify-between">
-                <Col span={12}>
+            <Row gutter={10} className="my-10 ">
+                <Col span={8}>
                     <Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
                 </Col>
-                <Col span={12}>
+                <Col span={8}>
+                    <div>
+                        {/* <Title level={5}>Chọn phòng khám</Title> */}
+                        <Select
+                            className="w-full"
+                            defaultValue="Chọn Phòng Khám"
+                            onChange={handleChange}
+                            options={[
+                                { value: 'jack', label: 'Jack' },
+                                { value: 'lucy', label: 'Lucy' },
+                                { value: 'Yiminghe', label: 'yiminghe' },
+                            ]}
+                        />
+                    </div>
+                </Col>
+                <Col span={8}>
                     <Button type="primary" onClick={showModal} className=" float-right">
                         Add new
                     </Button>
