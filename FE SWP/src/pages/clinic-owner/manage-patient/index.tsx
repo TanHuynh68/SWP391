@@ -1,4 +1,4 @@
-import { Col, GetProps, Input, Row, Table } from "antd";
+import { GetProps, Input, Select, Table } from "antd";
 const ManagePatient = () => {
     const dataSource = [
         {
@@ -56,20 +56,33 @@ const ManagePatient = () => {
     ];
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
-
+    const handleChange = (value: string) => {
+        console.log(`selected ${value}`);
+    };
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
             <h1 className="font-bold text-2xl text-center">
                 Quản Lý Bệnh Nhân
             </h1>
-            <Row gutter={10} className="my-10 flex justify-between">
-                <Col span={12}>
+            <div  className="my-10 flex justify-between">
+                <div >
                     <Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
-                </Col>
-                <Col span={12}>
-                </Col>
-            </Row>
+                </div>
+                <div>
+                        {/* <Title level={5}>Chọn phòng khám</Title> */}
+                        <Select
+                            style={{ width: 200 }}
+                            defaultValue="Chọn Phòng Khám"
+                            onChange={handleChange}
+                            options={[
+                                { value: 'jack', label: 'Jack' },
+                                { value: 'lucy', label: 'Lucy' },
+                                { value: 'Yiminghe', label: 'yiminghe' },
+                            ]}
+                        />
+                    </div>
+            </div>
 
             <Table dataSource={dataSource} columns={columns} />
         </div>
