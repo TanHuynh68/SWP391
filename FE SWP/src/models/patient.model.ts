@@ -155,7 +155,7 @@ export class Role {
     bookingAddress: string;
     bookingName: string;
     result: string | null;
-    medicines: any[]; // Assuming medicines is an array of any type
+    medicines: Medicine[]; // Assuming medicines is an array of any type
   
     constructor(
         id: number = 0,
@@ -171,7 +171,7 @@ export class Role {
         bookingAddress: string = "",
         bookingName: string = "",
         result: string | null = null,
-        medicines: any[] = []
+        medicines: Medicine[] = []
     ) {
         this.id = id;
         this.status = status;
@@ -190,3 +190,9 @@ export class Role {
     }
   }
   
+export interface Medicine {
+    id: number;
+    name: string;
+    quantity: number;
+    detail: string;
+}

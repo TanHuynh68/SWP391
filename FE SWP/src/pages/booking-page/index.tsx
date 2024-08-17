@@ -29,6 +29,7 @@ const CustomerBookingPage = () => {
     const [service, setService] = useState<string>('');
     const [services, setServices] = useState<ServiceDetail[]>([]);
     const [slotChecked, setSlotChecked] = useState<number>(-1);
+    const [dayChecked, setDayChecked] = useState<dayjs.Dayjs| null>(null);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
    
@@ -149,9 +150,10 @@ const CustomerBookingPage = () => {
         }
     };
 
-    const handleSetSlotTime = (workingTime: WorkingTime) => {
-        if (!isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek)) {
+    const handleSetSlotTime = (workingTime: WorkingTime, selectedDate:dayjs.Dayjs) => {
+        if (!isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek, selectedDate)) {
             setSlotChecked(workingTime.slot.slotTime);
+            setDayChecked(selectedDate)
             console.log("handleSetSlotTime", workingTime)
         } else {
             message.error("Slot Time Invalid!")
@@ -225,8 +227,8 @@ const CustomerBookingPage = () => {
                             <div key={workingTime.id}>
                                 <Card
                                     key={workingTime.id}
-                                    onClick={() => handleSetSlotTime(workingTime)}
-                                    className={` ${isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek) ? "bg-red-500" : (slotChecked === workingTime.slot.slotTime ? "bg-yellow-500 cursor-pointer" : "bg-gray-200 cursor-pointer")}`}
+                                    onClick={() => handleSetSlotTime(workingTime, selectedDate)}
+                                    className={`${isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek, selectedDate) ? "bg-red-500" : (slotChecked === workingTime.slot.slotTime && dayChecked === selectedDate ? "bg-yellow-500 cursor-pointer" : "bg-gray-200 cursor-pointer")}`}
                                     style={{ width: 150 }}
                                 >
                                     <div className="text-center">
