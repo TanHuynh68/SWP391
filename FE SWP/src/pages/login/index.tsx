@@ -20,7 +20,11 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const resultAction = await dispatch(login({ email, password }));
+   
     const decodeToken = decodeJWT(resultAction.payload + "");
+    if(!decodeToken){
+      message.error("Authentication Failed")
+    }
     if (decodeToken.role === "CUSTOMER" ||decodeToken.role === "CLINICOWNER") {
       console.log("decodeToken: ", decodeToken)
       localStorage.setItem("token", resultAction.payload + "");

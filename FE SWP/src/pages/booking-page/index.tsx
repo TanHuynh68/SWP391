@@ -11,18 +11,12 @@ import { useParams } from "react-router-dom";
 import dayjs from 'dayjs';
 import { ServiceDetail } from "@/models/service.model";
 import { User } from "@/models/user.model";
-
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 const { Title } = Typography;
 
-// const getDateForDayOfWeek = (dayOfWeek: number) => {
-//     const today = dayjs();
-//     const currentDayOfWeek = today.day(); // Sunday = 0, Monday = 1, etc.
-//     const targetDayOfWeek = (dayOfWeek === 8 ? 0 : dayOfWeek - 1); // Adjust for Sunday
-//     const daysDiff = targetDayOfWeek - currentDayOfWeek;
-
-//     return today.add(daysDiff, 'day').format('DD/MM/YYYY');
-// };
-
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const CustomerBookingPage = () => {
     const { clinic_id } = useParams<{ clinic_id: string }>();
     const [clinic, setClinic] = useState<Clinic>();
@@ -34,10 +28,10 @@ const CustomerBookingPage = () => {
     const [workingDayOfWeek, setWorkingDayOfWeek] = useState<number>(0);
     const [service, setService] = useState<string>('');
     const [services, setServices] = useState<ServiceDetail[]>([]);
-    const [slotChecked, setSlotChecked] = useState<number>(0);
+    const [slotChecked, setSlotChecked] = useState<number>(-1);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-
+   
     const user = localStorage.getItem("user");
     const userData: User = JSON.parse(user)
     const customerId = userData.Id;
@@ -45,9 +39,9 @@ const CustomerBookingPage = () => {
         setDoctorIdSelected(parseInt(value));
         const selectedDoctor = doctors.find(doctor => doctor.id === parseInt(value));
         if (selectedDoctor) {
-            const {id, account  } = selectedDoctor;
-            console.log("id: ",id)
-            console.log("account: ",account)
+            const { id, account } = selectedDoctor;
+            console.log("id: ", id)
+            console.log("account: ", account)
             setAccountIdDoctor(account.id);
             // Xử lý accountId và doctorId ở đây
         }
@@ -63,14 +57,28 @@ const CustomerBookingPage = () => {
 
     const handleAddBooking = async () => {
         console.log("slotChecked", slotChecked)
-        console.log("selectedDate", selectedDate.toISOString())
+        console.log("selectedDate", selectedDate?.toISOString())
         console.log("customerId", customerId)
         console.log("clinic_id", clinic_id)
         console.log("service", service)
         console.log("doctorIdSelected", doctorIdSelected)
-        const res = await createBooking(slotChecked, 0, new Date(selectedDate.toISOString()), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
+         if (!service) {
+            return message.error("Hãy chọn chuyên khoa")
+        } 
+        else if (!doctorIdSelected) {
+            return message.error("Hãy chọn bác sĩ")
+        }
+        else if (!selectedDate) {
+            return message.error("Hãy chọn ngày")
+        }
+        else if (slotChecked === -1) {
+            return message.error("Hãy chọn slot")
+        }
+        const vnTimePlusOneDay = selectedDate.tz("Asia/Ho_Chi_Minh").add(1, 'day').format('YYYY-MM-DDTHH:mm:ss');
+
+        const res = await createBooking(slotChecked, 0, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
         console.log("handleAddBooking: ", res);
-        if(res){
+        if (res) {
             message.success("Đặt lịch thành công")
         }
     }
@@ -118,8 +126,9 @@ const CustomerBookingPage = () => {
     const getWorkingTimeDoctorFromCustomer = async () => {
         if (selectedDate && doctorIdSelected) {
             const res = await getWorkingTimeDoctor(doctorIdSelected, workingDayOfWeek);
-            console.log("doctorIdSelected: ", doctorIdSelected)
-            console.log("workingDayOfWeek: ", workingDayOfWeek)
+            // console.log("doctorIdSelected: ", doctorIdSelected)
+            // console.log("workingDayOfWeek: ", workingDayOfWeek)
+            console.log("getWorkingTimeDoctorFromCustomer: ", res)
             if (res) {
                 setWorkingTimeB(res);
             }
@@ -136,7 +145,7 @@ const CustomerBookingPage = () => {
         if (date && doctorIdSelected) {
             const dayOfWeek = date.day();
             setWorkingDayOfWeek(dayOfWeek);
-            getWorkingTimeDoctorFromCustomer();
+            // getWorkingTimeDoctorFromCustomer();
         }
     };
 
@@ -170,7 +179,7 @@ const CustomerBookingPage = () => {
                     </div>
                     <div className="grid grid-cols-3 gap-10 my-3">
                         <div>
-                            <Title level={5}>Chọn chuyên khoa</Title>
+                            <Title level={5}>Chọn chuyên khoa<span className="text-red-500"> *</span></Title>
                             <Select
                                 defaultValue="Chọn chuyên khoa"
                                 className="w-full"
@@ -181,7 +190,7 @@ const CustomerBookingPage = () => {
                             />
                         </div>
                         <div>
-                            <Title level={5}>Chọn Bác Sĩ</Title>
+                            <Title level={5}>Chọn Bác Sĩ<span className="text-red-500"> *</span></Title>
                             <Select
                                 defaultValue="Chọn bác sĩ"
                                 className="w-full"
@@ -191,8 +200,8 @@ const CustomerBookingPage = () => {
                                 ))}
                             />
                         </div>
-                        <div>
-                            <Title level={5}>Chọn ngày</Title>
+                        <div >
+                            <Title level={5}>Chọn ngày<span className="text-red-500"> *</span></Title>
                             <DatePicker
                                 className="w-full"
                                 onChange={handleDateChange}
@@ -208,7 +217,7 @@ const CustomerBookingPage = () => {
                             <CalendarOutlined />
                         </Col>
                         <Col span={23}>
-                            <p>LỊCH KHÁM</p>
+                            <p>LỊCH KHÁM <span className="text-red-500"> *</span> <span className="text-gray-300">(chọn bác sĩ và ngày trước)</span></p>
                         </Col>
                     </Row>
                     <div className="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-1">
@@ -228,7 +237,7 @@ const CustomerBookingPage = () => {
                         ))}
                     </div>
                     <div className="text-center my-2">
-                        <Button onClick={handleAddBooking} type="primary">Đặt Ngay</Button>
+                        <Button htmlType="submit" onClick={handleAddBooking} type="primary">Đặt Ngay</Button>
                     </div>
                 </div>
             </div>
