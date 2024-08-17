@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDoctors } from '@redux/Slice/doctorSlice';
-import { RootState, AppDispatch } from '@redux/store/Store';
+import { RootState, AppDispatch } from '@redux/store/store';
 import styles from './Doctor.module.css';
 
 const Doctor: React.FC = () => {

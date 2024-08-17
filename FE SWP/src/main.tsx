@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
-import store from '@redux/store/Store.tsx'; 
+import store from '@redux/store/store.tsx'; 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HelmetProvider>

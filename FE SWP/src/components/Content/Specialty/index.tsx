@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@redux/store/Store';
+import { AppDispatch, RootState } from '@redux/store/store';
 import { fetchSpecialties } from '@redux/Slice/specialtySlice';
 import styles from './Specialty.module.css';
 
