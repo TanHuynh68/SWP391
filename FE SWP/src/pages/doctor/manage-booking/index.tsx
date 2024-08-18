@@ -1,7 +1,7 @@
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
 import { Booking, Customer, Medicine } from "@/models/booking.model";
 import { User } from "@/models/user.model";
-import { editResult, getAllBooking } from "@/services/doctor.service";
+import { cancelBooking, editResult, getAllBooking } from "@/services/doctor.service";
 import { Button, Form, Image, Input, Modal, Table, Tag } from "antd";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -63,9 +63,16 @@ const ManageBooking = () => {
     const getAllBookingByDoctor = async () => {
         const res = await getAllBooking(doctorId);
         if (res) {
-            setBookings(res);
+            console.log("getAllBookingByDoctor: ", res);
+
+            // Sắp xếp các booking theo thời gian mới nhất
+            const sortedBookings = res.sort((a, b) => {
+                return new Date(b.createAt).getTime() - new Date(a.createAt).getTime();
+            });
+            setBookings(sortedBookings);
         }
-    }
+    };
+
 
     const columnsMedicine = [
         {
@@ -75,8 +82,8 @@ const ManageBooking = () => {
         },
         {
             title: 'Số lượng',
-            dataIndex: 'quantity',
-            key: 'quantity',
+            dataIndex: 'quatity',
+            key: 'quatity',
         },
         {
             title: 'Chi tiết',
@@ -85,6 +92,13 @@ const ManageBooking = () => {
         },
     ];
 
+    const handleCancelBooking = async (id: number) => {
+        const res = await cancelBooking(id);
+        if (res) {
+            console.log("res: ", res);
+            getAllBookingByDoctor();
+        }
+    }
     const columns = [
         {
             title: 'Tên bệnh nhân',
@@ -141,21 +155,33 @@ const ManageBooking = () => {
                                 :
                                 <div className="flex justify-between">
                                     Không có đơn thuốc
-                                   { record.status === 1&&  <Button onClick={() => showModalEditMedicines(record.id)} type="primary" >Kê đơn</Button>}
+                                    {record.status === 1 && <Button onClick={() => showModalEditMedicines(record.id)} type="primary" >Kê đơn</Button>}
                                 </div>
                         }
                     </>
             )
         },
+        {
+            title: 'Action',
+            render: (record: Booking) => (
+                record.status === 1 && <>
+                    <Button onClick={() => handleCancelBooking(record.id)} className="bg-red-500 m-2">
+                        Cancel
+                    </Button>
+                </>
+            )
+        },
     ];
 
-    const handleFinish =async (values: MedicineFormValues) => {
+    const handleFinish = async (values: MedicineFormValues) => {
         console.log("values array: ", values);
         const res = await editResult(bookingId, values, values.result)
-            if (res) {
-                console.log("res: ", res);
-            }
+        if (res) {
+            console.log("res: ", res);
+
+        }
         handleOk();
+        getAllBookingByDoctor();
     };
 
     const formItemLayout = {
@@ -171,6 +197,7 @@ const ManageBooking = () => {
 
     return (
         <>
+
             <Modal title="Kê đơn" footer="" open={isModalEditMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
                     <Form  {...formItemLayout} style={{ maxWidth: 600 }} onFinish={handleFinish}>
@@ -245,15 +272,16 @@ const ManageBooking = () => {
                 </div>
             </Modal>
             <Modal footer="" title="Đơn thuốc" open={isModalMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div> 
+                <div>
                     <p>Kết luận: {result}</p>
                     <Table
                         dataSource={medicines}
                         columns={columnsMedicine}
                         pagination={false}
-                    />             
+                    />
                 </div>
             </Modal>
+            <h1 className="text-center my-5">Quản lý đặt lịch</h1>
             <Table columns={columns} dataSource={bookings} />
         </>
     )
