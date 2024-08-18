@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
     else if (error.response && error.response.status === 404) {
       return console.log("404 - Not found")
     } else if (error.response && error.response.status === 500) {
-      return console.log("5000 - Internal server error")
+      return console.log("500 - Internal server error")
     }
     return Promise.reject(error);
   }

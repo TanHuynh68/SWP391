@@ -7,6 +7,7 @@ import styles from './Login.module.css';
 import img1 from "@assets/home-img/logo.jpg";
 import { decodeJWT } from '@/configs/decode-jwt';
 import { message } from 'antd';
+import { role } from '@/redux/hooks/usRedirect';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ const Login: React.FC = () => {
     if(!decodeToken){
       message.error("Authentication Failed")
     }
-    if (decodeToken.role === "CUSTOMER" ||decodeToken.role === "CLINICOWNER") {
+    if (decodeToken.role === "CUSTOMER" ||decodeToken.role === "CLINICOWNER" || decodeToken.role === "DOCTOR" ) {
       console.log("decodeToken: ", decodeToken)
       localStorage.setItem("token", resultAction.payload + "");
       localStorage.setItem("user", JSON.stringify(decodeToken));
@@ -35,13 +36,17 @@ const Login: React.FC = () => {
         setPopupMessage(authError || "Đăng nhập thất bại");
       }
       setShowPopup(true);
-    if(decodeToken.role === "CUSTOMER"){
+    if(decodeToken.role === role.CUSTOMER){
       navigate("/");
-    }else{
+    }else if(decodeToken.role === role.DOCTOR){
+      navigate("/doctor/manage-booking");
+    }
+    else{
       navigate("/clinic-owner/register-clinic");
     }
     } else {
-      message.error("You are not customer or clinic owner!")
+      message.error("You are Admin")
+      navigate("/admin/login");
     }
   };
 

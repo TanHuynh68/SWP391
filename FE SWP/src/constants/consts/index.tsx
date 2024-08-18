@@ -42,11 +42,11 @@ export const bookingStatus = (status: number) => {
 export const colorBookingStatus = (status: number) => {
     switch (status) {
         case 1:
-            return "red"
+            return "yellow"
         case 2:
             return "green"
         case 3:
-            return "purple"
+            return "red"
     }
 }
 export const isPastSlotTimeToday = (slot: number, workingDayOfWeek: number, selectedDate: dayjs.Dayjs) => {

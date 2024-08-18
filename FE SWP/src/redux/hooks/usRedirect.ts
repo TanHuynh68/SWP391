@@ -65,6 +65,11 @@ const useRedirect = () => {
                     navigate(paths.HOME);
                 }
                 break;
+                case role.DOCTOR:
+                if (!path.includes("doctor" || paths.LOGIN)) {
+                    navigate(paths.DOCTOR_MANAGE_BOOKING)
+                }
+                break;
             default:
                 navigate(paths.HOME);
         }

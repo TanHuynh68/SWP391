@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { paths } from "../constants";
 import {
-  AdminDashboard, AdminLogin, ChatWindow, CustomerBookingHistory, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
+  AdminDashboard, AdminLogin, CustomerBookingHistory, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageBooking, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
   NotFound,
   RegisterClinic
 } from "../pages";
@@ -35,9 +35,12 @@ const AppRouter: React.FC = () => {
         <Route path={paths.MANAGE_PATIENT} element={<ManagePatient />} />
         <Route path={paths.MANAGE_MEDICAL_EXAMINATION_SCHEDULE} element={<ManageMedicalExaminationSchedule/>} />
       </Route>
-      {/* Dentist */}
+      {/* Dentist
       <Route path="/dentist/*" element={<Dashboard />}>
         <Route path={paths.DENTIST_CHAT_WINDOW} element={<ChatWindow />} />
+      </Route> */}
+      <Route path="/doctor/*" element={canAccess([role.DOCTOR]) ? <Dashboard /> : <Navigate to={paths.HOME}/>}>
+        <Route path={paths.DOCTOR_MANAGE_BOOKING}  element={canAccess([role.DOCTOR]) ? <ManageBooking/> : <Navigate to={paths.HOME}/>} />
       </Route>
       {/* Admin */}
       <Route  path={"/admin/login"} element={<AdminLogin />} />
