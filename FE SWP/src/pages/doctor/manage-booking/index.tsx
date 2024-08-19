@@ -26,7 +26,7 @@ const ManageBooking = () => {
     const [result, setResult] = useState<string>('')
     const [bookings, setBookings] = useState<Booking[]>([])
     const [bookingId, setBookingId] = useState<number>(0)
-    const [bookingNeedToCancel, setBookingNeedToCancel] =  useState<Booking>();
+    const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Booking>();
     const showModalMedicines = (medicines: Medicine[], result: string) => {
         setMedicines(medicines);
         setResult(result);
@@ -34,9 +34,9 @@ const ManageBooking = () => {
     };
 
     const handleOk = () => {
+        setIsModalCustomerOpen(false);
         handleCancelBooking(bookingNeedToCancel.id)
         setIsModalMedicinesOpen(false)
-        setIsModalCustomerOpen(false);
         setIsModalEditMedicinesOpen(false)
         setIsModalCancelBooking(false)
     };
@@ -175,7 +175,7 @@ const ManageBooking = () => {
             title: 'Action',
             render: (record: Booking) => (
                 record.status === 1 && <>
-                    <Button onClick={()=>showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
+                    <Button onClick={() => showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
                         Huỷ đặt lịch
                     </Button>
                 </>
@@ -187,11 +187,10 @@ const ManageBooking = () => {
         console.log("values array: ", values);
         const res = await editResult(bookingId, values, values.result)
         if (res) {
-            console.log("res: ", res);
-
+            message.success("Kê đơn thuốc thành công")
+            console.log("res: ", res); 
+            getAllBookingByDoctor();
         }
-        handleOk();
-        getAllBookingByDoctor();
     };
 
     const formItemLayout = {
@@ -214,7 +213,7 @@ const ManageBooking = () => {
                         <Form.Item
                             label="Kết luận khám"
                             name="result"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập kết luận khám!' }]}
                         >
                             <Input.TextArea />
                         </Form.Item>
@@ -261,7 +260,7 @@ const ManageBooking = () => {
                             )}
                         </Form.List>
                         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                            <Button type="primary" htmlType="submit">
+                            <Button onClick={handleOk} type="primary" htmlType="submit">
                                 Submit
                             </Button>
                         </Form.Item>
@@ -291,9 +290,9 @@ const ManageBooking = () => {
                     />
                 </div>
             </Modal>
-            <Modal  title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                     <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
+                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
                 </div>
             </Modal>
             <h1 className="text-center my-5">Quản lý đặt lịch</h1>

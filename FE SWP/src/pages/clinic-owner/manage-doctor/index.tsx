@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, GetProps, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
+import { Button, Col, GetProps, Input, Modal, Row, Table, Form, Select, Upload, Switch } from "antd";
 import { useState, } from "react";
 
 const ManageDoctor = () => {
@@ -45,17 +45,29 @@ const ManageDoctor = () => {
             key: 'name',
         },
         {
-            title: 'Ngày Tháng Năm Sinh',
-            dataIndex: 'birthday',
-            key: 'birthday',
-        },
-        {
             title: 'Giới Tính',
             dataIndex: 'gender',
             key: 'gender',
         },
-
+        {
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: () => (
+                <>
+                    <Switch defaultChecked onChange={onChange} />
+                </>
+            )
+        },
     ];
+    const onChange = (checked: boolean) => {
+        console.log(`switch to ${checked}`);
+    };
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
 

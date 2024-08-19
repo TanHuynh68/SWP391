@@ -52,8 +52,11 @@ const CustomerBookingHistory = () => {
 
     const getPatientFromCustomer = async () => {
         const res = await getPatient(customerId);
+        const sortedBookings = res.sort((a, b) => {
+            return new Date(b.createAt).getTime() - new Date(a.createAt).getTime();
+        });
         if (res) {
-            setPatients(res);
+            setPatients(sortedBookings);
         }
     }
 
@@ -139,32 +142,32 @@ const CustomerBookingHistory = () => {
     // format(new Date(user.createdAt), "dd/MM/yyyy")
     return (
         <>
-            <Modal footer="" title="User Detail" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" title="Thông tin bác sĩ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <p>Full name: <span className="font-bold">{doctorInfo?.account.fullName}</span></p>
+                    <p>Tên bác sĩ: <span className="font-bold">{doctorInfo?.account.fullName}</span></p>
                     <p>Email: <span className="font-bold">{doctorInfo?.account.email}</span></p>
-                    <p>Gender: <span className="font-bold">{doctorInfo?.account.gender}</span></p>
-                    <p>Created At: <span className="font-bold">{doctorInfo?.account.createdAt ? format(new Date(doctorInfo.account.createdAt), "dd/MM/yyyy") : 'N/A'}</span></p>
-                    <p>Created At: <span className="font-bold">{doctorInfo?.account.updateAt ? format(new Date(doctorInfo.account.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
+                    <p>Giới tính: <span className="font-bold">{doctorInfo?.account.gender}</span></p>
+                    <p>Ngày tạo: <span className="font-bold">{doctorInfo?.account.createdAt ? format(new Date(doctorInfo.account.createdAt), "dd/MM/yyyy") : 'N/A'}</span></p>
+                    <p>Ngày chỉnh sửa: <span className="font-bold">{doctorInfo?.account.updateAt ? format(new Date(doctorInfo.account.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
                     <Image src={doctorInfo?.account?.image} />
                 </div>
             </Modal>
-            <Modal footer="" title="Clinic Detail" open={isModalClinicOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" title="Thông tin phòng khám" open={isModalClinicOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <p>Clinic name: <span className="font-bold">{clinicInfo?.clinics.name}</span></p>
-                    <p>Description: <span className="font-bold">{clinicInfo?.clinics.description}</span></p>
-                    <p>Address: <span className="font-bold">{clinicInfo?.clinics.address}</span></p>
-                    <p>Image: <Image src={clinicInfo?.clinics.image} /></p>
+                    <p>Tên phòng khám: <span className="font-bold">{clinicInfo?.clinics.name}</span></p>
+                    <p>Mô tả: <span className="font-bold">{clinicInfo?.clinics.description}</span></p>
+                    <p>Địa chỉ: <span className="font-bold">{clinicInfo?.clinics.address}</span></p>
+                    <p>Hình ảnh: <Image src={clinicInfo?.clinics.image} /></p>
                 </div>
             </Modal>
-            <Modal footer="" title="Chi tiết đơn thuốc" open={isModalMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" title="Thông tin đơn thuốc" open={isModalMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
                     <p>Kết Quả: <span className="font-bold">{result}</span></p>
                     <Table dataSource={medicines} columns={columnsMedicine} />
                 </div>
             </Modal>
             <div className="mt-10">
-                <h1 className="text-center my-10">Booking History</h1>
+                <h1 className="text-center my-10">Lich sử đặt lịch</h1>
                 <Table dataSource={patients} columns={columns} />
             </div>
         </>
