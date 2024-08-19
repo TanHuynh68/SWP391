@@ -23,6 +23,7 @@ import specialtyReducer from '../Slice/specialtySlice';
 import doctorReducer from '../Slice/doctorSlice'; 
 import logoutReducer from '../auth/logoutSlice'; 
 import clinicManagementReducer from '../Slice/clinicManagementSlice'; 
+import managePatientSlice from '../Slice/managePatientSlice';
 
 const store = configureStore({
   reducer: {
@@ -34,6 +35,7 @@ const store = configureStore({
     doctor: doctorReducer, 
     logout: logoutReducer,
     clinicManagement: clinicManagementReducer, 
+    managePatient: managePatientSlice
   },
 });
 
