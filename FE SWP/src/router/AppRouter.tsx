@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { paths } from "../constants";
 import {
-  AdminDashboard, AdminLogin, ChatWindow, CustomerBookingHistory, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
+  AdminDashboard, AdminLogin, ClinicPage, CustomerBookingHistory, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageBooking, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
   NotFound,
   RegisterClinic
 } from "../pages";
@@ -23,10 +23,12 @@ const AppRouter: React.FC = () => {
       <Route path={paths.LOGIN} element={<Login />} />
       <Route path={paths.REGISTER} element={<SignUp />} />
       <Route path={paths.HOME} element={<Home />} />
+      <Route path={paths.CLINIC_PAGE} element={<ClinicPage />} />
       {/* Customer */}
       <Route path="/customer/*" element={canAccess([role.CUSTOMER]) ? <CustomerLayout /> : <Navigate to={paths.HOME}/>}>
         <Route path={paths.BOOKING_PAGE} element={canAccess([role.CUSTOMER]) ? <CustomerBookingPage /> : <Navigate to={paths.HOME}/>} />
         <Route path={paths.BOOKING_HISTORY} element={canAccess([role.CUSTOMER]) ? <CustomerBookingHistory /> : <Navigate to={paths.HOME}/>} />
+        <Route path={paths.CUSTOMER_CLINIC_PAGE}element={canAccess([role.CUSTOMER]) ? <ClinicPage /> : <Navigate to={paths.HOME}/>} />
       </Route>
       {/* Clinic Owner */}
       <Route path="/clinic-owner/*" element={canAccess([role.CLINIC_OWNER]) ? <Dashboard /> : <Navigate to={paths.HOME}/>}>
@@ -34,10 +36,14 @@ const AppRouter: React.FC = () => {
         <Route path={paths.MANAGE_DOCTOR} element={<ManageDoctor />} />
         <Route path={paths.MANAGE_PATIENT} element={<ManagePatient />} />
         <Route path={paths.MANAGE_MEDICAL_EXAMINATION_SCHEDULE} element={<ManageMedicalExaminationSchedule/>} />
+        
       </Route>
-      {/* Dentist */}
+      {/* Dentist
       <Route path="/dentist/*" element={<Dashboard />}>
         <Route path={paths.DENTIST_CHAT_WINDOW} element={<ChatWindow />} />
+      </Route> */}
+      <Route path="/doctor/*" element={canAccess([role.DOCTOR]) ? <Dashboard /> : <Navigate to={paths.HOME}/>}>
+        <Route path={paths.DOCTOR_MANAGE_BOOKING}  element={canAccess([role.DOCTOR]) ? <ManageBooking/> : <Navigate to={paths.HOME}/>} />
       </Route>
       {/* Admin */}
       <Route  path={"/admin/login"} element={<AdminLogin />} />

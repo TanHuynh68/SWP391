@@ -1,14 +1,14 @@
 export class Role {
     id: number;
     name: string;
-  
+
     constructor(id: number = 0, name: string = "") {
         this.id = id;
         this.name = name;
     }
-  }
-  
-  export class Account {
+}
+
+export class Account {
     id: number;
     fullName: string;
     password: string;
@@ -18,8 +18,8 @@ export class Role {
     status: number;
     updateAt: string;
     createdAt: string;
-    role: Role;
-  
+    role: Role | null;
+
     constructor(
         id: number = 0,
         fullName: string = "",
@@ -30,7 +30,7 @@ export class Role {
         status: number = 2,
         updateAt: string = "",
         createdAt: string = "",
-        role: Role = new Role()
+        role: Role | null = null
     ) {
         this.id = id;
         this.fullName = fullName;
@@ -43,21 +43,21 @@ export class Role {
         this.createdAt = createdAt;
         this.role = role;
     }
-  }
-  
-  export class Slot {
+}
+
+export class Slot {
     id: number;
     status: number;
     slotTime: number;
-  
+
     constructor(id: number = 0, status: number = 0, slotTime: number = 0) {
         this.id = id;
         this.status = status;
         this.slotTime = slotTime;
     }
-  }
-  
-  export class Clinic {
+}
+
+export class Clinic {
     id: number;
     name: string;
     description: string | null;
@@ -68,7 +68,7 @@ export class Role {
     doctors: Doctor[];
     createAt: string;
     updateAt: string;
-  
+
     constructor(
         id: number = 0,
         name: string = "",
@@ -92,14 +92,14 @@ export class Role {
         this.createAt = createAt;
         this.updateAt = updateAt;
     }
-  }
-  
-  export class Doctor {
+}
+
+export class Doctor {
     id: number;
     description: string | null;
     account: Account;
     clinicsId: number;
-  
+
     constructor(
         id: number = 0,
         description: string | null = null,
@@ -111,37 +111,66 @@ export class Role {
         this.account = account;
         this.clinicsId = clinicsId;
     }
-  }
-  
-  export class ClinicsService {
+}
+
+export class ClinicsService {
     id: number;
-    clinics: Clinic;
+    clinics: Clinic | null;
     services: Service;
-  
+
     constructor(
         id: number = 0,
-        clinics: Clinic = new Clinic(),
+        clinics: Clinic | null = null,
         services: Service = new Service()
     ) {
         this.id = id;
         this.clinics = clinics;
         this.services = services;
     }
-  }
-  
-  export class Service {
+}
+
+export class Service {
     id: number;
     status: number;
     name: string;
-  
+
     constructor(id: number = 0, status: number = 2, name: string = "") {
         this.id = id;
         this.status = status;
         this.name = name;
     }
-  }
-  
-  export class Patient {
+}
+
+export class Customer {
+    id: number;
+    phone: string;
+    doB: string;
+    address: string;
+    account: Account;
+
+    constructor(
+        id: number = 0,
+        phone: string = "",
+        doB: string = "",
+        address: string = "",
+        account: Account = new Account()
+    ) {
+        this.id = id;
+        this.phone = phone;
+        this.doB = doB;
+        this.address = address;
+        this.account = account;
+    }
+}
+
+export interface Medicine {
+    id: number;
+    name: string;
+    quatity: number;
+    detail: string;
+}
+
+export class Booking {
     id: number;
     status: number;
     slot: Slot;
@@ -149,14 +178,14 @@ export class Role {
     createAt: string;
     updateAt: string;
     bookingDate: string;
-    customer: Account;
-    doctor: Doctor;
+    customer: Customer;
+    doctor: Doctor | null;
     clinicsService: ClinicsService;
     bookingAddress: string;
     bookingName: string;
     result: string | null;
-    medicines: Medicine[]; // Assuming medicines is an array of any type
-  
+    medicines: Medicine[];
+
     constructor(
         id: number = 0,
         status: number = 0,
@@ -165,8 +194,8 @@ export class Role {
         createAt: string = "",
         updateAt: string = "",
         bookingDate: string = "",
-        customer: Account = new Account(),
-        doctor: Doctor = new Doctor(),
+        customer: Customer = new Customer(),
+        doctor: Doctor | null = null,
         clinicsService: ClinicsService = new ClinicsService(),
         bookingAddress: string = "",
         bookingName: string = "",
@@ -188,11 +217,4 @@ export class Role {
         this.result = result;
         this.medicines = medicines;
     }
-  }
-  
-export interface Medicine {
-    id: number;
-    name: string;
-    quantity: number;
-    detail: string;
 }

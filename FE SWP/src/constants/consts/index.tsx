@@ -27,12 +27,31 @@ export const statusName = (status: number) => {
             return "Inactive"
     }
 }
-export const isPastSlotTimeToday = (slot: number, workingDayOfWeek: number) => {
-    const today = dayjs();
-    const currentDayOfWeek = today.day(); // Sunday = 0, Monday = 1, etc.
 
-    // Chỉ kiểm tra nếu workingDayOfWeek trùng với ngày hôm nay
-    if (currentDayOfWeek !== workingDayOfWeek) {
+export const bookingStatus = (status: number) => {
+    switch (status) {
+        case 1:
+            return "Booking"
+        case 2:
+            return "Completed"
+        case 3:
+            return "Canceled"
+    }
+}
+
+export const colorBookingStatus = (status: number) => {
+    switch (status) {
+        case 1:
+            return "yellow"
+        case 2:
+            return "green"
+        case 3:
+            return "red"
+    }
+}
+export const isPastSlotTimeToday = (slot: number, workingDayOfWeek: number, selectedDate: dayjs.Dayjs) => {
+    const today = dayjs();
+    if (today.format('YYYY-MM-DD') !== selectedDate?.format('YYYY-MM-DD') ) {
         return false;
     }
 

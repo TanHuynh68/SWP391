@@ -6,12 +6,13 @@ import logo from '@assets/home-img/logo.jpg';
 import Sidebar from '../Sidebar/index';
 import { ProfilePopUp } from '../PopUpProfile';
 import type { RootState } from '@redux/store/store';
+import { getUserDataFromLocalStorage } from '@/constants/consts';
 
 const Header: React.FC = () => {
     const [sidebarVisible, setSidebarVisible] = React.useState(false);
     const navigate = useNavigate();
     const token = useSelector((state: RootState) => state.auth.token); // Lấy token từ Redux store
-
+    const tokenFromLocalstorage = localStorage.getItem("token");
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
     };
@@ -53,14 +54,14 @@ const Header: React.FC = () => {
                         </ul>
                     </nav>
                     <div className={styles.actions}>
-                        {!token && (
+                        {!tokenFromLocalstorage && (
                             <>
                                 <button className={styles.loginButton} onClick={handleLoginClick}>Đăng Nhập</button>
                                 <button className={styles.signupButton} onClick={handleSignUpClick}>Đăng Ký</button>
                             </>
                         )}
                     </div>
-                    {token && (
+                    {tokenFromLocalstorage && (
                         <div className={styles.header_profile}>
                             <ProfilePopUp />
                         </div>

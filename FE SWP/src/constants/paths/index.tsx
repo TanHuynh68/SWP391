@@ -5,19 +5,25 @@ const Paths = {
    ABOUT: "/about",
    REGISTER: "/sign-up",
    DENTAL_HANDBOOK: "/dental-handbook",
-   SPECIAL_PACKAGE:"/specialty",
+   SPECIAL_PACKAGE: "/specialty",
+   CLINIC_PAGE: "/clinic",
    // CUSTOMER
    BOOKING_HISTORY: "booking-history",
+
    // CLINIC_OWNER
-   REGISTER_CLINIC:"register-clinic",
-   MANAGE_DOCTOR:"manage-doctor",
-   MANAGE_PATIENT:"manage-patient",
-   MANAGE_MEDICAL_EXAMINATION_SCHEDULE:"manage-medical-examination-schedule",
+   REGISTER_CLINIC: "register-clinic",
+   MANAGE_DOCTOR: "manage-doctor",
+   MANAGE_PATIENT: "manage-patient",
+   CUSTOMER_CLINIC_PAGE: "clinic",
+   MANAGE_MEDICAL_EXAMINATION_SCHEDULE: "manage-medical-examination-schedule",
 
    /* DENTIST PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",
    BOOKING_PAGE: "booking-page/:clinic_id",
+
+   //DOCTOR PATHS
+   DOCTOR_MANAGE_BOOKING: "manage-booking",
 
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",
