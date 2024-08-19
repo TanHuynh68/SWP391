@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
+import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, Switch } from "antd";
 import { useState } from "react";
 
 interface ClinicData {
@@ -11,7 +11,7 @@ interface ClinicData {
 
 const RegisterClinic = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form] = Form.useForm(); 
+    const [form] = Form.useForm();
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -24,7 +24,9 @@ const RegisterClinic = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
+    const onChange = (checked: boolean) => {
+        console.log(`switch to ${checked}`);
+    };
     const dataSource: ClinicData[] = [
         {
             key: '1',
@@ -55,6 +57,16 @@ const RegisterClinic = () => {
             title: 'Địa Chỉ',
             dataIndex: 'address',
             key: 'address',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'address',
+            key: 'address',
+            render: () => (
+                <>
+                    <Switch defaultChecked onChange={onChange} />
+                </>
+            )
         },
     ];
 
@@ -148,7 +160,7 @@ const RegisterClinic = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-               Quản Lý Phòng Khám
+                Quản Lý Phòng Khám
             </h1>
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>

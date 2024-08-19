@@ -70,14 +70,8 @@ export const ProfilePopUp: React.FC = () => {
             </div>
             <div className={styles.night_mode_switch__btn}>
             </div>
-            <Link to="/instructor-dashboard" className={styles.item}>
-              Cursus dashboard
-            </Link>
-            <Link to="/help" className={styles.item}>
-              Help
-            </Link>
-            <Link to="/send-feedback" className={styles.item}>
-              Send Feedback
+            <Link to="/customer/booking-history" className={styles.item}>
+             Lịch sử đặt lịch
             </Link>
             {token && (
               <a onClick={handleSignOut} className={styles.item}>
