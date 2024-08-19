@@ -1,11 +1,35 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@redux/*": ["src/redux/*"],
+      "@api/*": ["src/api/*"],
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"],
+      "@public/*": ["public/*"],
+      "@utils/*": ["src/utils/*"],
+      "@service/*": ["src/service/*"],
+      "@inteface/*": ["src/inferface/*"],
+      "@assets/*": ["src/assets/*"],
+      "@data/*": ["src/data/*"]
     },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+    "target": "ES5",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
 }

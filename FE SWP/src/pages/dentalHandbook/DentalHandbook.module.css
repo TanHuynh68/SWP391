@@ -1,0 +1,95 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.homeButton {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.homeButton:hover {
+    background-color: #005fa3;
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.imageContainer {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.image {
+    width: 260px;
+    height: 140p\px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.titleContainer {
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 18px;
+    color: #007acc;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.title:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.loadMore {
+    font-size: 16px;
+    color: #007acc;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid #007acc;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.loadMore:hover {
+    background-color: #007acc;
+    color: #ffffff;
+}

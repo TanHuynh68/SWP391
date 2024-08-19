@@ -1,0 +1,59 @@
+.sidebar {
+    position: fixed;
+    left: -250px; 
+    width: 250px;
+    height: 100%;
+    background-color: #f8f9fa; /* Màu nền sáng hơn */
+    color: #333; /* Màu chữ đậm */
+    transition: left 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar.visible {
+    left: 0; 
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.nav {
+    flex-grow: 1;
+}
+
+.item {
+    display: block;
+    padding: 10px 0;
+    font-size: 18px;
+    color: #007bff; /* Màu xanh cho liên kết */
+    text-decoration: none;
+    border-bottom: 1px solid #ddd;
+}
+
+.item:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.social {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.socialIcon img {
+    width: 30px;
+    height: 30px;
+}

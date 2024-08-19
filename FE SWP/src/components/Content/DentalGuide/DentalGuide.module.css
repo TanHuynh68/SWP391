@@ -1,0 +1,67 @@
+.servicesContainer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5; 
+}
+
+h2 {
+  font-size: 26px; /* Đồng bộ với kích thước tiêu đề của Specialty */
+  margin-bottom: 20px;
+}
+
+.carouselContainer {
+  overflow: hidden;
+  width: 100%;
+}
+
+.servicesList {
+  display: flex;
+  will-change: transform;
+  transition: transform 0.3s ease-out;
+}
+
+.serviceCard {
+  min-width: 25%;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.icon {
+  width: 310px; 
+  height: 221px; 
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.serviceCard p {
+  font-size: 20px; /* Đồng bộ với kích thước chữ trong Specialty */
+  color: #333;
+}
+
+.allPostsButton {
+  margin-left: auto;
+  padding: 10px 20px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.allPostsButton:hover {
+  background-color: #ccc;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.serviceCard p a {
+  text-decoration: none; /* Loại bỏ gạch chân */
+  color: #333; /* Đặt màu văn bản thành màu đen hoặc một màu khác tùy chọn */
+}
+
+
+

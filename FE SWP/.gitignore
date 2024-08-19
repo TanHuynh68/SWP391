@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Make sure these files are not ignored
+!package-lock.json
+!package.json
