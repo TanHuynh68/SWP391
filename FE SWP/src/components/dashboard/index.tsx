@@ -52,6 +52,7 @@ const Dashboard: React.FC = () => {
         }else if(currentPath.startsWith('/doctor')) {
             setItems([
                 getItem('Quản lý đặt lịch', '/doctor/manage-booking', <DesktopOutlined />),
+                getItem('Lịch khám trong tuần', '/doctor/schedule-of-week', <DesktopOutlined />),
             ]);
         }
     };

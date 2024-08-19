@@ -28,7 +28,7 @@ const Paths = {
 
    //DOCTOR PATHS
    DOCTOR_MANAGE_BOOKING: "manage-booking",
-
+   DOCTOR_SCHEDULE_OF_WEEK: "schedule-of-week",
    /* ADMIN PATHS */
    ADMIN_LOGIN: "login",
    ADMIN_DASHBOARD: "dashboard",
