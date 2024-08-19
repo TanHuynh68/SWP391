@@ -4,11 +4,15 @@ const Paths = {
    LOGIN: "/login",
    ABOUT: "/about",
    REGISTER: "/sign-up",
-   DENTAL_HANDBOOK: "/dental-handbook",
-   SPECIAL_PACKAGE: "/specialty",
    CLINIC_PAGE: "/clinic",
+   
+
    // CUSTOMER
    BOOKING_HISTORY: "booking-history",
+
+   DENTAL_DETAILS: "dental-details",
+   DENTAL_HANDBOOK: "dental-handbook",
+   SPECIAL_PACKAGE: "specialty",
 
    // CLINIC_OWNER
    REGISTER_CLINIC: "register-clinic",
