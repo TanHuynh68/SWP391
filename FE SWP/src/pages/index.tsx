@@ -1,5 +1,5 @@
 export { default as Home } from './home'
-export { default as Dashboard } from '../components/Dashboard'
+export { default as Dashboard } from '../components/dashboard'
 export { default as CustomerLayout } from '../components/Customer-layout'
 export { default as Login } from './login'
 export { default as CustomerBookingPage } from './booking-page'
@@ -17,3 +17,4 @@ export { default as ManageMedicalExaminationSchedule } from './clinic-owner/mana
 export { default as ManageClinicOwner } from './admin/manage-clinic-owner'
 export { default as NotFound } from './status/status-404'
 export { default as InternalServerError } from './status/status-500'
+export { default as ClinicPage } from './clinic-page'

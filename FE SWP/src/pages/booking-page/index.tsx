@@ -168,18 +168,18 @@ const CustomerBookingPage = () => {
 
     return (
         <div>
-            <div className="grid md:grid-cols-2 gap-20 pt-20">
+            <div className="pt-20">
                 <div>
-                    <div className="grid md:grid-cols-2">
-                        <div>
+                    <Row gutter={10} className="">
+                        <Col span={6}>
                             <Image width={200} src={clinic?.image} />
-                        </div>
-                        <div className="mt-10">
+                        </Col>
+                        <Col span={18} className="mt-10">
                             <div><p className="m-0">{clinic?.name}</p></div>
                             <div>{clinic?.address}</div>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-10 my-3">
+                        </Col>
+                    </Row>
+                    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 my-3">
                         <div>
                             <Title level={5}>Chọn chuyên khoa<span className="text-red-500"> *</span></Title>
                             <Select

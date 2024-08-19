@@ -2,7 +2,7 @@ import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "
 import { Booking, Customer, Medicine } from "@/models/booking.model";
 import { User } from "@/models/user.model";
 import { cancelBooking, editResult, getAllBooking } from "@/services/doctor.service";
-import { Button, Form, Image, Input, Modal, Table, Tag } from "antd";
+import { Button, Form, Image, Input, message, Modal, Table, Tag } from "antd";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
@@ -17,6 +17,7 @@ export interface MedicineFormValues {
 }
 
 const ManageBooking = () => {
+    const [isModalCancelBooking, setIsModalCancelBooking] = useState(false);
     const [isModalEditMedicinesOpen, setIsModalEditMedicinesOpen] = useState(false);
     const [isModalCustomerOpen, setIsModalCustomerOpen] = useState(false);
     const [isModalMedicinesOpen, setIsModalMedicinesOpen] = useState(false);
@@ -25,6 +26,7 @@ const ManageBooking = () => {
     const [result, setResult] = useState<string>('')
     const [bookings, setBookings] = useState<Booking[]>([])
     const [bookingId, setBookingId] = useState<number>(0)
+    const [bookingNeedToCancel, setBookingNeedToCancel] =  useState<Booking>();
     const showModalMedicines = (medicines: Medicine[], result: string) => {
         setMedicines(medicines);
         setResult(result);
@@ -32,15 +34,18 @@ const ManageBooking = () => {
     };
 
     const handleOk = () => {
+        handleCancelBooking(bookingNeedToCancel.id)
         setIsModalMedicinesOpen(false)
         setIsModalCustomerOpen(false);
         setIsModalEditMedicinesOpen(false)
+        setIsModalCancelBooking(false)
     };
 
     const handleCancel = () => {
         setIsModalMedicinesOpen(false)
         setIsModalCustomerOpen(false);
         setIsModalEditMedicinesOpen(false)
+        setIsModalCancelBooking(false)
     };
 
     const showModalEditMedicines = (id: number) => {
@@ -53,6 +58,10 @@ const ManageBooking = () => {
         setIsModalCustomerOpen(true);
     };
 
+    const showModalCanlcelBooking = (booking: Booking) => {
+        setBookingNeedToCancel(booking);
+        setIsModalCancelBooking(true)
+    };
     const userData: User = getUserDataFromLocalStorage();
     const doctorId = userData.Id;
 
@@ -96,6 +105,7 @@ const ManageBooking = () => {
         const res = await cancelBooking(id);
         if (res) {
             console.log("res: ", res);
+            message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
             getAllBookingByDoctor();
         }
     }
@@ -165,8 +175,8 @@ const ManageBooking = () => {
             title: 'Action',
             render: (record: Booking) => (
                 record.status === 1 && <>
-                    <Button onClick={() => handleCancelBooking(record.id)} className="bg-red-500 m-2">
-                        Cancel
+                    <Button onClick={()=>showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
+                        Huỷ đặt lịch
                     </Button>
                 </>
             )
@@ -279,6 +289,11 @@ const ManageBooking = () => {
                         columns={columnsMedicine}
                         pagination={false}
                     />
+                </div>
+            </Modal>
+            <Modal  title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
+                <div>
+                     <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
                 </div>
             </Modal>
             <h1 className="text-center my-5">Quản lý đặt lịch</h1>
