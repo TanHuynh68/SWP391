@@ -1,14 +1,15 @@
 import { Clinic } from "@/models/clinic.model";
-import { getAllClinic, getClinicByName, searchUser } from "@/services/admin.service";
-import { Button, Col, GetProps, Image, Modal, Row, Switch, Table, Tag } from "antd";
+import { deleteClinicPending, getAllClinic, getAllClinicPending, getClinicByName, updateClinicStatusActiveOrInactive, updateClinicStatusPendingToActive } from "@/services/admin.service";
+import { Button, Col, GetProps, Image, message, Modal, Row, Switch, Table, Tabs, TabsProps, Tag } from "antd";
 import Input from "antd/es/input";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
-
 const ManageClinic = () => {
     const [clinics, setClinics] = useState<Clinic[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [keyword, setKeyword] = useState<string>('');
+    const [statusToFilter, setStatusToFilter] = useState<number>(1);
     const [clinic, setClinic] = useState<Clinic>();
     const showModal = (clinic: Clinic) => {
         setClinic(clinic);
@@ -24,8 +25,13 @@ const ManageClinic = () => {
     };
 
     useEffect(() => {
-        getAllClinicFromAdmin();
-    }, [])
+        if (statusToFilter === 1) {
+            getAllClinicActiveAndInactiveFromAdmin();
+        } else {
+            getAllClinicPending();
+        }
+    }, [statusToFilter])
+
     const statusName = (status: number) => {
         switch (status) {
             case 1:
@@ -36,8 +42,16 @@ const ManageClinic = () => {
                 return "Inactive"
         }
     }
-    const getAllClinicFromAdmin = async () => {
+    const getAllClinicActiveAndInactiveFromAdmin = async () => {
         const res = await getAllClinic();
+        if (res) {
+            console.log("res: ", res)
+            setClinics(res);
+        }
+    }
+
+    const getAllClinicPendingFromAdmin = async () => {
+        const res = await getAllClinicPending();
         if (res) {
             console.log("res: ", res)
             setClinics(res);
@@ -50,7 +64,7 @@ const ManageClinic = () => {
             case 2:
                 return "Active"
             case 3:
-             return "Inactive"
+                return "Inactive"
         }
     }
     const statusColor = (status: number) => {
@@ -63,24 +77,69 @@ const ManageClinic = () => {
                 return "purple"
         }
     }
+
+    const onChangeStatus =async (record: Clinic) => {
+        console.log("record: ",record)
+        const res = await updateClinicStatusActiveOrInactive(record.id);
+        console.log("onChangeStatus: ",res)
+        message.success("Cập nhật trạng thái thành công!")
+        getAllClinicActiveAndInactiveFromAdmin();
+    };
+
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             render: (name: string, record: Clinic) => (
-                <div onClick={()=>showModal(record)} className="cursor-pointer text-blue-500">
+                <div onClick={() => showModal(record)} className="cursor-pointer text-blue-500">
                     {name}
                 </div>
             )
         },
         {
-            title: 'Address',
+            title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: number, record:Clinic) => (
+                <div className="flex justify-between">
+                    <Tag color={statusColor(status)}>
+                        {statusName(status)}
+                    </Tag>
+                    <Switch checked={status === 2 ? true : false} onChange={()=>onChangeStatus(record)} />
+                </div>
+            )
+        },
+        {
+            title: 'Chủ phòng khám',
+            dataIndex: ['owner', 'fullName'], // Assuming owner is an object with a fullName property
+            key: 'owner',
+        },
+    ];
+
+    const columnsClinicPending = [
+        {
+            title: 'Tên',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name: string, record: Clinic) => (
+                <div onClick={() => showModal(record)} className="cursor-pointer text-blue-500">
+                    {name}
+                </div>
+            )
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (status: number) => (
@@ -92,67 +151,125 @@ const ManageClinic = () => {
             )
         },
         {
-            title: 'Owner',
+            title: 'Chủ phòng khám',
             dataIndex: ['owner', 'fullName'], // Assuming owner is an object with a fullName property
             key: 'owner',
         },
-        // {
-        //     title: 'Action',
-        //     render: (record:Clinic) => (
-        //         record.status===1&&<Row>
-        //                 <Col span={12}>
-        //                     <Button className="bg-blue-500">
-        //                         Accept
-        //                     </Button>
-        //                 </Col>
-        //                 <Col span={12}>
-        //                     <Button className="bg-red-500">
-        //                         Reject
-        //                     </Button>
-        //                 </Col>
-        //             </Row>
-        //     ),
-        // },
+        {
+            title: 'Hành động',
+            width: "15%",
+            render: (record: Clinic) => (
+                <>
+                    <Button onClick={() => handleAcceptClinic(record.id)} className="m-2" type="primary">
+                        Chấp nhận
+                    </Button>
+                    <Button onClick={() => handleRejectClinic(record.id)} className="m-2 bg-red-500">
+                        Từ chối
+                    </Button>
+                </>
+            )
+        },
     ];
 
     type SearchProps = GetProps<typeof Input.Search>;
     const { Search } = Input;
 
+    const onChange = (key: string) => {
+        setStatusToFilter(parseInt(key));
+        if (key === '1') {
+            getAllClinicActiveAndInactiveFromAdmin();
+        } else {
+            getAllClinicPendingFromAdmin();
+        }
+    };
 
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: 'Active and Inactive',
+        },
+        {
+            key: '2',
+            label: 'Pending',
+        },
+    ];
 
-    const onSearch: SearchProps['onSearch'] = async(value) => {
+    const handleAcceptClinic = async (id: number) => {
+        const res = await updateClinicStatusPendingToActive(id);
+        if (res) {
+            message.success("Đã chấp nhận");
+        } else {
+            message.error("Chấp nhận thất bại");
+        }
+    }
+
+    const handleRejectClinic = async (id: number) => {
+        const res = await deleteClinicPending(id);
+        if (res) {
+            message.success("Đã xóa");
+        } else {
+            message.error("Xóa thất bại");
+        }
+    }
+
+    const updateStatusActiveOrInactive = async (record: Clinic) => {
+        const res = await updateClinicStatusActiveOrInactive(record.id);
+        if (res) {
+            message.success(`Cập nhật trạng thái thành công!`)
+        } else {
+            message.error(`Cập nhật trạng thái thất bại!`)
+        }
+    }
+
+    const onSearch: SearchProps['onSearch'] = async (value) => {
         console.log("value: ", value)
-        const res =  await getClinicByName(value)
-        console.log("res: ",res)
+        setKeyword(value);
+        const res = await getClinicByName(value)
+        if (value != "") {
+            setClinics(res);
+        } else {
+            if (statusToFilter === 2) {
+                getAllClinicPending();
+            } else {
+                getAllClinicActiveAndInactiveFromAdmin();
+            }
+        }
+
+        console.log("res: ", res)
     };
     return (
         <div>
-            <Modal footer="" title="Clinic Detail" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" title="Thông tin phòng khám" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <p>Name: <span className="font-bold">{clinic?.name}</span></p>
-                    <p>Description: <span className="font-bold">{clinic?.description}</span></p>
-                    <p>Address: <span className="font-bold">{clinic?.address}</span></p>
-                    <p>Status: <span className="font-bold">{status(clinic?.status)}</span></p>
-                    <p>Owner: <span className="font-bold">{clinic?.owner?.fullName}</span></p>
-                    <p>Created At: <span className="font-bold">{clinic?.createAt ? format(new Date(clinic.createAt), "dd/MM/yyyy") : 'N/A'}</span></p>
-                    <p>Updated At: <span className="font-bold">{clinic?.updateAt ? format(new Date(clinic.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
+                    <p>Tên: <span className="font-bold">{clinic?.name}</span></p>
+                    <p>Mô tả: <span className="font-bold">{clinic?.description}</span></p>
+                    <p>Địa chỉ: <span className="font-bold">{clinic?.address}</span></p>
+                    <p>Trạng thái: <span className="font-bold">{status(clinic?.status)}</span></p>
+                    <p>Chủ phòng khám: <span className="font-bold">{clinic?.owner?.fullName}</span></p>
+                    <p>Ngày tạo: <span className="font-bold">{clinic?.createAt ? format(new Date(clinic.createAt), "dd/MM/yyyy") : 'N/A'}</span></p>
+                    <p>Ngày chỉnh sửa: <span className="font-bold">{clinic?.updateAt ? format(new Date(clinic.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
                     <Image src={clinic?.image} />
                 </div>
             </Modal>
 
             <h1 className="font-bold text-2xl text-center">
-                Manage Clinic
+                Quản lý phòng khám
             </h1>
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
-                    <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />
+                    <Search style={{ width: 300 }} placeholder="Nhập tên phòng khám" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={12}>
 
                 </Col>
             </Row>
-
-            <Table dataSource={clinics} columns={columns} />
+            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+            {
+                statusToFilter === 1 && <Table dataSource={clinics} columns={columns} />
+            }
+            {
+                statusToFilter === 2 && <Table dataSource={clinics} columns={columnsClinicPending} />
+            }
         </div>
     )
 }

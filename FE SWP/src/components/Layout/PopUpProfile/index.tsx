@@ -60,14 +60,14 @@ export const ProfilePopUp: React.FC = () => {
                     <img src="https://i.pinimg.com/564x/d0/7b/a6/d07ba6dcf05fa86c0a61855bc722cb7a.jpg" alt="Default Avatar" />
                     <div className={styles.pd_content}>
                       <div className={styles.name3}>
-                        <Row>
-                          <Col span={6}>
-                            {user?.fullName}
-                          </Col>
-                          <Col span={18}>
+                        <div>
+                          <div>
+                            {user?.given_name}
+                          </div>
+                          <div>
                             {user?.email}
-                          </Col>
-                        </Row>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </>
