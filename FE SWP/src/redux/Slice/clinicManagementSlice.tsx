@@ -12,19 +12,29 @@ const ownerId = userData?.Id;
 export const fetchClinics = createAsyncThunk(
   'clinicManagement/fetchClinics',
   async (_, { rejectWithValue }) => {
+    const tokenWithBearer = localStorage.getItem('token');
+    const token = tokenWithBearer?.replace('Bearer ', '');
+    const user = localStorage.getItem('user');
+    const userData = user ? JSON.parse(user) : null;
+    const ownerId = userData?.Id;
+
+    if (!ownerId || !token) {
+      return rejectWithValue('Owner ID or token is missing');
+    }
+
     try {
       const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllClinicsByOwnerId?ownerId=${ownerId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
       });
-      
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || 'An error occurred');
     }
   }
 );
+
 
 export const fetchDoctors = createAsyncThunk(
   'clinicManagement/fetchDoctors',

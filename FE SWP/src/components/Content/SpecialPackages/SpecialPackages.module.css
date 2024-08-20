@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-around;
     overflow: hidden;
-    padding: 20px;
     width: 100%; 
 }
 

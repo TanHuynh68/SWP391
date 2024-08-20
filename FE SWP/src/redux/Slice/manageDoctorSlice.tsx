@@ -1,3 +1,4 @@
+import { doctorData } from '@/data/doctorData';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -42,6 +43,24 @@ export const fetchPatients = createAsyncThunk(
     }
 );
 
+export const addDoctor = createAsyncThunk(
+    'manageDoctor/addDoctor',
+    async (newDoctor: any, {rejectWithValue}) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/ClinicOwner/addDoctor`, newDoctor,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || 'An error occurred');
+        }
+        
+    }
+)
+
+
 const manageDoctorSlice = createSlice({
     name: 'manageDoctor',
     initialState: {
@@ -74,6 +93,18 @@ const manageDoctorSlice = createSlice({
             .addCase(fetchPatients.rejected, (state, action) => {
                 state.error = action.payload;
                 state.loading = false;
+            })
+
+            .addCase(addDoctor.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addDoctor.fulfilled, (state, action) => {
+                state.loading = false;
+                state.patients.push(action.payload); 
+            })
+            .addCase(addDoctor.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     },
 });

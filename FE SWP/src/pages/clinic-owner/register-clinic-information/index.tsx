@@ -12,11 +12,16 @@ const RegisterClinic = () => {
     const dispatch: AppDispatch = useDispatch();
     const { clinics, loading, error } = useSelector((state: RootState) => state.registerClinic);
     const { services } = useSelector((state: RootState) => state.servicesRegisterClinic);
-
+   
     useEffect(() => {
-        dispatch(fetchAllClinics());
-        dispatch(fetchSevicesAllServices());
+        const token = localStorage.getItem('token');
+        if (token) {
+            dispatch(fetchAllClinics());
+            dispatch(fetchSevicesAllServices());
+        }
     }, [dispatch]);
+    
+    
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -31,11 +36,9 @@ const RegisterClinic = () => {
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-    
             const user = localStorage.getItem('user');
             const userData = user ? JSON.parse(user) : null;
             const ownerId = userData?.Id;
-    
             const clinicData = {
                 clinicName: values.name,
                 description: values.description,

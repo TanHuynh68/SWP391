@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { AppDispatch, RootState } from '@redux/store/Store';
+import { AppDispatch, RootState } from '@redux/store/store';
 import { registerUser } from '@redux/auth/registerSlice';
 import styles from './register.module.css';
 
@@ -81,9 +81,8 @@ const SignUp: React.FC = () => {
             onChange={(e) => setGender(e.target.value)}
           >
             <option value="">Chọn giới tính</option>
-            <option value="0">Nam</option>
-            <option value="1">Nữ</option>
-            <option value="2">Khác</option>
+            <option value="1">Nam</option>
+            <option value="2">Nữ</option>
           </select>
           <input
             type="text"
