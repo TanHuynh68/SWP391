@@ -58,6 +58,25 @@ export const fetchWorkingTimes = createAsyncThunk(
   }
 );
 
+export const addWorkingTime = createAsyncThunk(
+  'clinicManagement/addWorkingTime',
+  async (workingTimeData: { doctorId: number; workingDayOfWeek: number; slotId: number }[], { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/ClinicOwner/AddWorkingTimeForDoctor`, workingTimeData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'An error occurred');
+    }
+  }
+);
+
+
+
+
 const clinicManagementSlice = createSlice({
   name: 'clinicManagement',
   initialState: {
@@ -107,6 +126,18 @@ const clinicManagementSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchWorkingTimes.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+
+      .addCase(addWorkingTime.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addWorkingTime.fulfilled, (state, action) => {
+        state.loading = false;
+        // Handle success, e.g., show a message or update the state
+      })
+      .addCase(addWorkingTime.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
       });

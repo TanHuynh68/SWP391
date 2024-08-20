@@ -1,37 +1,45 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, GetProps, Input, Modal, Row, Table, Form, Select, Upload, Switch } from "antd";
-import { useState, } from "react";
+import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClinics, fetchPatients } from "@redux/Slice/manageDoctorSlice";
+import { RootState, AppDispatch } from "@redux/store/store";
 
 const ManageDoctor = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form] = Form.useForm(); // Sử dụng Form.useForm để quản lý trạng thái form
-    const showModal = () => {
-        setIsModalOpen(true);
+    const [selectedClinic, setSelectedClinic] = useState<number | null>(null);
+    const [form] = Form.useForm();
+    const dispatch: AppDispatch = useDispatch();
+    const { clinics, patients, loading, error } = useSelector((state: RootState) => state.manageDoctor);
+
+    const normFile = (e: any) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
     };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
+    useEffect(() => {
+        dispatch(fetchClinics());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedClinic !== null) {
+            dispatch(fetchPatients(selectedClinic));
+        }
+    }, [selectedClinic, dispatch]);
+
+    const showModal = () => {
+        setIsModalOpen(true);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const dataSource = [
-        {
-            key: '1',
-            no: '1',
-            name: "Trương Mỹ Lan",
-            birthday: '10/9/1978',
-            gender: "Nữ"
-        },
-        {
-            key: '2',
-            no: '1',
-            name: "Lê Thị Hồng Gấm",
-            birthday: '9/10/1975',
-            gender: "Nữ"
-        },
-    ];
+
+    const handleClinicChange = (value: number) => {
+        setSelectedClinic(value);
+    };
 
     const columns = [
         {
@@ -58,18 +66,22 @@ const ManageDoctor = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: () => (
+            render: (status: number) => (
                 <>
-                    <Switch defaultChecked onChange={onChange} />
+                    {status === 2 ? "Active" : "Unactive"}
                 </>
-            )
+            ),
         },
     ];
-    const onChange = (checked: boolean) => {
-        console.log(`switch to ${checked}`);
-    };
-    type SearchProps = GetProps<typeof Input.Search>;
-    const { Search } = Input;
+
+    const dataSource = patients.map((patient, index) => ({
+        key: patient.id,
+        no: index + 1,
+        name: patient.account.fullName,
+        gender: patient.account.gender === 0 ? "Nữ" : "Nam",
+        description: patient.account.email,
+        status: patient.account.status,
+    }));
 
     const formItemLayout = {
         labelCol: {
@@ -81,32 +93,17 @@ const ManageDoctor = () => {
             sm: { span: 14 },
         },
     };
-    // const options: SelectProps['options'] = [{ value: 'dentistry', label: 'Nha khoa' },
-    // { value: 'cardiology', label: 'Tim mạch' },
-    // { value: 'neurology', label: 'Thần kinh' },
-    // { value: 'orthopedics', label: 'Chấn thương chỉnh hình' },];
 
+    const onSearch = (value: string) => console.log(value);
 
-    // const handleChange = (value: string[]) => {
-    //     console.log(`selected ${value}`);
-    // };
-
-    const normFile = (e: React.ChangeEvent<HTMLInputElement>): File[] => {
-        return e.target.files ? Array.from(e.target.files) : [];
-    };
-    const handleChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
-            <Modal footer="" width={900} title="Đăng Ký Bác Sĩ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer="" width={900} title="Đăng Ký Bác Sĩ" open={isModalOpen} onCancel={handleCancel}>
                 <div className="flex justify-center">
                     <Form
-                        form={form} // Kết nối form với trạng thái
+                        form={form}
                         className="w-full"
                         {...formItemLayout}
-                        variant="filled"
                         style={{ maxWidth: 800 }}
                     >
                         <Form.Item
@@ -118,39 +115,25 @@ const ManageDoctor = () => {
                         </Form.Item>
                         <Form.Item
                             label="Ngày Tháng Năm Sinh"
-                            name="name"
+                            name="birthday"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
                             label="Giới Tính"
-                            name="name"
+                            name="gender"
                             rules={[{ required: true, message: 'Please input!' }]}
                         >
                             <Select
                                 defaultValue="Chọn Giới Tính"
                                 style={{ width: 151 }}
                                 options={[
-                                    { value: 'male', label: 'Male' },
-                                    { value: 'female', label: 'Female' },
+                                    { value: 'male', label: 'Nam' },
+                                    { value: 'female', label: 'Nữ' },
                                 ]}
                             />
                         </Form.Item>
-                        {/* <Form.Item
-                            label="Chuyên Khoa"
-                            name="gender"
-                            rules={[{ required: true, message: 'Please input!' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                allowClear
-                                style={{ width: '100%' }}
-                                placeholder="Chọn Chuyên Khoa"
-                                onChange={handleChange}
-                                options={options}
-                            />
-                        </Form.Item> */}
                         <Form.Item
                             label="Email"
                             name="email"
@@ -173,7 +156,7 @@ const ManageDoctor = () => {
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item label="Ảnh đại diện" valuePropName="fileList" getValueFromEvent={normFile}>
-                            <Upload action="/upload.do" listType="picture-card">
+                            <Upload name="image" listType="picture-card">
                                 <button style={{ border: 0, background: 'none' }} type="button">
                                     <PlusOutlined />
                                     <div style={{ marginTop: 8 }}>Ảnh đại diện</div>
@@ -188,27 +171,24 @@ const ManageDoctor = () => {
                     </Form>
                 </div>
             </Modal>
+
             <h1 className="font-bold text-2xl text-center">
                 Quản Lý Bác Sĩ
             </h1>
             <Row gutter={10} className="my-10 ">
                 <Col span={8}>
-                    <Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
+                    <Input.Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={8}>
-                    <div>
-                        {/* <Title level={5}>Chọn phòng khám</Title> */}
-                        <Select
-                            className="w-full"
-                            defaultValue="Chọn Phòng Khám"
-                            onChange={handleChange}
-                            options={[
-                                { value: 'jack', label: 'Jack' },
-                                { value: 'lucy', label: 'Lucy' },
-                                { value: 'Yiminghe', label: 'yiminghe' },
-                            ]}
-                        />
-                    </div>
+                    <Select
+                        className="w-full"
+                        placeholder="Chọn Phòng Khám"
+                        onChange={handleClinicChange}
+                        options={clinics.map(clinic => ({
+                            value: clinic.id,
+                            label: clinic.name
+                        }))}
+                    />
                 </Col>
                 <Col span={8}>
                     <Button type="primary" onClick={showModal} className=" float-right">
@@ -217,10 +197,10 @@ const ManageDoctor = () => {
                 </Col>
             </Row>
 
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={dataSource} columns={columns} loading={loading} />
+            {error && <p style={{ color: 'red' }}>Lỗi: {error}</p>}
         </div>
-    )
-
+    );
 }
 
 export default ManageDoctor;

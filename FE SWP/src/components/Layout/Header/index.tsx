@@ -1,17 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
 import Sidebar from '../Sidebar/index';
 import { ProfilePopUp } from '../PopUpProfile';
-import type { RootState } from '@redux/store/store';
-import { getUserDataFromLocalStorage } from '@/constants/consts';
+// import type { RootState } from '@redux/store/store';
 
 const Header: React.FC = () => {
     const [sidebarVisible, setSidebarVisible] = React.useState(false);
     const navigate = useNavigate();
-    const token = useSelector((state: RootState) => state.auth.token); // Lấy token từ Redux store
+    // const token = useSelector((state: RootState) => state.auth.token); // Lấy token từ Redux store
     const tokenFromLocalstorage = localStorage.getItem("token");
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
