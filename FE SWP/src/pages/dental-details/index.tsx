@@ -1,11 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './styles.module.css';
 import img1 from '@assets/home-img/search.png';
+import { Affix } from 'antd';
+import { Link } from 'react-router-dom';
 
 const DentalDetails: React.FC = () => {
+  const [bottom, setBottom] = React.useState<number>(100);
   const navigate = useNavigate();
-
+  const { id } = useParams<{ id: string }>();
   const handleBackToHome = () => {
     navigate('/');
   };
@@ -84,7 +87,11 @@ const DentalDetails: React.FC = () => {
       </div>
 
       <div className={styles.bookingSection}>
-        <button className={styles.bookingButton}>Đặt lịch khám ngay</button>
+        <Affix offsetBottom={bottom}>
+          <button className={styles.bookingButton}>
+            <Link to={`/customer/booking-page/${id}`}>Đặt lịch khám ngay</Link>
+          </button>
+        </Affix>
       </div>
     </div>
   );

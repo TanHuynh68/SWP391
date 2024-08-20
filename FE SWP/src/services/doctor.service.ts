@@ -54,7 +54,7 @@ export const addBookingByWeeks = async (weeksDuration: number,slot: number,type:
 
 export const getAllWorkingTimeOfDoctor = async (id:number) => {
     try {
-        const response = await axiosInstance.get(`${API_GET_WORKING_TIME_DOCTOR_BY_ID}/${id}`)
+        const response = await axiosInstance.post(`${API_GET_WORKING_TIME_DOCTOR_BY_ID}${id}`)
         if (response) {
             return response;
         }

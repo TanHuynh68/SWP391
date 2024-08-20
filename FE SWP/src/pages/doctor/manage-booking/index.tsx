@@ -240,11 +240,13 @@ const ManageBooking = () => {
     const handleFinish = async (values: MedicineFormValues) => {
         console.log("values array: ", values);
         const res = await editResult(bookingId, values, values.result)
-        if (res) {
+        if (values.medicines!=undefined) {
             setIsModalMedicinesOpen(false)
-            message.success("Kê đơn thuốc thành công")
+            message.success("Kê đơn thuốc thành công!")
             console.log("res: ", res);
             getAllBookingByDoctor();
+        }else{
+            message.error("Hãy chọn thuốc cho bệnh nhân!")
         }
     };
 
@@ -299,7 +301,9 @@ const ManageBooking = () => {
                         >
                             <Input.TextArea />
                         </Form.Item>
-                        <Form.List name="medicines">
+                        <Form.List name="medicines"
+              
+                        >
                             {(fields, { add, remove }) => (
                                 <>
                                     {fields.map((field) => (

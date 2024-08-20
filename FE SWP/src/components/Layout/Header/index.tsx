@@ -6,7 +6,6 @@ import logo from '@assets/home-img/logo.jpg';
 import Sidebar from '../Sidebar/index';
 import { ProfilePopUp } from '../PopUpProfile';
 import type { RootState } from '@redux/store/store';
-import { getUserDataFromLocalStorage } from '@/constants/consts';
 
 const Header: React.FC = () => {
     const [sidebarVisible, setSidebarVisible] = React.useState(false);

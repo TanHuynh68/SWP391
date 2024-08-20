@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa6";
 import type { RootState } from "@redux/store/store";
 import { logout } from '@redux/auth/logoutSlice';
+import { getUserDataFromLocalStorage } from "@/constants/consts";
+import { Col, Row } from "antd";
 
 export const ProfilePopUp: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -21,6 +23,8 @@ export const ProfilePopUp: React.FC = () => {
     dispatch(logout()); // Thực hiện hành động logout
     navigate("/login"); // Điều hướng đến trang đăng nhập
   };
+
+  const user = getUserDataFromLocalStorage();
 
   return (
     <div className={styles.profiledropdown}>
@@ -56,7 +60,14 @@ export const ProfilePopUp: React.FC = () => {
                     <img src="https://i.pinimg.com/564x/d0/7b/a6/d07ba6dcf05fa86c0a61855bc722cb7a.jpg" alt="Default Avatar" />
                     <div className={styles.pd_content}>
                       <div className={styles.name3}>
-                        <h6>Guest</h6>
+                        <Row>
+                          <Col span={6}>
+                            {user?.fullName}
+                          </Col>
+                          <Col span={18}>
+                            {user?.email}
+                          </Col>
+                        </Row>
                       </div>
                     </div>
                   </>
@@ -71,7 +82,7 @@ export const ProfilePopUp: React.FC = () => {
             <div className={styles.night_mode_switch__btn}>
             </div>
             <Link to="/customer/booking-history" className={styles.item}>
-             Lịch sử đặt lịch
+              Lịch sử đặt lịch
             </Link>
             {token && (
               <a onClick={handleSignOut} className={styles.item}>

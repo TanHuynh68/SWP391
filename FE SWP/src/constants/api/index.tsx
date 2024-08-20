@@ -10,7 +10,7 @@ export const API_CHANGE_STATUS_USER_ACTIVE_OR_INACTIVE= "/Admin/updateStatusBetw
 export const API_DELETE_USER_PENDING= "/Admin/deleteUserPendingById"
 export const API_CHANGE_STATUS_USER_PENDING_TO_ACTIVE= "/Admin/updateStatusPendingToActive"
 export const API_GET_ALL_DOCTOR_BY_CLINIC= "/ClinicOwner/GetAllDoctorsOfClinic?clinicId="
-export const API_GET_WORKING_TIME_DOCTOR_BY_ID= "/WorkingTime"
+export const API_GET_WORKING_TIME_DOCTOR_BY_ID= "/WorkingTime/GetWorkingTimeByAccountId?id="
 // export const API_GET_ALL_WORKING_TIME_OF_DOCTOR= "/WorkingTime/get-all"
 export const API_CREATE_BOOKING= "/Booking/AddBooking"
 export const API_GET_CLINIC_BY_ID= "/Guest/GetClinicById?id="

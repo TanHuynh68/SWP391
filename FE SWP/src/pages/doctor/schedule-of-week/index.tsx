@@ -69,7 +69,7 @@ const ScheduleOfWeek = () => {
             key: 'slot',
         },
         {
-            title: 'Monday',
+            title: 'Thứ 2',
             dataIndex: 'Monday',
             key: 'Monday',
             render:(Monday:string)=>(
@@ -77,7 +77,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Tuesday',
+            title: 'Thứ 3',
             dataIndex: 'Tuesday',
             key: 'Tuesday',
             render:(Tuesday:string)=>(
@@ -85,7 +85,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Wednesday',
+            title: 'Thứ 4',
             dataIndex: 'Wednesday',
             key: 'Wednesday',
             render:(Wednesday:string)=>(
@@ -93,7 +93,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Thursday',
+            title: 'Thứ 5',
             dataIndex: 'Thursday',
             key: 'Thursday',
             render:(Thursday:string)=>(
@@ -101,7 +101,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Friday',
+            title: 'Thứ 6',
             dataIndex: 'Friday',
             key: 'Friday',
             render:(Friday:string)=>(
@@ -109,7 +109,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Saturday',
+            title: 'Thứ 7',
             dataIndex: 'Saturday',
             key: 'Saturday',
             render:(Saturday:string)=>(
@@ -117,7 +117,7 @@ const ScheduleOfWeek = () => {
             )
         },
         {
-            title: 'Sunday',
+            title: 'Chủ nhật',
             dataIndex: 'Sunday',
             key: 'Sunday',
             render:(Sunday:string)=>(

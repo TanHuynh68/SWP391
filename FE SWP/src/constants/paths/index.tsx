@@ -9,7 +9,7 @@ const Paths = {
 
    // CUSTOMER
    BOOKING_HISTORY: "booking-history",
-
+   CLINIC_DETAIL: "clinic/:id",
    DENTAL_DETAILS: "dental-details",
    DENTAL_HANDBOOK: "dental-handbook",
    SPECIAL_PACKAGE: "specialty",

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@redux/store/store';
 import { fetchSpecialties } from '@redux/Slice/specialtySlice';
 import styles from './Specialty.module.css';
+import { Link } from 'react-router-dom';
 
 const Specialty: React.FC = () => {
   const dispatch: AppDispatch = useDispatch(); // Đảm bảo rằng dispatch có kiểu AppDispatch
@@ -30,7 +31,9 @@ const Specialty: React.FC = () => {
       <div className={styles.carouselContainer}>
         <div className={styles.specialtyList}>
           {specialties.map((specialty, i) => (
-            <SpecialtyCard key={i} name={specialty.name} imageUrl={specialty.image} />
+            <Link to={`/customer/clinic/${specialty.id}`}>
+              <SpecialtyCard key={i} name={specialty.name} imageUrl={specialty.image} />
+            </Link>
           ))}
         </div>
       </div>
