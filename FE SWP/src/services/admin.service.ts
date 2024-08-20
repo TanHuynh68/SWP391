@@ -89,8 +89,6 @@ export const updateStatusUserActiveOrInactive = async (id: number) => {
     }
 }
 
-
-
 export const deleteUserPending = async (id: number) => {
     try {
         const response = await axiosInstance.delete(`${API_DELETE_USER_PENDING}/${id}`)

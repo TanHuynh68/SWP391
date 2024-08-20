@@ -78,10 +78,10 @@ const ManageClinic = () => {
         }
     }
 
-    const onChangeStatus =async (record: Clinic) => {
-        console.log("record: ",record)
+    const onChangeStatus = async (record: Clinic) => {
+        console.log("record: ", record)
         const res = await updateClinicStatusActiveOrInactive(record.id);
-        console.log("onChangeStatus: ",res)
+        console.log("onChangeStatus: ", res)
         message.success("Cập nhật trạng thái thành công!")
         getAllClinicActiveAndInactiveFromAdmin();
     };
@@ -106,12 +106,12 @@ const ManageClinic = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: number, record:Clinic) => (
+            render: (status: number, record: Clinic) => (
                 <div className="flex justify-between">
                     <Tag color={statusColor(status)}>
                         {statusName(status)}
                     </Tag>
-                    <Switch checked={status === 2 ? true : false} onChange={()=>onChangeStatus(record)} />
+                    <Switch checked={status === 2 ? true : false} onChange={() => onChangeStatus(record)} />
                 </div>
             )
         },
@@ -195,20 +195,20 @@ const ManageClinic = () => {
     ];
 
     const handleAcceptClinic = async (id: number) => {
-        const res = await updateClinicStatusPendingToActive(id);
-        if (res) {
-            message.success("Đã chấp nhận");
-        } else {
-            message.error("Chấp nhận thất bại");
+        await updateClinicStatusPendingToActive(id);
+        message.success("Đã chấp nhận");
+        if (statusToFilter === 2) {
+            console.log("statusToFilter: ", statusToFilter)
+            getAllClinicPendingFromAdmin();
         }
     }
 
     const handleRejectClinic = async (id: number) => {
-        const res = await deleteClinicPending(id);
-        if (res) {
-            message.success("Đã xóa");
-        } else {
-            message.error("Xóa thất bại");
+         await deleteClinicPending(id);
+         message.success("Đã xóa");
+         if (statusToFilter === 2) {
+            console.log("statusToFilter: ", statusToFilter)
+            getAllClinicPendingFromAdmin();
         }
     }
 
