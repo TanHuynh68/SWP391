@@ -5,6 +5,8 @@ import styles from './Header.module.css';
 import logo from '@assets/home-img/logo.jpg';
 import Sidebar from '../Sidebar/index';
 import { ProfilePopUp } from '../PopUpProfile';
+
+import type { RootState } from '@redux/store/store';
 // import type { RootState } from '@redux/store/store';
 
 const Header: React.FC = () => {

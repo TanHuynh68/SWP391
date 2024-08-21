@@ -4,7 +4,8 @@ import { paths } from "../constants";
 import {
   AdminDashboard, AdminLogin, ClinicPage, CustomerBookingHistory, CustomerBookingPage, CustomerLayout, Dashboard, Home, InternalServerError, Login, ManageBooking, ManageClinic, ManageClinicOwner, ManageDoctor, ManageMedicalExaminationSchedule, ManagePatient, ManageUser,
   NotFound,
-  RegisterClinic
+  RegisterClinic,
+  ScheduleOfWeek
 } from "../pages";
 import SignUp from "@/pages/Register";
 import { role} from "@/redux/hooks/usRedirect";
@@ -33,7 +34,7 @@ const AppRouter: React.FC = () => {
         <Route path={paths.BOOKING_PAGE} element={canAccess([role.CUSTOMER]) ? <CustomerBookingPage /> : <Navigate to={paths.HOME}/>} />
         <Route path={paths.BOOKING_HISTORY} element={canAccess([role.CUSTOMER]) ? <CustomerBookingHistory /> : <Navigate to={paths.HOME}/>} />
         <Route path={paths.CUSTOMER_CLINIC_PAGE}element={canAccess([role.CUSTOMER]) ? <ClinicPage /> : <Navigate to={paths.HOME}/>} />
-        <Route path={paths.DENTAL_DETAILS} element={ canAccess([role.CUSTOMER]) ? <DentalDetails/> : <Navigate to={paths.HOME}/>} />
+        <Route path={paths.CLINIC_DETAIL} element={ canAccess([role.CUSTOMER]) ? <DentalDetails/> : <Navigate to={paths.HOME}/>} />
       <Route path={paths.DENTAL_HANDBOOK} element={ canAccess([role.CUSTOMER]) ? <DentalHandbook /> : <Navigate to={paths.HOME}/>} />
       <Route path={paths.SPECIAL_PACKAGE} element={ canAccess([role.CUSTOMER]) ?<SpecialtyPage/> : <Navigate to={paths.HOME}/>} />
         
@@ -52,6 +53,7 @@ const AppRouter: React.FC = () => {
       </Route> */}
       <Route path="/doctor/*" element={canAccess([role.DOCTOR]) ? <Dashboard /> : <Navigate to={paths.HOME}/>}>
         <Route path={paths.DOCTOR_MANAGE_BOOKING}  element={canAccess([role.DOCTOR]) ? <ManageBooking/> : <Navigate to={paths.HOME}/>} />
+        <Route path={paths.DOCTOR_SCHEDULE_OF_WEEK}  element={canAccess([role.DOCTOR]) ? <ScheduleOfWeek/> : <Navigate to={paths.HOME}/>} />
       </Route>
       {/* Admin */}
       <Route  path={"/admin/login"} element={<AdminLogin />} />

@@ -167,7 +167,7 @@ const CustomerBookingHistory = () => {
                 </div>
             </Modal>
             <div className="mt-10">
-                <h1 className="text-center my-10">Lich sử đặt lịch</h1>
+                <h1 className="text-center my-10">Lịch sử đặt lịch</h1>
                 <Table dataSource={patients} columns={columns} />
             </div>
         </>

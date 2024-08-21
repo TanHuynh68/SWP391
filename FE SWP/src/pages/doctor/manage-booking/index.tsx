@@ -1,11 +1,16 @@
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
 import { Booking, Customer, Medicine } from "@/models/booking.model";
 import { User } from "@/models/user.model";
-import { cancelBooking, editResult, getAllBooking } from "@/services/doctor.service";
-import { Button, Form, Image, Input, message, Modal, Table, Tag } from "antd";
+import { addBookingByWeeks, cancelBooking, editResult, getAllBooking, getAllBookingByCustomerPhone } from "@/services/doctor.service";
+import { Button, DatePicker, Form, Image, Input, message, Modal, Select, Table, Tag } from "antd";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import Title from "antd/es/typography/Title";
+import dayjs from "dayjs";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
+import { useForm } from "antd/es/form/Form";
 
 export interface MedicineFormValues {
     result: string;
@@ -17,6 +22,7 @@ export interface MedicineFormValues {
 }
 
 const ManageBooking = () => {
+    const [isModalBookingByWeeks, setIsModalBookingByWeeks] = useState(false);
     const [isModalCancelBooking, setIsModalCancelBooking] = useState(false);
     const [isModalEditMedicinesOpen, setIsModalEditMedicinesOpen] = useState(false);
     const [isModalCustomerOpen, setIsModalCustomerOpen] = useState(false);
@@ -27,27 +33,52 @@ const ManageBooking = () => {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [bookingId, setBookingId] = useState<number>(0)
     const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Booking>();
+    const [weeksDuration, setWeeksDuration] = useState<number>(0);
+    const [customerIdToAddBookingByWeeks, setCustomerIdToAddBookingByWeeks] = useState<number>(0);
+    const [typeToAddBookingByWeeks, setTypeToAddBookingByWeeks] = useState<number>(-1);
+    const [slotToAddBookingByWeeks, setSlotToAddBookingByWeeks] = useState<number>(-1);
+    const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+    const [clinicIdToAddBookingByWeeks, setClinicIdToAddBookingByWeeks] = useState<number>(0);
+    const [serviceIdToAddBookingByWeeks, setServiceIdToAddBookingByWeeks] = useState<number>(0);
+    const [form] =  Form.useForm();
     const showModalMedicines = (medicines: Medicine[], result: string) => {
         setMedicines(medicines);
         setResult(result);
         setIsModalMedicinesOpen(true)
     };
 
+    const userData: User = getUserDataFromLocalStorage();
+    const doctorId = userData.Id;
+
+    const handleSetWeeksDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handleSetWeeksDuration: ", e.target.value);
+        setWeeksDuration(parseInt(e.target.value));
+    };
+
     const handleOk = () => {
         setIsModalCustomerOpen(false);
         handleCancelBooking(bookingNeedToCancel.id)
-        setIsModalMedicinesOpen(false)
         setIsModalEditMedicinesOpen(false)
         setIsModalCancelBooking(false)
+        setIsModalBookingByWeeks(false)
     };
 
     const handleCancel = () => {
+        setIsModalBookingByWeeks(false)
         setIsModalMedicinesOpen(false)
         setIsModalCustomerOpen(false);
         setIsModalEditMedicinesOpen(false)
         setIsModalCancelBooking(false)
     };
 
+    const showModalBookingByWeeks = (booking: Booking) => {
+        setCustomerIdToAddBookingByWeeks(booking?.customer?.account.id)
+        setTypeToAddBookingByWeeks(booking?.type)
+        setClinicIdToAddBookingByWeeks(booking?.clinicsService?.clinics?.id)
+        setServiceIdToAddBookingByWeeks(booking?.clinicsService?.services?.id)
+        // setSlotToAddBookingByWeeks(booking.slot.slotTime)
+        setIsModalBookingByWeeks(true)
+    };
     const showModalEditMedicines = (id: number) => {
         setBookingId(id);
         setIsModalEditMedicinesOpen(true)
@@ -62,8 +93,7 @@ const ManageBooking = () => {
         setBookingNeedToCancel(booking);
         setIsModalCancelBooking(true)
     };
-    const userData: User = getUserDataFromLocalStorage();
-    const doctorId = userData.Id;
+
 
     useEffect(() => {
         getAllBookingByDoctor();
@@ -143,6 +173,14 @@ const ManageBooking = () => {
             )
         },
         {
+            title: 'Số điện thoại',
+            render: (record: Booking) => (
+                <>
+                    {record.customer.phone}
+                </>
+            )
+        },
+        {
             title: 'Slot Time',
             render: (record: Booking) => (
                 <>
@@ -173,23 +211,46 @@ const ManageBooking = () => {
         },
         {
             title: 'Action',
+            width:"20%",
             render: (record: Booking) => (
-                record.status === 1 && <>
-                    <Button onClick={() => showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
-                        Huỷ đặt lịch
-                    </Button>
+                <>
+                    {
+                        record.status === 1 && <>
+                            <Button onClick={() => showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
+                                Huỷ đặt lịch
+                            </Button>
+                            <Button onClick={() => showModalBookingByWeeks(record)} className="bg-purple-500 m-2 ">
+                                Hẹn khám định kỳ
+                            </Button>
+                        </>
+                    }
+
                 </>
             )
         },
     ];
-
+    const onSearch: SearchProps['onSearch'] = async(value) =>{
+        console.log("value: ", value)
+        const res = await getAllBookingByCustomerPhone(value);
+        if(value!=""){
+            console.log("onSearch: ", res)
+            setBookings(res);
+        }else{
+            getAllBookingByDoctor();
+        }   
+    };
     const handleFinish = async (values: MedicineFormValues) => {
         console.log("values array: ", values);
         const res = await editResult(bookingId, values, values.result)
-        if (res) {
-            message.success("Kê đơn thuốc thành công")
-            console.log("res: ", res); 
+        if (values.medicines!=undefined) {
+            setIsModalMedicinesOpen(false)
+            message.success("Kê đơn thuốc thành công!")
+            console.log("res: ", res);
             getAllBookingByDoctor();
+            form.setFieldsValue([])
+            setIsModalEditMedicinesOpen(false)
+        }else{
+            message.error("Hãy chọn thuốc cho bệnh nhân!")
         }
     };
 
@@ -203,13 +264,40 @@ const ManageBooking = () => {
             sm: { span: 14 },
         },
     };
+    const handleChangeSlotTimeToAddBookingByWeeks = (value: string) => {
+        console.log(`handleChangeSlotTimeToAddBookingByWeeks: ${value}`);
+        setSlotToAddBookingByWeeks(parseInt(value))
+    };
+    const disabledDate = (current: dayjs.Dayjs) => {
+        // Disable dates before today
+        return current && current < dayjs().startOf('day');
+    };
+    const handleDateChange = (date: dayjs.Dayjs | null) => {
+        setSelectedDate(date);
+        console.log("handleDateChange: ", selectedDate?.toISOString());
+    };
 
+    const handleAddBookingByWeeks = async () => {
+        console.log("weeksDuration: ", weeksDuration)
+        console.log("slotToAddBookingByWeeks: ", slotToAddBookingByWeeks)
+        console.log("selectedDate: ",  selectedDate?.toISOString())
+        console.log("customerIdToAddBookingByWeeks: ", customerIdToAddBookingByWeeks)
+        console.log("doctorId: ", doctorId)
+        console.log("clinicIdToAddBookingByWeeks: ", clinicIdToAddBookingByWeeks)
+        console.log("serviceIdToAddBookingByWeeks: ", serviceIdToAddBookingByWeeks)
+        const res = await addBookingByWeeks(weeksDuration, slotToAddBookingByWeeks, typeToAddBookingByWeeks,new Date(selectedDate.format('YYYY-MM-DD')), customerIdToAddBookingByWeeks
+            , doctorId, clinicIdToAddBookingByWeeks, serviceIdToAddBookingByWeeks
+        );
+        if(res){
+            console.log("handleAddBookingByWeeks: ", res);
+        }
+    }
     return (
         <>
 
             <Modal title="Kê đơn" footer="" open={isModalEditMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <Form  {...formItemLayout} style={{ maxWidth: 600 }} onFinish={handleFinish}>
+                    <Form form={form} {...formItemLayout} style={{ maxWidth: 600 }} onFinish={handleFinish}>
                         <Form.Item
                             label="Kết luận khám"
                             name="result"
@@ -217,7 +305,9 @@ const ManageBooking = () => {
                         >
                             <Input.TextArea />
                         </Form.Item>
-                        <Form.List name="medicines">
+                        <Form.List name="medicines"
+              
+                        >
                             {(fields, { add, remove }) => (
                                 <>
                                     {fields.map((field) => (
@@ -226,7 +316,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Tên thuốc"
                                                 name={[field.name, 'name']}
-                                                rules={[{ required: true, message: 'Please input the name of the medicine!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập tên thuốc' }]}
                                             >
                                                 <Input />
                                             </Form.Item>
@@ -234,7 +324,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Số lượng"
                                                 name={[field.name, 'quatity']}
-                                                rules={[{ required: true, message: 'Please input the quantity!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập số lượng!' }]}
                                             >
                                                 <Input type="number" />
                                             </Form.Item>
@@ -242,7 +332,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Chi tiết"
                                                 name={[field.name, 'detail']}
-                                                rules={[{ required: true, message: 'Please input the details!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập chi tiết thông tin!' }]}
                                             >
                                                 <Input.TextArea />
                                             </Form.Item>
@@ -295,7 +385,55 @@ const ManageBooking = () => {
                     <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
                 </div>
             </Modal>
+            <Modal width={1200} footer="" title="Hẹn lịch khám định kỳ" open={isModalBookingByWeeks} onOk={handleOk} onCancel={handleCancel}>
+                <div className="grid grid-cols-3 gap-20 h-96">
+                    <div>
+                        <Title level={5}>Chọn khung giờ<span className="text-red-500"> *</span></Title>
+                        <Select
+                            defaultValue="hãy chọn khung giờ"
+                            className="w-full"
+                            onChange={handleChangeSlotTimeToAddBookingByWeeks}
+                            options={[
+                                {
+                                    options: [
+                                        { label: <span>8h-8h45</span>, value: '1' },
+                                        { label: <span>8h45-9h30</span>, value: '2' },
+                                        { label: <span>9h30-10h15</span>, value: '3' },
+                                        { label: <span>10h15-11h</span>, value: '4' },
+                                        { label: <span>11h-11h45</span>, value: '5' },
+                                        { label: <span>1h-1h45</span>, value: '6' },
+                                        { label: <span>1h45-2h30</span>, value: '7' },
+                                        { label: <span>2h30-3h15</span>, value: '8' },
+                                        { label: <span>3h15-4h</span>, value: '9' },
+                                        { label: <span>4h-4h45</span>, value: '10' },
+                                    ],
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div >
+                        <Title level={5}>Chọn ngày bắt đầu<span className="text-red-500"> *</span></Title>
+                        <DatePicker
+                            className="w-full"
+                            onChange={handleDateChange}
+                            format="DD/MM/YYYY"
+                            disabledDate={disabledDate}
+                            placeholder="Hãy chọn ngày bắt đầu khám định kỳ"
+                        />
+                    </div>
+                    <div>
+                        <Title level={5}>Chọn số tuần<span className="text-red-500"> *</span></Title>
+                        <Input type="number" onChange={handleSetWeeksDuration} placeholder="Hãy nhập số tuần đặt lịch" />
+                    </div>
+                </div>
+                <div className="text-center pt-5">
+                    <Button onClick={handleAddBookingByWeeks} type="primary">
+                        Đặt lịch
+                    </Button>
+                </div>
+            </Modal>
             <h1 className="text-center my-5">Quản lý đặt lịch</h1>
+            <Search className="mb-5" style={{width: "300px"}} type="number" placeholder="Nhập số điện thoại" onSearch={onSearch} enterButton />
             <Table columns={columns} dataSource={bookings} />
         </>
     )

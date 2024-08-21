@@ -36,32 +36,22 @@ const ManageClinicOwner = () => {
     
     const columns = [
         {
-            title: 'Full Name',
+            title: 'Tên chủ phòng khám',
             dataIndex: 'fullName',
             key: 'fullName',
         },
         {
-            title: 'Gender',
+            title: 'Giới tính',
             dataIndex: 'gender',
             key: 'gender',
         },
-        // {
-        //     title: 'Birth Day',
-        //     dataIndex: 'birthDay',
-        //     key: 'birthDay',
-        // },
-        // {
-        //     title: 'Phone Number',
-        //     dataIndex: 'phoneNumber',
-        //     key: 'phoneNumber',
-        // },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (status: number) => (
@@ -74,7 +64,7 @@ const ManageClinicOwner = () => {
         },
         ([
             {
-                title: 'Action',
+                title: 'Hành động',
                 render: (record: ClinicOwner) => (
                     record.status === 1 && <>
                         <Row>
@@ -186,12 +176,12 @@ const ManageClinicOwner = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-                Manage Clinic Owner
+                Quản lý chủ phòng khám
             </h1>
         
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
-                    <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />
+                    <Search style={{ width: 300 }} placeholder="Nhập tên chủ phòng khám" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={12}>
                     <Button onClick={showModal} type="primary" className="float-right">

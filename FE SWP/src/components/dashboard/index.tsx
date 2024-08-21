@@ -8,13 +8,15 @@ import { Avatar, Dropdown, Layout, Menu, MenuProps, message, Space } from 'antd'
 import { Outlet } from 'react-router-dom';
 import "./dashboard.css";
 import { paths } from '@/constants';
+import { getUserDataFromLocalStorage } from '@/constants/consts';
 
 const Dashboard: React.FC = () => {
     const [items, setItems] = useState<MenuItem[]>([]);
     const navigate = useNavigate(); // Hook to navigate programmatically
-
+    
     type MenuItem = Required<MenuProps>['items'][number];
 
+    const user =  getUserDataFromLocalStorage();
     function getItem(
         label: React.ReactNode,
         key: React.Key,
@@ -38,20 +40,21 @@ const Dashboard: React.FC = () => {
         if (currentPath.startsWith('/admin')) {
             setItems([
                 getItem('Dashboard', '/admin/dashboard', <DesktopOutlined />),
-                getItem('Manage User', '/admin/manage-user', <UserOutlined />),
-                getItem('Manage Clinic', '/admin/manage-clinic', <DesktopOutlined />),
-                getItem('Manage Clinic Owners', '/admin/manage-clinic-owner', <UserOutlined />),
+                getItem('Quản lý người dùng', '/admin/manage-user', <UserOutlined />),
+                getItem('Quản lý phòng khám', '/admin/manage-clinic', <DesktopOutlined />),
+                getItem('Quản lý chủ phòng khám', '/admin/manage-clinic-owner', <UserOutlined />),
             ]);
         }else if(currentPath.startsWith('/clinic-owner')) {
             setItems([
-                getItem('Register Clinic', '/clinic-owner/register-clinic', <DesktopOutlined />),
-                getItem('Register Doctor', '/clinic-owner/manage-doctor', <UserOutlined />),
-                getItem('Manage Patient', '/clinic-owner/manage-patient', <UserOutlined />),
+                getItem('Quản lý phòng khám', '/clinic-owner/register-clinic', <DesktopOutlined />),
+                getItem('Quản lý bác sĩ', '/clinic-owner/manage-doctor', <UserOutlined />),
+                getItem('Quản lý bệnh nhân', '/clinic-owner/manage-patient', <UserOutlined />),
                 getItem('Quản lý lịch khám bệnh', '/clinic-owner/manage-medical-examination-schedule', <UserOutlined />),
             ]);
         }else if(currentPath.startsWith('/doctor')) {
             setItems([
                 getItem('Quản lý đặt lịch', '/doctor/manage-booking', <DesktopOutlined />),
+                getItem('Lịch khám trong tuần', '/doctor/schedule-of-week', <DesktopOutlined />),
             ]);
         }
     };
@@ -70,17 +73,9 @@ const Dashboard: React.FC = () => {
         {
             key: '1',
             label: (
-                <p rel="noopener noreferrer">
-                   Profile
-                </p>
-            ),
-        },
-        {
-            key: '2',
-            label: (
-                <p onClick={handleLogout} rel="noopener noreferrer" >
-                   Log out
-                </p>
+                <div onClick={handleLogout} rel="noopener noreferrer" >
+                   Đăng xuất
+                </div>
             ),
         },
     ];
@@ -98,6 +93,7 @@ const Dashboard: React.FC = () => {
 
     const { Header, Content, Footer, Sider } = Layout;
 
+   
     return (
         <Layout hasSider>
             <Sider style={siderStyle}>
@@ -112,11 +108,15 @@ const Dashboard: React.FC = () => {
                 />
             </Sider>
             <Layout style={{ marginInlineStart: 200 }}>
-                <Header className="bg-white">
+                <Header className="bg-white flex justify-between">
+                    <div>
+                        <div className='h-5'>Tên: {user?.given_name}</div>
+                        <div className='h-5'>Địa chỉ email: {user?.email}</div>
+                    </div>
                     <Dropdown
                         overlay={<Menu items={menuItems} />}
                         trigger={['click']}
-                        className="dropdown-center float-right" // Add custom class
+                        className="dropdown-center " // Add custom class
                     >
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
