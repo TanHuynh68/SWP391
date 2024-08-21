@@ -10,6 +10,7 @@ import Title from "antd/es/typography/Title";
 import dayjs from "dayjs";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
+import { useForm } from "antd/es/form/Form";
 
 export interface MedicineFormValues {
     result: string;
@@ -39,6 +40,7 @@ const ManageBooking = () => {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
     const [clinicIdToAddBookingByWeeks, setClinicIdToAddBookingByWeeks] = useState<number>(0);
     const [serviceIdToAddBookingByWeeks, setServiceIdToAddBookingByWeeks] = useState<number>(0);
+    const [form] =  Form.useForm();
     const showModalMedicines = (medicines: Medicine[], result: string) => {
         setMedicines(medicines);
         setResult(result);
@@ -245,6 +247,8 @@ const ManageBooking = () => {
             message.success("Kê đơn thuốc thành công!")
             console.log("res: ", res);
             getAllBookingByDoctor();
+            form.setFieldsValue([])
+            setIsModalEditMedicinesOpen(false)
         }else{
             message.error("Hãy chọn thuốc cho bệnh nhân!")
         }
@@ -293,7 +297,7 @@ const ManageBooking = () => {
 
             <Modal title="Kê đơn" footer="" open={isModalEditMedicinesOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <Form  {...formItemLayout} style={{ maxWidth: 600 }} onFinish={handleFinish}>
+                    <Form form={form} {...formItemLayout} style={{ maxWidth: 600 }} onFinish={handleFinish}>
                         <Form.Item
                             label="Kết luận khám"
                             name="result"
@@ -312,7 +316,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Tên thuốc"
                                                 name={[field.name, 'name']}
-                                                rules={[{ required: true, message: 'Please input the name of the medicine!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập tên thuốc' }]}
                                             >
                                                 <Input />
                                             </Form.Item>
@@ -320,7 +324,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Số lượng"
                                                 name={[field.name, 'quatity']}
-                                                rules={[{ required: true, message: 'Please input the quantity!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập số lượng!' }]}
                                             >
                                                 <Input type="number" />
                                             </Form.Item>
@@ -328,7 +332,7 @@ const ManageBooking = () => {
                                                 {...field}
                                                 label="Chi tiết"
                                                 name={[field.name, 'detail']}
-                                                rules={[{ required: true, message: 'Please input the details!' }]}
+                                                rules={[{ required: true, message: 'Hãy nhập chi tiết thông tin!' }]}
                                             >
                                                 <Input.TextArea />
                                             </Form.Item>

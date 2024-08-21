@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { deleteUserPending, updateStatusUserActiveOrInactive, updateStatusUserPendingToActive } from "@/services/admin.service";
 import { DeleteOutlined } from "@ant-design/icons";
+import { role } from "@/redux/hooks/usRedirect";
 
 const ManageUser = () => {
     const [user, setUser] = useState<User>();
@@ -54,10 +55,10 @@ const ManageUser = () => {
     };
 
     const handleUpDateStatusUser = async (user: User) => {
-        console.log("user: ",user)
+        console.log("user: ", user)
         const res = await updateStatusUserActiveOrInactive(user.id);
         if (res) {
-            console.log("res: ",res)
+            console.log("res: ", res)
             if (roleUser || keywordUser) {
                 handleSearchAndFilter();
             } else {
@@ -116,8 +117,11 @@ const ManageUser = () => {
         },
         {
             title: 'Vai trò',
-            dataIndex: ['role', 'name'], // Assuming role is an object with a name property
-            key: 'role',
+            render:(record:User)=>(
+                <Tag color={roleNameColor(record.role.name)}>
+                    {record.role.name}
+                </Tag>
+            )
         },
         {
             title: 'Trạng thái',
@@ -136,7 +140,7 @@ const ManageUser = () => {
         },
         {
             title: 'Hành động',
-            width:"15%",
+            width: "15%",
             render: (record: User) => (
                 record.status === 1 ? <Row>
                     <Col span={12}>
@@ -148,9 +152,9 @@ const ManageUser = () => {
                         </div>
                     </Col>
                 </Row> :
-                <>
-                Không có hành động gì với trạng thái active hoặc inactive
-                </>
+                    <>
+                        Không có hành động gì với trạng thái active hoặc inactive
+                    </>
             )
         },
     ];
@@ -171,6 +175,18 @@ const ManageUser = () => {
                 return "Active"
             case 3:
                 return "Inactive"
+        }
+    }
+    const roleNameColor = (roleName: string) => {
+        switch (roleName) {
+            case role.ADMIN:
+                return "red"
+            case role.CLINIC_OWNER:
+                return "green"
+            case role.DOCTOR:
+                return "purple"
+            case role.CUSTOMER:
+                return "yellow"
         }
     }
     const statusColor = (status: number) => {
