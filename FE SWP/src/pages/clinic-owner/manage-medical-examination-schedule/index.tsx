@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Card, Select, Typography, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
-import { fetchClinics, fetchDoctors, fetchWorkingTimes, setSelectedDoctorId } from '@redux/Slice/clinicManagementSlice';
+import { fetchClinics, fetchDoctors, fetchWorkingTimes, setSelectedDoctorId, addWorkingTime } from '@redux/Slice/clinicManagementSlice';
 import { RootState, AppDispatch } from '@redux/store/store';
 import { User } from '@/models/user.model';
 
@@ -51,15 +51,21 @@ const ManageMedicalExaminationSchedule = () => {
             message.warning('Vui lòng chọn ít nhất một khung thời gian trước khi lưu!');
             return;
         }
-
-        const formData = {
-            ...data,
-            selectedSlots,
-        };
-
-        console.log("Form data:", formData);
-
-        message.success('Thông tin đã được lưu thành công!');
+    
+        const workingTimeData = selectedSlots.map(slotId => ({
+            doctorId: data.doctorId,
+            workingDayOfWeek: data.dayOfWeek,
+            slotId: slotId
+        }));
+    
+        dispatch(addWorkingTime(workingTimeData))
+          .unwrap()
+          .then(() => {
+            message.success('Thông tin đã được lưu thành công!');
+          })
+          .catch(() => {
+            message.error('Đã xảy ra lỗi khi lưu thông tin.');
+          });
     };
 
     const daysOfWeek = [
