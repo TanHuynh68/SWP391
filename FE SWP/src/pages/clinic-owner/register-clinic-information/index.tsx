@@ -12,6 +12,8 @@ const RegisterClinic = () => {
     const dispatch: AppDispatch = useDispatch();
     const { clinics, loading, error } = useSelector((state: RootState) => state.registerClinic);
     const { services } = useSelector((state: RootState) => state.servicesRegisterClinic);
+
+    
    
     useEffect(() => {
         const token = localStorage.getItem('token');
