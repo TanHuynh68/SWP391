@@ -37,13 +37,13 @@ const ScheduleOfWeek = () => {
     // Hàm lấy tên ngày từ số (1 = Thứ Hai, ..., 7 = Chủ Nhật)
     const getDayName = (dayNumber: number): keyof SlotData => {
         const days: { [key: number]: keyof SlotData } = {
-            1: 'Monday',
-            2: 'Tuesday',
-            3: 'Wednesday',
-            4: 'Thursday',
-            5: 'Friday',
-            6: 'Saturday',
-            7: 'Sunday'
+            0: 'Monday',
+            1: 'Tuesday',
+            2: 'Wednesday',
+            3: 'Thursday',
+            4: 'Friday',
+            5: 'Saturday',
+            6: 'Sunday'
         };
         return days[dayNumber] || 'Monday'; // Hoặc giá trị mặc định nếu không tìm thấy
     };
@@ -53,7 +53,7 @@ const ScheduleOfWeek = () => {
         const slotData: SlotData = { slot: `${slotTime(slotNumber)}` };
     
         doctorWorkingTime.forEach(workingTime => {
-            if (workingTime.slot.slotTime === slotNumber) {
+            if (workingTime.slot.slotTime  === slotNumber) {
                 const dayName = getDayName(workingTime.workingDayOfWeek) as keyof SlotData;
                 slotData[dayName] = '1'; 
             }
