@@ -1,4 +1,3 @@
-import { doctorData } from '@/data/doctorData';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -87,7 +86,7 @@ const manageDoctorSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchPatients.fulfilled, (state, action) => {
-                state.patients = action.payload;
+                state.patients = Array.isArray(action.payload) ? action.payload : [];
                 state.loading = false;
             })
             .addCase(fetchPatients.rejected, (state, action) => {

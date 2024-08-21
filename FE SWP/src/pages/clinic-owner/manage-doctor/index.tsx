@@ -87,14 +87,14 @@ const ManageDoctor = () => {
         },
     ];
 
-    const dataSource = patients.map((patient, index) => ({
+    const dataSource = Array.isArray(patients) ? patients.map((patient, index) => ({
         key: patient.id,
         no: index + 1,
         name: patient.account.fullName,
         gender: patient.account.gender === 0 ? "Nữ" : "Nam",
         description: patient.account.email,
         status: patient.account.status,
-    }));
+    })) : [];
 
     const formItemLayout = {
         labelCol: {
