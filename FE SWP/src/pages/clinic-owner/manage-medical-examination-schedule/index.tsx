@@ -14,8 +14,10 @@ const ManageMedicalExaminationSchedule = () => {
     const userData: User = user ? JSON.parse(user) : null;
     const customerId = userData?.Id;
 
-    const { handleSubmit, control, setValue } = useForm();
-    const [selectedSlots, setSelectedSlots] = React.useState<number[]>([]);
+    const { handleSubmit, control, setValue, watch } = useForm();
+    const [selectedSlots, setSelectedSlots] = React.useState<{ [day: number]: number[] }>({});
+    const selectedDay = watch('dayOfWeek');  // Track the selected day
+    const selectedDoctor = watch('doctorId');  // Track the selected doctor
 
     useEffect(() => {
         if (customerId) {
@@ -23,36 +25,61 @@ const ManageMedicalExaminationSchedule = () => {
         }
     }, [dispatch, customerId]);
 
+    useEffect(() => {
+        if (selectedDay !== undefined && selectedDoctor !== undefined) {
+            dispatch(fetchWorkingTimes({ doctorId: selectedDoctor, dayOfWeek: selectedDay }))
+                .then(response => {
+                    if (response.payload) {
+                        const bookedSlots = response.payload.map((slot: any) => slot.slot.slotTime);
+                        setSelectedSlots(prevState => ({
+                            ...prevState,
+                            [selectedDay]: bookedSlots
+                        }));
+                    }
+                });
+        }
+    }, [selectedDay, selectedDoctor, dispatch]);
+
     const handleClinicChange = (clinicId: number) => {
         dispatch(fetchDoctors(clinicId));
         const clinicName = clinics.find(clinic => clinic.id === clinicId)?.name;
-        setValue('clinicName', clinicName); // Lưu tên phòng khám
+        setValue('clinicName', clinicName); // Save clinic name
     };
 
     const handleDoctorChange = (doctorId: number) => {
         dispatch(setSelectedDoctorId(doctorId));
-        dispatch(fetchWorkingTimes(doctorId));
+        if (selectedDay !== undefined) {
+            dispatch(fetchWorkingTimes({ doctorId, dayOfWeek: selectedDay }));
+        }
         const doctorName = doctors.find(doctor => doctor.id === doctorId)?.account.fullName;
-        setValue('doctorName', doctorName); // Lưu tên bác sĩ
+        setValue('doctorName', doctorName); // Save doctor name
     };
 
     const onSlotSelect = (slotTime: number) => {
         setSelectedSlots((prevSelectedSlots) => {
-            if (prevSelectedSlots.includes(slotTime)) {
-                return prevSelectedSlots.filter((slot) => slot !== slotTime); // Bỏ chọn nếu đã chọn trước đó
+            const daySlots = prevSelectedSlots[selectedDay] || [];
+            if (daySlots.includes(slotTime)) {
+                return {
+                    ...prevSelectedSlots,
+                    [selectedDay]: daySlots.filter((slot) => slot !== slotTime), // Deselect slot
+                };
             } else {
-                return [...prevSelectedSlots, slotTime]; // Thêm vào nếu chưa chọn
+                return {
+                    ...prevSelectedSlots,
+                    [selectedDay]: [...daySlots, slotTime], // Select slot
+                };
             }
         });
     };
 
     const onSubmit = (data: any) => {
-        if (selectedSlots.length === 0) {
+        const daySlots = selectedSlots[selectedDay];
+        if (!daySlots || daySlots.length === 0) {
             message.warning('Vui lòng chọn ít nhất một khung thời gian trước khi lưu!');
             return;
         }
     
-        const workingTimeData = selectedSlots.map(slotId => ({
+        const workingTimeData = daySlots.map(slotId => ({
             doctorId: data.doctorId,
             workingDayOfWeek: data.dayOfWeek,
             slotId: slotId
@@ -154,21 +181,25 @@ const ManageMedicalExaminationSchedule = () => {
                                 className="w-full"
                                 placeholder="Chọn thứ"
                                 options={daysOfWeek}
+                                onChange={(value) => {
+                                    field.onChange(value);
+                                    setValue('dayOfWeek', value); // Update the day selection
+                                }}
                             />
                         )}
                     />
                 </div>
             </div>
             <div className="grid 2xl:grid-cols-8 xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 mt-10">
-                {workingTimes?.map((slot: any) => (
+                {Object.entries(defaultSlotTimes).map(([slotId, time]) => (
                     <Card
-                        key={slot.id}
-                        className={`bg-gray-200 hover:border-blue-500 cursor-pointer ${selectedSlots.includes(slot.slot.slotTime) ? 'border-blue-500' : ''}`}
+                        key={slotId}
+                        className={`bg-gray-200 hover:border-blue-500 cursor-pointer ${selectedSlots[selectedDay]?.includes(Number(slotId)) ? 'border-blue-500' : ''}`}
                         style={{ width: 150 }}
-                        onClick={() => onSlotSelect(slot.slot.slotTime)}
+                        onClick={() => onSlotSelect(Number(slotId))}
                     >
                         <div className="text-center">
-                            {defaultSlotTimes[slot.slot.slotTime] || 'Thời gian không xác định'}
+                            {time}
                         </div>
                     </Card>
                 ))}
