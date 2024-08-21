@@ -87,7 +87,7 @@ const ManageDoctor = () => {
         },
     ];
 
-    const dataSource = patients.map((patient, index) => ({
+    const dataSource = patients?.map((patient, index) => ({
         key: patient.id,
         no: index + 1,
         name: patient.account.fullName,
