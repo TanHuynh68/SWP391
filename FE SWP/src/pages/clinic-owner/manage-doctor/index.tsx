@@ -2,15 +2,22 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, message } from "antd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchClinics, fetchPatients, addDoctor } from "@redux/Slice/manageDoctorSlice";
+import { fetchClinics, fetchDoctors, addDoctor } from "@redux/Slice/manageDoctorSlice";  // Removed assignClinic
 import { RootState, AppDispatch } from "@redux/store/store";
 
 const ManageDoctor = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClinic, setSelectedClinic] = useState<number | null>(null);
     const [form] = Form.useForm();
+
+    const tokenWithBearer = localStorage.getItem('token');
+    const token = tokenWithBearer?.replace('Bearer ', '');
+    const user = localStorage.getItem('user');
+    const userData = user ? JSON.parse(user) : null;
+    const ownerId = userData?.Id;
+
     const dispatch: AppDispatch = useDispatch();
-    const { clinics, patients, loading, error } = useSelector((state: RootState) => state.manageDoctor);
+    const { clinics, doctors, loading, error } = useSelector((state: RootState) => state.manageDoctor);
 
     const normFile = (e: any) => {
         if (Array.isArray(e)) {
@@ -20,14 +27,16 @@ const ManageDoctor = () => {
     };
 
     useEffect(() => {
-        dispatch(fetchClinics());
-    }, [dispatch]);
+        if (token && ownerId) {
+            dispatch(fetchClinics({ ownerId, token }));
+        }
+    }, [dispatch, ownerId, token]);
 
     useEffect(() => {
-        if (selectedClinic !== null) {
-            dispatch(fetchPatients(selectedClinic));
+        if (selectedClinic !== null && token) {
+            dispatch(fetchDoctors({ clinicId: selectedClinic, token }));
         }
-    }, [selectedClinic, dispatch]);
+    }, [selectedClinic, dispatch, token]);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -44,14 +53,31 @@ const ManageDoctor = () => {
 
     const handleAddDoctor = async (values: any) => {
         try {
-            await dispatch(addDoctor(values)).unwrap();
+            const doctorData = { 
+                email: values.email,
+                password: values.password,
+                fullName: values.fullName,
+                description: values.description,
+                gender: values.gender
+            };
+            const clinicId = values.clinicId; // Extract the clinicId from the form values
+    
+            // Call the API with the clinicId as a query parameter
+            await dispatch(addDoctor({ token, ...doctorData, clinicId })).unwrap();
+            
             message.success("Đăng ký bác sĩ thành công!");
             setIsModalOpen(false);
             form.resetFields();
-            window.location.reload();  
+            window.location.reload();
         } catch (err) {
             message.error("Có lỗi xảy ra khi đăng ký bác sĩ, vui lòng thử lại!");
         }
+    };
+    
+    // Only keep one declaration of handleAssignClinic
+    const handleAssignClinic = (doctorId: number) => {
+        console.log(`Assigning clinic to doctor with ID: ${doctorId}`);
+        // Logic to assign clinic goes here
     };
 
     const columns = [
@@ -79,22 +105,40 @@ const ManageDoctor = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: number) => (
-                <>
-                    {status === 2 ? "Active" : "Inactive"}
-                </>
-            ),
+            render: (status: number) => {
+                switch (status) {
+                    case 1:
+                        return "Chờ Duyệt";
+                    case 2:
+                        return "Đang Hoạt Động";
+                    case 3:
+                        return "Không Hoạt Động";
+
+                }
+            },
         },
+        {
+            title: 'Thêm Phòng Khám',
+            key: 'action',
+            render: (_, record) => (
+                record.clinicsId ?
+                    <span>Đã có phòng khám</span> :
+                    <Button type="primary" onClick={() => handleAssignClinic(record.key)}>
+                        Thêm Phòng Khám
+                    </Button>
+            )
+        }
     ];
 
-    const dataSource = patients?.map((patient, index) => ({
+    const dataSource = patients.map((patient, index) => ({
         key: patient.id,
         no: index + 1,
-        name: patient.account.fullName,
-        gender: patient.account.gender === 0 ? "Nữ" : "Nam",
-        description: patient.account.email,
-        status: patient.account.status,
-    }));
+        name: doctors.account.fullName,
+        gender: doctors.account.gender === 0 ? "Nữ" : "Nam",
+        description: doctors.account.email,
+        status: doctors.account.status,
+        clinicsId: doctors.clinicsId,  // Assuming this is provided in the patient object
+    })) : [];
 
     const formItemLayout = {
         labelCol: {
@@ -134,12 +178,21 @@ const ManageDoctor = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Ngày Tháng Năm Sinh"
-                            name="birthday"
-                            rules={[{ required: true, message: 'Vui lòng nhập ngày tháng năm sinh!' }]}
+                            label="Chọn Phòng Khám"
+                            name="clinicId"
+                            rules={[{ required: true, message: 'Vui lòng chọn phòng khám!' }]}
                         >
-                            <Input />
+                            <Select
+                                style={{ width: '100%' }}
+                                placeholder="Chọn Phòng Khám"
+                                options={clinics.map(clinic => ({
+                                    value: clinic.id,
+                                    label: clinic.name
+                                }))}
+                                onChange={handleClinicChange}
+                            />
                         </Form.Item>
+
                         <Form.Item
                             label="Giới Tính"
                             name="gender"
