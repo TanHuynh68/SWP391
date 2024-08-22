@@ -48,7 +48,7 @@ export const createBooking = async (slot: number, type: number, bookingDate: Dat
         }
     } catch (error) {
         console.error("createBooking failed", error);
-        return [];
+        return error;
     }
 }
 

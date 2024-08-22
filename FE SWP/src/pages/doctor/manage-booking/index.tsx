@@ -10,7 +10,7 @@ import Title from "antd/es/typography/Title";
 import dayjs from "dayjs";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
-import { useForm } from "antd/es/form/Form";
+import TextArea from "antd/es/input/TextArea";
 
 export interface MedicineFormValues {
     result: string;
@@ -33,6 +33,7 @@ const ManageBooking = () => {
     const [bookings, setBookings] = useState<Booking[]>([])
     const [bookingId, setBookingId] = useState<number>(0)
     const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Booking>();
+    const [reasonToCancelBooking, setReasonCancelBooking] = useState<string>('');
     const [weeksDuration, setWeeksDuration] = useState<number>(0);
     const [customerIdToAddBookingByWeeks, setCustomerIdToAddBookingByWeeks] = useState<number>(0);
     const [typeToAddBookingByWeeks, setTypeToAddBookingByWeeks] = useState<number>(-1);
@@ -40,7 +41,7 @@ const ManageBooking = () => {
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
     const [clinicIdToAddBookingByWeeks, setClinicIdToAddBookingByWeeks] = useState<number>(0);
     const [serviceIdToAddBookingByWeeks, setServiceIdToAddBookingByWeeks] = useState<number>(0);
-    const [form] =  Form.useForm();
+    const [form] = Form.useForm();
     const showModalMedicines = (medicines: Medicine[], result: string) => {
         setMedicines(medicines);
         setResult(result);
@@ -59,7 +60,7 @@ const ManageBooking = () => {
         setIsModalCustomerOpen(false);
         handleCancelBooking(bookingNeedToCancel.id)
         setIsModalEditMedicinesOpen(false)
-        setIsModalCancelBooking(false)
+      
         setIsModalBookingByWeeks(false)
     };
 
@@ -90,6 +91,7 @@ const ManageBooking = () => {
     };
 
     const showModalCanlcelBooking = (booking: Booking) => {
+        console.log("reason: ", reasonToCancelBooking);
         setBookingNeedToCancel(booking);
         setIsModalCancelBooking(true)
     };
@@ -132,11 +134,17 @@ const ManageBooking = () => {
     ];
 
     const handleCancelBooking = async (id: number) => {
-        const res = await cancelBooking(id);
-        if (res) {
-            console.log("res: ", res);
-            message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
+        if (reasonToCancelBooking) {
+            const res = await cancelBooking(id, reasonToCancelBooking);
+            if (res) {
+                console.log("res: ", res);
+                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
+                setIsModalCancelBooking(false)
+                setReasonCancelBooking('')
+            }
             getAllBookingByDoctor();
+        }else{
+            message.error("Hãy nhập lý do huỷ!")
         }
     }
     const columns = [
@@ -211,7 +219,7 @@ const ManageBooking = () => {
         },
         {
             title: 'Action',
-            width:"20%",
+            width: "20%",
             render: (record: Booking) => (
                 <>
                     {
@@ -229,27 +237,27 @@ const ManageBooking = () => {
             )
         },
     ];
-    const onSearch: SearchProps['onSearch'] = async(value) =>{
+    const onSearch: SearchProps['onSearch'] = async (value) => {
         console.log("value: ", value)
         const res = await getAllBookingByCustomerPhone(value);
-        if(value!=""){
+        if (value != "") {
             console.log("onSearch: ", res)
             setBookings(res);
-        }else{
+        } else {
             getAllBookingByDoctor();
-        }   
+        }
     };
     const handleFinish = async (values: MedicineFormValues) => {
         console.log("values array: ", values);
         const res = await editResult(bookingId, values, values.result)
-        if (values.medicines!=undefined) {
+        if (values.medicines != undefined) {
             setIsModalMedicinesOpen(false)
             message.success("Kê đơn thuốc thành công!")
             console.log("res: ", res);
             getAllBookingByDoctor();
             form.setFieldsValue([])
             setIsModalEditMedicinesOpen(false)
-        }else{
+        } else {
             message.error("Hãy chọn thuốc cho bệnh nhân!")
         }
     };
@@ -280,18 +288,24 @@ const ManageBooking = () => {
     const handleAddBookingByWeeks = async () => {
         console.log("weeksDuration: ", weeksDuration)
         console.log("slotToAddBookingByWeeks: ", slotToAddBookingByWeeks)
-        console.log("selectedDate: ",  selectedDate?.toISOString())
+        console.log("selectedDate: ", selectedDate?.toISOString())
         console.log("customerIdToAddBookingByWeeks: ", customerIdToAddBookingByWeeks)
         console.log("doctorId: ", doctorId)
         console.log("clinicIdToAddBookingByWeeks: ", clinicIdToAddBookingByWeeks)
         console.log("serviceIdToAddBookingByWeeks: ", serviceIdToAddBookingByWeeks)
-        const res = await addBookingByWeeks(weeksDuration, slotToAddBookingByWeeks, typeToAddBookingByWeeks,new Date(selectedDate.format('YYYY-MM-DD')), customerIdToAddBookingByWeeks
+        const res = await addBookingByWeeks(weeksDuration, slotToAddBookingByWeeks, typeToAddBookingByWeeks, new Date(selectedDate.format('YYYY-MM-DD')), customerIdToAddBookingByWeeks
             , doctorId, clinicIdToAddBookingByWeeks, serviceIdToAddBookingByWeeks
         );
-        if(res){
+        if (res) {
             console.log("handleAddBookingByWeeks: ", res);
         }
     }
+    const onchangeReason = (e) => {
+        console.log("onchangeReason: ", e.target.value);
+        setReasonCancelBooking(e.target.value);
+    };
+
+
     return (
         <>
 
@@ -306,7 +320,7 @@ const ManageBooking = () => {
                             <Input.TextArea />
                         </Form.Item>
                         <Form.List name="medicines"
-              
+
                         >
                             {(fields, { add, remove }) => (
                                 <>
@@ -383,6 +397,8 @@ const ManageBooking = () => {
             <Modal title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
                 <div>
                     <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
+                    <Title level={5}>Lý do huỷ: <span className="text-red-500">*</span></Title>
+                    <TextArea value={reasonToCancelBooking} onChange={onchangeReason} />
                 </div>
             </Modal>
             <Modal width={1200} footer="" title="Hẹn lịch khám định kỳ" open={isModalBookingByWeeks} onOk={handleOk} onCancel={handleCancel}>
@@ -433,7 +449,7 @@ const ManageBooking = () => {
                 </div>
             </Modal>
             <h1 className="text-center my-5">Quản lý đặt lịch</h1>
-            <Search className="mb-5" style={{width: "300px"}} type="number" placeholder="Nhập số điện thoại" onSearch={onSearch} enterButton />
+            <Search className="mb-5" style={{ width: "300px" }} type="number" placeholder="Nhập số điện thoại" onSearch={onSearch} enterButton />
             <Table columns={columns} dataSource={bookings} />
         </>
     )
