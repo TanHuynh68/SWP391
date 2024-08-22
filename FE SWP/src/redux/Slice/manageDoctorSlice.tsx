@@ -1,18 +1,29 @@
-import { doctorData } from '@/data/doctorData';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:5105';
-const tokenWithBearer = localStorage.getItem('token');
-const token = tokenWithBearer?.replace('Bearer ', '');
-const user = localStorage.getItem('user');
-const userData = user ? JSON.parse(user) : null;
-const ownerId = userData?.Id;
 
-// Async Thunk để lấy danh sách phòng khám
+// Async Thunk để lấy danh sách phòng khám (bao gồm cả phòng khám đang hoạt động và không hoạt động)
+export const fetchAllClinicsActiveAndDeactiveByOwnerId = createAsyncThunk(
+    'manageDoctor/fetchAllClinicsActiveAndDeactiveByOwnerId',
+    async ({ ownerId, token }: { ownerId: number, token: string }, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllClinicsActiveAndDeactiveByOwnerId?ownerId=${ownerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data || 'An error occurred');
+        }
+    }
+);
+
+// Async Thunk để lấy danh sách phòng khám theo ownerId
 export const fetchClinics = createAsyncThunk(
     'manageDoctor/fetchClinics',
-    async (_, { rejectWithValue }) => {
+    async ({ ownerId, token }: { ownerId: number, token: string }, { rejectWithValue }) => {
         try {
             const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllClinicsByOwnerId?ownerId=${ownerId}`, {
                 headers: {
@@ -26,12 +37,12 @@ export const fetchClinics = createAsyncThunk(
     }
 );
 
-// Async Thunk để lấy danh sách bệnh nhân trong một phòng khám cụ thể
-export const fetchPatients = createAsyncThunk(
-    'manageDoctor/fetchPatients',
-    async (clinicId: number, { rejectWithValue }) => {
+// Async Thunk để lấy danh sách bác sĩ trong một phòng khám cụ thể
+export const fetchDoctors = createAsyncThunk(
+    'manageDoctor/fetchDoctors',
+    async ({ clinicId, token }: { clinicId: number, token: string }, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllPatientsOfClinic?clinicId=${clinicId}`, {
+            const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllDoctorsOfClinic?clinicId=${clinicId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -43,35 +54,46 @@ export const fetchPatients = createAsyncThunk(
     }
 );
 
+// Async Thunk để thêm mới bác sĩ
 export const addDoctor = createAsyncThunk(
     'manageDoctor/addDoctor',
-    async (newDoctor: any, {rejectWithValue}) => {
+    async ({ token, clinicId, ...newDoctor }: { token: string, clinicId: number, newDoctor: any }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${BASE_URL}/ClinicOwner/addDoctor`, newDoctor,{
+            const response = await axios.post(`${BASE_URL}/ClinicOwner/addDoctor?clinicId=${clinicId}`, newDoctor, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
-            })
+            });
             return response.data;
-        } catch (error) {
+        } catch (error: any) {
             return rejectWithValue(error.response?.data || 'An error occurred');
         }
-        
     }
-)
+);
 
 
 const manageDoctorSlice = createSlice({
     name: 'manageDoctor',
     initialState: {
         clinics: [],
-        patients: [],
+        doctors: [],
         loading: false,
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchAllClinicsActiveAndDeactiveByOwnerId.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchAllClinicsActiveAndDeactiveByOwnerId.fulfilled, (state, action) => {
+                state.clinics = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchAllClinicsActiveAndDeactiveByOwnerId.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            })
             .addCase(fetchClinics.pending, (state) => {
                 state.loading = true;
             })
@@ -83,24 +105,23 @@ const manageDoctorSlice = createSlice({
                 state.error = action.payload;
                 state.loading = false;
             })
-            .addCase(fetchPatients.pending, (state) => {
+            .addCase(fetchDoctors.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(fetchPatients.fulfilled, (state, action) => {
-                state.patients = action.payload;
+            .addCase(fetchDoctors.fulfilled, (state, action) => {
+                state.doctors = Array.isArray(action.payload) ? action.payload : [];
                 state.loading = false;
             })
-            .addCase(fetchPatients.rejected, (state, action) => {
+            .addCase(fetchDoctors.rejected, (state, action) => {
                 state.error = action.payload;
                 state.loading = false;
             })
-
             .addCase(addDoctor.pending, (state) => {
                 state.loading = true;
             })
             .addCase(addDoctor.fulfilled, (state, action) => {
                 state.loading = false;
-                state.patients.push(action.payload); 
+                state.doctors.push(action.payload);
             })
             .addCase(addDoctor.rejected, (state, action) => {
                 state.loading = false;

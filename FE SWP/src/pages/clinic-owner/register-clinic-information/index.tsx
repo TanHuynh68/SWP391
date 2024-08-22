@@ -9,21 +9,26 @@ import { fetchSevicesAllServices } from '@redux/Slice/servicesRegisterClinicSlic
 const RegisterClinic = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm();
+    const [token, setToken] = useState<string | null>(null);
+    const [ownerId, setOwnerId] = useState<number | null>(null);
+
     const dispatch: AppDispatch = useDispatch();
     const { clinics, loading, error } = useSelector((state: RootState) => state.registerClinic);
     const { services } = useSelector((state: RootState) => state.servicesRegisterClinic);
 
-    
-   
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            dispatch(fetchAllClinics());
+        const tokenWithBearer = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        const userData = user ? JSON.parse(user) : null;
+
+        setToken(tokenWithBearer?.replace('Bearer ', '') || null);
+        setOwnerId(userData?.Id || null);
+
+        if (token && ownerId) {
+            dispatch(fetchAllClinics({ ownerId, token }));
             dispatch(fetchSevicesAllServices());
         }
-    }, [dispatch]);
-    
-    
+    }, [dispatch, token, ownerId]);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -33,35 +38,33 @@ const RegisterClinic = () => {
         setIsModalOpen(false);
     };
 
-
-
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const user = localStorage.getItem('user');
-            const userData = user ? JSON.parse(user) : null;
-            const ownerId = userData?.Id;
-            const clinicData = {
-                clinicName: values.name,
-                description: values.description,
-                address: values.address,
-                serviceIdList: values.specialty.map(Number),
-                image: "", 
-                ownerId: ownerId, 
-            };
-    
-            console.log("Clinic Data:", clinicData); 
-            dispatch(registerClinic(clinicData))
-                .unwrap()
-                .then(() => {
-                    message.success("Phòng khám đã được đăng ký thành công!");
-                    setIsModalOpen(false);
-                    form.resetFields();
-                    dispatch(fetchAllClinics());
-                })
-                .catch((err) => {
-                    message.error(`Đăng ký phòng khám thất bại: ${JSON.stringify(err)}`);
-                });
+            if (token && ownerId) {
+                const clinicData = {
+                    clinicName: values.name,
+                    description: values.description,
+                    address: values.address,
+                    serviceIdList: values.specialty.map(Number),
+                    image: "",
+                    ownerId: ownerId,
+                    token: token,
+                };
+
+                console.log("Clinic Data:", clinicData);
+                dispatch(registerClinic(clinicData))
+                    .unwrap()
+                    .then(() => {
+                        message.success("Phòng khám đã được đăng ký thành công!");
+                        setIsModalOpen(false);
+                        form.resetFields();
+                        dispatch(fetchAllClinics({ ownerId, token }));
+                    })
+                    .catch((err) => {
+                        message.error(`Đăng ký phòng khám thất bại: ${JSON.stringify(err)}`);
+                    });
+            }
         } catch (err) {
             console.error("Error:", err);
             message.error("Có lỗi xảy ra khi nộp form.");
@@ -88,12 +91,17 @@ const RegisterClinic = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: number) => (
-                <>
-                    {status === 2 ? "Active" : "Unactive"}
-                </>
-            ),
-        },
+            render: (status: number) => {
+                switch(status) {
+                    case 1:
+                        return "Chờ Duyệt";
+                    case 2:
+                        return "Đang Hoạt Động";
+                    case 3:
+                        return "Không Hoạt Động";
+                }
+            },
+        }
     ];
 
     const dataSource = clinics.map((clinic, index) => ({
