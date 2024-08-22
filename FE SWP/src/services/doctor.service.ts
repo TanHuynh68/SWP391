@@ -26,9 +26,9 @@ export const editResult = async (id: number, value:MedicineFormValues, result: s
     }
 }
 
-export const cancelBooking = async (id: number) => {
+export const cancelBooking = async (id: number, reason:string) => {
     try {
-        const response = await axiosInstance.post(`${API_DOCTOR_CANCEL_BOOKING}${id}`)
+        const response = await axiosInstance.post(`/Booking/CancelBooking?bookingId=${id}&reason=${reason}`)
         if (response) {
             return response;
         }

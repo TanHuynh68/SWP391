@@ -29,10 +29,10 @@ const CustomerBookingPage = () => {
     const [service, setService] = useState<string>('');
     const [services, setServices] = useState<ServiceDetail[]>([]);
     const [slotChecked, setSlotChecked] = useState<number>(-1);
-    const [dayChecked, setDayChecked] = useState<dayjs.Dayjs| null>(null);
+    const [dayChecked, setDayChecked] = useState<dayjs.Dayjs | null>(null);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-   
+
     const user = localStorage.getItem("user");
     const userData: User = JSON.parse(user)
     const customerId = userData.Id;
@@ -63,9 +63,9 @@ const CustomerBookingPage = () => {
         console.log("clinic_id", clinic_id)
         console.log("service", service)
         console.log("doctorIdSelected", doctorIdSelected)
-         if (!service) {
+        if (!service) {
             return message.error("Hãy chọn chuyên khoa")
-        } 
+        }
         else if (!doctorIdSelected) {
             return message.error("Hãy chọn bác sĩ")
         }
@@ -78,9 +78,10 @@ const CustomerBookingPage = () => {
         const vnTimePlusOneDay = selectedDate.tz("Asia/Ho_Chi_Minh").add(1, 'day').format('YYYY-MM-DDTHH:mm:ss');
 
         const res = await createBooking(slotChecked, 0, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
-        console.log("handleAddBooking: ", res);
-        if (res) {
+        if (res.length > 0) {
             message.success("Đặt lịch thành công")
+        } else {
+            message.error(""+ res.response.data)
         }
     }
     useEffect(() => {
@@ -107,6 +108,7 @@ const CustomerBookingPage = () => {
 
     const getAllServicesOfClinicFromCustomer = async () => {
         const res = await getAllServicesOfClinic(parseInt(clinic_id));
+        console.log("getAllServicesOfClinicFromCustomer: ", res);
         setServices(res);
     };
 
@@ -120,6 +122,7 @@ const CustomerBookingPage = () => {
     const getWorkingTimeDoctorByCustomer = async () => {
         const res = await getWorkingOfDoctor(doctorIdSelected);
         if (res) {
+            console.log("getWorkingTimeDoctorByCustomer: ", res)
             setWorkingTimeA(res);
         }
     };
@@ -150,7 +153,7 @@ const CustomerBookingPage = () => {
         }
     };
 
-    const handleSetSlotTime = (workingTime: WorkingTime, selectedDate:dayjs.Dayjs) => {
+    const handleSetSlotTime = (workingTime: WorkingTime, selectedDate: dayjs.Dayjs) => {
         if (!isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek, selectedDate)) {
             setSlotChecked(workingTime.slot.slotTime);
             setDayChecked(selectedDate)
@@ -187,7 +190,7 @@ const CustomerBookingPage = () => {
                                 className="w-full"
                                 onChange={handleChangeService}
                                 options={services?.map(service => (
-                                    { label: service.services.name, value: service.id }
+                                    { label: service.services.name, value: service.services.id }
                                 ))}
                             />
                         </div>
