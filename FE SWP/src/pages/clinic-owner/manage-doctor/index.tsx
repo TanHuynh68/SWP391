@@ -130,8 +130,8 @@ const ManageDoctor = () => {
         }
     ];
 
-    const dataSource = patients.map((patient, index) => ({
-        key: patient.id,
+    const dataSource = Array.isArray(doctors) ? doctors.map((doctors, index) => ({
+        key: doctors.id,
         no: index + 1,
         name: doctors.account.fullName,
         gender: doctors.account.gender === 0 ? "Nữ" : "Nam",
