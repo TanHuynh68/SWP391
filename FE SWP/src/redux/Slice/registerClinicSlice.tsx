@@ -2,23 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:5105';
-const tokenWithBearer = localStorage.getItem('token');
-const token = tokenWithBearer?.replace('Bearer ', '');
-const user = localStorage.getItem('user');
-const userData = user ? JSON.parse(user) : null;
-const ownerId = userData?.Id;
 
 // Async Thunk để gọi API đăng ký phòng khám
 export const registerClinic = createAsyncThunk(
     'registerClinic/registerClinic',
-    async (clinicData: { clinicName: string, description: string, address: string, serviceIdList: number[] }, { rejectWithValue }) => {
+    async (clinicData: { clinicName: string, description: string, address: string, serviceIdList: number[], ownerId: number }, { rejectWithValue }) => {
       try {
-        const response = await axios.post(`${BASE_URL}/ClinicOwner/addClinic`, {
-          ...clinicData,
-          ownerId: ownerId,
-        }, {
+        const response = await axios.post(`${BASE_URL}/ClinicOwner/addClinic`, clinicData, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${clinicData.token}`,
           }
         });
         return response.data;
@@ -31,7 +23,7 @@ export const registerClinic = createAsyncThunk(
 // Async Thunk để gọi API lấy danh sách phòng khám
 export const fetchAllClinics = createAsyncThunk(
     'registerClinic/fetchAllClinics',
-    async (_, { rejectWithValue }) => {
+    async ({ ownerId, token }: { ownerId: number, token: string }, { rejectWithValue }) => {
         try {
             const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllClinicsByOwnerId?ownerId=${ownerId}`, {
                 headers: {
