@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, message } from "antd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchClinics, fetchDoctors, addDoctor } from "@redux/Slice/manageDoctorSlice";  // Removed assignClinic
+import { fetchClinics, fetchDoctors, addDoctor } from "@redux/Slice/manageDoctorSlice";  
 import { RootState, AppDispatch } from "@redux/store/store";
 
 const ManageDoctor = () => {

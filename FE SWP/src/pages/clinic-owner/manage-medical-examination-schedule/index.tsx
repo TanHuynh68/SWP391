@@ -13,8 +13,8 @@ const ManageMedicalExaminationSchedule = () => {
     const doctors = useSelector((state: RootState) => state.clinicManagement.doctors);
     const workingTimes = useSelector((state: RootState) => state.clinicManagement.workingTimes);
     const [selectedSlots, setSelectedSlots] = useState<{ [day: number]: number[] }>({});
-    const selectedDay = watch('dayOfWeek');  // Track the selected day
-    const selectedDoctor = watch('doctorId');  // Track the selected doctor
+    const selectedDay = watch('dayOfWeek');  // Theo dõi ngày đã chọn
+    const selectedDoctor = watch('doctorId');  // Theo dõi bác sĩ đã chọn
 
     useEffect(() => {
         dispatch(fetchClinicsByOwnerId());
