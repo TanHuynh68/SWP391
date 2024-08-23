@@ -5,7 +5,7 @@ import { WorkingTime } from "@/models/workingTime.model";
 import { createBooking, getAllDoctorByClinic, getAllServicesOfClinic, getClinicById } from "@/services/customer.service";
 import { getWorkingOfDoctor, getWorkingTimeDoctor } from "@/services/workingTime.service";
 import { CalendarOutlined } from "@ant-design/icons";
-import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message } from "antd";
+import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message, Checkbox, CheckboxProps } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from 'dayjs';
@@ -32,7 +32,7 @@ const CustomerBookingPage = () => {
     const [dayChecked, setDayChecked] = useState<dayjs.Dayjs | null>(null);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-
+    const [type ,setType] =  useState<number>(1);
     const user = localStorage.getItem("user");
     const userData: User = JSON.parse(user)
     const customerId = userData.Id;
@@ -63,6 +63,7 @@ const CustomerBookingPage = () => {
         console.log("clinic_id", clinic_id)
         console.log("service", service)
         console.log("doctorIdSelected", doctorIdSelected)
+        console.log("type", type)
         if (!service) {
             return message.error("Hãy chọn chuyên khoa")
         }
@@ -77,8 +78,9 @@ const CustomerBookingPage = () => {
         }
         const vnTimePlusOneDay = selectedDate.tz("Asia/Ho_Chi_Minh").add(1, 'day').format('YYYY-MM-DDTHH:mm:ss');
 
-        const res = await createBooking(slotChecked, 0, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
-        if (res.length > 0) {
+        const res = await createBooking(slotChecked, type, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
+        if (res.length >0) {
+            console.log("handleAddBooking: ", res )
             message.success("Đặt lịch thành công")
         } else {
             message.error(""+ res.response.data)
@@ -168,7 +170,14 @@ const CustomerBookingPage = () => {
         // Disable dates before today
         return current && current < dayjs().startOf('day');
     };
-
+    const onChangeCheck: CheckboxProps['onChange'] = (e) => {
+        console.log(`checked = ${e.target.checked}`);
+        if(e.target.checked === true){
+            setType(2);
+        }else{
+            setType(1); 
+        }
+      };
     return (
         <div>
             <div className="pt-20">
@@ -177,9 +186,12 @@ const CustomerBookingPage = () => {
                         <Col span={6}>
                             <Image width={200} src={clinic?.image} />
                         </Col>
-                        <Col span={18} className="mt-10">
-                            <div><p className="m-0">{clinic?.name}</p></div>
+                        <Col span={6} className="mt-10">
+                            <div><h3 className="m-0">{clinic?.name}</h3></div>
                             <div>{clinic?.address}</div>
+                        </Col>
+                        <Col span={12} className="mt-10">
+                            <div><p className="m-0">{clinic?.description}</p></div>
                         </Col>
                     </Row>
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 my-3">
@@ -216,6 +228,9 @@ const CustomerBookingPage = () => {
                                 disabled={doctorIdSelected ? false : true}
                             />
                         </div>
+                    </div>
+                    <div>
+                    <Checkbox onChange={onChangeCheck}>Checkbox</Checkbox>
                     </div>
                     <Row className="mt-2">
                         <Col span={1}>
@@ -270,9 +285,6 @@ const CustomerBookingPage = () => {
                         </div>
                     ))
                 }
-            </div>
-            <div className="my-5">
-                {clinic?.description}
             </div>
         </div>
     );

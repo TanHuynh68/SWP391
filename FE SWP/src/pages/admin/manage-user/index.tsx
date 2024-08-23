@@ -240,7 +240,7 @@ const ManageUser = () => {
                         onChange={handleChange}
                         options={[
                             { value: '', label: 'Tất cả vai trò' },
-                            { value: 'Clinic Owner', label: 'Chủ phòng khám' },
+                            { value: 'ClinicOwner', label: 'Chủ phòng khám' },
                             { value: 'Admin', label: 'Quản trị viên' },
                             { value: 'Doctor', label: 'Bác sĩ' },
                             { value: 'Customer', label: 'Khách hàng' },

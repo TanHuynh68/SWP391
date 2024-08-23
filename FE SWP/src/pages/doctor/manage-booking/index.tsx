@@ -90,7 +90,7 @@ const ManageBooking = () => {
         setIsModalCustomerOpen(true);
     };
 
-    const showModalCanlcelBooking = (booking: Booking) => {
+    const showModalCancelBooking = (booking: Booking) => {
         console.log("reason: ", reasonToCancelBooking);
         setBookingNeedToCancel(booking);
         setIsModalCancelBooking(true)
@@ -224,7 +224,7 @@ const ManageBooking = () => {
                 <>
                     {
                         record.status === 1 && <>
-                            <Button onClick={() => showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
+                            <Button onClick={() => showModalCancelBooking(record)} className="bg-red-500 m-2 ">
                                 Huỷ đặt lịch
                             </Button>
                             <Button onClick={() => showModalBookingByWeeks(record)} className="bg-purple-500 m-2 ">
