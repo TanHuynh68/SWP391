@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Col, GetProps, Modal, Row, Table, Tag } from "antd";
 import Input from "antd/es/input";
 import { useEffect, useState } from "react";

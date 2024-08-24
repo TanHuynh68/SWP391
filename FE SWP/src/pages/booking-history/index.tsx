@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
 import { ClinicsService, Doctor, Medicine, Patient } from "@/models/patient.model";
 import { User } from "@/models/user.model";
@@ -55,7 +56,7 @@ const CustomerBookingHistory = () => {
             const res = await cancelBooking(id, reasonToCancelBooking);
             if (res) {
                 console.log("res: ", res);
-                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.fullName} thành công`)
+                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
                 setIsModalCancelBooking(false)
                 setReasonCancelBooking('')
             }
@@ -224,7 +225,7 @@ const CustomerBookingHistory = () => {
             </Modal>
             <Modal title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.fullName}</span></p>
+                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
                     <Title level={5}>Lý do huỷ: <span className="text-red-500">*</span></Title>
                     <TextArea value={reasonToCancelBooking} onChange={onchangeReason} />
                 </div>

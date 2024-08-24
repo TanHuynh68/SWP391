@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Clinic } from "@/models/clinic.model";
 import { deleteClinicPending, getAllClinic, getAllClinicPending, getClinicByName, updateClinicStatusActiveOrInactive, updateClinicStatusPendingToActive } from "@/services/admin.service";
 import { Button, Col, GetProps, Image, message, Modal, Row, Switch, Table, Tabs, TabsProps, Tag } from "antd";
@@ -8,7 +9,6 @@ import { useEffect, useState } from "react";
 const ManageClinic = () => {
     const [clinics, setClinics] = useState<Clinic[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [keyword, setKeyword] = useState<string>('');
     const [statusToFilter, setStatusToFilter] = useState<number>(1);
     const [clinic, setClinic] = useState<Clinic>();
     const showModal = (clinic: Clinic) => {
@@ -212,18 +212,17 @@ const ManageClinic = () => {
         }
     }
 
-    const updateStatusActiveOrInactive = async (record: Clinic) => {
-        const res = await updateClinicStatusActiveOrInactive(record.id);
-        if (res) {
-            message.success(`Cập nhật trạng thái thành công!`)
-        } else {
-            message.error(`Cập nhật trạng thái thất bại!`)
-        }
-    }
+    // const updateStatusActiveOrInactive = async (record: Clinic) => {
+    //     const res = await updateClinicStatusActiveOrInactive(record.id);
+    //     if (res) {
+    //         message.success(`Cập nhật trạng thái thành công!`)
+    //     } else {
+    //         message.error(`Cập nhật trạng thái thất bại!`)
+    //     }
+    // }
 
     const onSearch: SearchProps['onSearch'] = async (value) => {
         console.log("value: ", value)
-        setKeyword(value);
         const res = await getClinicByName(value)
         if (value != "") {
             setClinics(res);

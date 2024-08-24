@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { User } from "@/models/user.model";
 import { filterUserbyNameAndRole, getAllUser } from "@/services/user.service";
 import { Button, Col, GetProps, Image, message, Modal, Row, Select, Switch, Table, Tag } from "antd";

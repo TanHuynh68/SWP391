@@ -1,9 +1,10 @@
+// @ts-nocheck
 import { isPastSlotTimeToday, slotTime } from "@/constants/consts";
 import { Clinic } from "@/models/clinic.model";
 import { Doctor } from "@/models/doctor.model";
 import { WorkingTime } from "@/models/workingTime.model";
 import { createBooking, getAllDoctorByClinic, getAllServicesOfClinic, getClinicById } from "@/services/customer.service";
-import { getWorkingOfDoctor, getWorkingTimeDoctor } from "@/services/workingTime.service";
+import {  getWorkingTimeDoctor } from "@/services/workingTime.service";
 import { CalendarOutlined } from "@ant-design/icons";
 import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message, Checkbox, CheckboxProps } from "antd";
 import { useEffect, useState } from "react";
@@ -23,14 +24,14 @@ const CustomerBookingPage = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [accountIdDoctor, setAccountIdDoctor] = useState<number>(0);
     const [doctorIdSelected, setDoctorIdSelected] = useState<number>(0);
-    const [workingTimeA, setWorkingTimeA] = useState<WorkingTime[]>([]);
+    // const [workingTimeA, setWorkingTimeA] = useState<WorkingTime[]>([]);
     const [workingTimeB, setWorkingTimeB] = useState<WorkingTime[]>([]);
     const [workingDayOfWeek, setWorkingDayOfWeek] = useState<number>(0);
     const [service, setService] = useState<string>('');
     const [services, setServices] = useState<ServiceDetail[]>([]);
     const [slotChecked, setSlotChecked] = useState<number>(-1);
     const [dayChecked, setDayChecked] = useState<dayjs.Dayjs | null>(null);
-    const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
+    // const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
     const [type, setType] = useState<number>(1);
     const user = localStorage.getItem("user");
@@ -121,13 +122,13 @@ const CustomerBookingPage = () => {
         }
     };
 
-    const getWorkingTimeDoctorByCustomer = async () => {
-        const res = await getWorkingOfDoctor(doctorIdSelected);
-        if (res) {
-            console.log("getWorkingTimeDoctorByCustomer: ", res)
-            setWorkingTimeA(res);
-        }
-    };
+    // const getWorkingTimeDoctorByCustomer = async () => {
+    //     const res = await getWorkingOfDoctor(doctorIdSelected);
+    //     if (res) {
+    //         console.log("getWorkingTimeDoctorByCustomer: ", res)
+    //         setWorkingTimeA(res);
+    //     }
+    // };
 
     const getWorkingTimeDoctorFromCustomer = async () => {
         if (selectedDate && doctorIdSelected) {

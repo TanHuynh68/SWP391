@@ -138,9 +138,24 @@ export class Role {
         this.id = id;
         this.status = status;
         this.name = name;
+       
     }
   }
   
+  
+  export class Customer {
+    id: number;
+    address: string;
+    phone: string;
+    account: Account;
+  
+    constructor(id: number = 0, phone: string = "", address: string = "",   account: Account = new Account()) {
+        this.id = id;
+        this.phone = phone;
+        this.address = address;
+        this.account = account;
+    }
+  }
   export class Patient {
     id: number;
     status: number;
@@ -149,7 +164,7 @@ export class Role {
     createAt: string;
     updateAt: string;
     bookingDate: string;
-    customer: Account;
+    customer: Customer;
     doctor: Doctor;
     clinicsService: ClinicsService;
     bookingAddress: string;
@@ -166,7 +181,7 @@ export class Role {
         createAt: string = "",
         updateAt: string = "",
         bookingDate: string = "",
-        customer: Account = new Account(),
+        customer: Customer = new Customer(),
         doctor: Doctor = new Doctor(),
         clinicsService: ClinicsService = new ClinicsService(),
         bookingAddress: string = "",

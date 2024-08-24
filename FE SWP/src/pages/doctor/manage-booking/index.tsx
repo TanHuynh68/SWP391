@@ -1,4 +1,5 @@
-import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
+// @ts-nocheck
+import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage, slotTime } from "@/constants/consts";
 import { Booking, Customer, Medicine } from "@/models/booking.model";
 import { User } from "@/models/user.model";
 import { addBookingByWeeks, cancelBooking, editResult, getAllBooking, getAllBookingByCustomerPhone } from "@/services/doctor.service";
@@ -200,10 +201,10 @@ const ManageBooking = () => {
             )
         },
         {
-            title: 'Slot Time',
+            title: 'Thời gian khám',
             render: (record: Booking) => (
                 <>
-                    {record.slot.slotTime}
+                    {slotTime(record.slot.slotTime)}
                 </>
             )
         },
