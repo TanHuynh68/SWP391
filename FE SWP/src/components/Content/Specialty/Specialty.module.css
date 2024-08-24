@@ -34,7 +34,7 @@ h2 {
 .icon {
   width: 180px;
   height: 180px;
-  border-radius: 10px; /* Giữ các góc vuông thay vì hình tròn */
+  border-radius: 10px; 
   object-fit: cover;
   margin-bottom: 10px;
 }
@@ -61,4 +61,15 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.specialtyList {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.specialtyCard {
+  min-width: 25%;
+  box-sizing: border-box; 
 }
