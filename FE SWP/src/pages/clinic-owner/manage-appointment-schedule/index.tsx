@@ -73,7 +73,7 @@ const ManageAppointmentSchedule = () => {
 
     const columns = [
         {
-            title: 'Tên bện nhân',
+            title: 'Tên bệnh nhân',
             render: (record: Booking) => (
                 <>
                     {record?.customer?.account?.fullName}
