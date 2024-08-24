@@ -6,6 +6,8 @@ import { useSpring, animated } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { useNavigate } from 'react-router-dom'; 
 import styles from './Doctor.module.css';
+import { getUserDataFromLocalStorage } from '@/constants/consts';
+
 
 const Doctor: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -44,6 +46,9 @@ const Doctor: React.FC = () => {
     });
   });
 
+  const user = getUserDataFromLocalStorage();
+
+
   return (
     <div className={styles.doctorContainer}>
       <div className={styles.head}>
@@ -56,6 +61,7 @@ const Doctor: React.FC = () => {
       <div className={styles.carouselContainer}>
         <animated.div {...bind()} className={styles.doctorList} style={{ x: props.x }}>
           {doctors.map((doctor, i) => (
+            
             <DoctorCard 
               key={i} 
               name={doctor.account.fullName} 

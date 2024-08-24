@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpecialties } from '@redux/Slice/specialtySlice';
-import { RootState, AppDispatch } from '@redux/store/store';
+import { RootState, AppDispatch } from '@redux/Store/store';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 import styles from './Specialty.module.css';
