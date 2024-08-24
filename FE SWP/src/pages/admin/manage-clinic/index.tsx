@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { statusName } from "@/constants/consts";
 import { Clinic } from "@/models/clinic.model";
 import { deleteClinicPending, getAllClinic, getAllClinicPending, getClinicByName, updateClinicStatusActiveOrInactive, updateClinicStatusPendingToActive } from "@/services/admin.service";
 import { Button, Col, GetProps, Image, message, Modal, Row, Switch, Table, Tabs, TabsProps, Tag } from "antd";
@@ -19,7 +20,7 @@ const ManageClinic = () => {
             getAllClinicPendingFromAdmin();
         }
     }, [statusToFilter])
-    
+
     const showModal = (clinic: Clinic) => {
         setClinic(clinic);
         setIsModalOpen(true);
@@ -35,16 +36,16 @@ const ManageClinic = () => {
 
   
 
-    const statusName = (status: number) => {
-        switch (status) {
-            case 1:
-                return "Pending"
-            case 2:
-                return "Active"
-            case 3:
-                return "Inactive"
-        }
-    }
+    // const statusName = (status: number) => {
+    //     switch (status) {
+    //         case 1:
+    //             return "Pending"
+    //         case 2:
+    //             return "Active"
+    //         case 3:
+    //             return "Inactive"
+    //     }
+    // }
     const getAllClinicActiveAndInactiveFromAdmin = async () => {
         const res = await getAllClinic();
         const sortedBookings = res.sort((a, b) => {

@@ -95,11 +95,11 @@ const CustomerBookingPage = () => {
         }
     }, [clinic_id]);
 
-    useEffect(() => {
-        if (doctorIdSelected) {
-            getWorkingTimeDoctorByCustomer();
-        }
-    }, [doctorIdSelected]);
+    // useEffect(() => {
+    //     if (doctorIdSelected) {
+    //         getWorkingTimeDoctorByCustomer();
+    //     }
+    // }, [doctorIdSelected]);
 
     useEffect(() => {
         if (selectedDate && doctorIdSelected) {
