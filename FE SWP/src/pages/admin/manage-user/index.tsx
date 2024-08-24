@@ -71,8 +71,11 @@ const ManageUser = () => {
 
     const getAllUserFormAdmin = async () => {
         const res = await getAllUser();
+        const sortedBookings = res.sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
         if (res) {
-            setUsers(res); // Extract data from AxiosResponse and set it to users
+            setUsers(sortedBookings); // Extract data from AxiosResponse and set it to users
         }
         console.log("user", users)
     };
@@ -138,6 +141,14 @@ const ManageUser = () => {
                     }
                 </div>
             )
+        },
+        {
+            title: 'Create At',
+            render: (record: User) => (
+                <>
+                     {format(new Date(record?.createdAt), "dd/MM/yyyy")}
+                </>
+            ),
         },
         {
             title: 'Hành động',
@@ -209,7 +220,10 @@ const ManageUser = () => {
         console.log("roleUser: ", roleUser)
         const res = await filterUserbyNameAndRole(keywordUser, roleUser);
         console.log("handleSearchAndFilter: ", res)
-        setUsers(res);
+        const sortedBookings = res.sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+        setUsers(sortedBookings);
     }
 
     return (

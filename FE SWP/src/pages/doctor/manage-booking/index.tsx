@@ -169,7 +169,7 @@ const ManageBooking = () => {
             title: 'Loại',
             render: (record: Booking) => (
                 record.type === 1 ? <>
-                    <p>Khám</p>
+                    <>Khám</>
                 </>
                     : <>
                         Điều trị
