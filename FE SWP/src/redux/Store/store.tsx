@@ -13,7 +13,6 @@
 // export type AppDispatch = typeof store.dispatch;
 
 
-// src/store.tsx
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../auth/authSlice';
 import registerReducer from '../auth/registerSlice';
@@ -22,7 +21,6 @@ import profileSlice from "../auth/profileSlice";
 import specialtyReducer from '../Slice/specialtySlice';
 import doctorReducer from '../Slice/doctorSlice'; 
 import logoutReducer from '../auth/logoutSlice'; 
-// import clinicManagementReducer from '../Slice/clinicManagementSlice'; 
 import managePatientSlice from '../Slice/managePatientSlice';
 import registerClinicSlice from '../Slice/registerClinicSlice';
 import manageDoctorSlice from '../Slice/manageDoctorSlice';
@@ -38,7 +36,6 @@ const store = configureStore({
     specialty: specialtyReducer, 
     doctor: doctorReducer, 
     logout: logoutReducer,
-    // clinicManagement: clinicManagementReducer, 
     managePatient: managePatientSlice,
     registerClinic: registerClinicSlice,
     manageDoctor: manageDoctorSlice,
