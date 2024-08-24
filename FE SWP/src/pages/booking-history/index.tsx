@@ -131,7 +131,7 @@ const CustomerBookingHistory = () => {
             title: 'Loại',
             render: (record: Patient) => (
                 record.type === 1 ? <>
-                    <p>Khám</p>
+                    <>Khám</>
                 </>
                     : <>
                         Điều trị
@@ -166,7 +166,7 @@ const CustomerBookingHistory = () => {
                 <>
                     {
                         record.status === 1 && <>
-                            <Button onClick={() => showModalCancelBooking(record)} className="bg-red-500 m-2 ">
+                            <Button onClick={() => showModalCancelBooking(record)} className="bg-red-500  ">
                                 Huỷ đặt lịch
                             </Button>
                         </>

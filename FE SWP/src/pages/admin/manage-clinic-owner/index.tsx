@@ -6,6 +6,7 @@ import { Form, Select } from 'antd';
 import { ClinicOwner } from "@/models/clinicOwner.model";
 import { addClinicOwner, getAllClinicOwner, searchUser } from "@/services/admin.service";
 import { statusColor, statusName } from "@/constants/consts";
+import { format } from "date-fns";
 
 const ManageClinicOwner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,11 @@ const ManageClinicOwner = () => {
     const getAllClinicOwnerFromAdmin = async () => {
         const res = await getAllClinicOwner("", "CLINICOWNER");
         if (res) {
-            setClinicOwner(res);
+            const sortedBookings = res.sort((a, b) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            });
+            console.log("getAllClinicOwnerFromAdmin: ", res)
+            setClinicOwner(sortedBookings);
         }
     }
     const showModal = () => {
@@ -67,6 +72,14 @@ const ManageClinicOwner = () => {
                     </Tag>
                 </>
             )
+        },
+        {
+            title: 'Create At',
+            render: (record: ClinicOwner) => (
+                <>
+                     {format(new Date(record?.createdAt), "dd/MM/yyyy")}
+                </>
+            ),
         },
         ([
             {

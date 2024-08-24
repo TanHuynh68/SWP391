@@ -11,6 +11,15 @@ const ManageClinic = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [statusToFilter, setStatusToFilter] = useState<number>(1);
     const [clinic, setClinic] = useState<Clinic>();
+
+    useEffect(() => {
+        if (statusToFilter === 1) {
+            getAllClinicActiveAndInactiveFromAdmin();
+        } else {
+            getAllClinicPendingFromAdmin();
+        }
+    }, [statusToFilter])
+    
     const showModal = (clinic: Clinic) => {
         setClinic(clinic);
         setIsModalOpen(true);
@@ -24,13 +33,7 @@ const ManageClinic = () => {
         setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        if (statusToFilter === 1) {
-            getAllClinicActiveAndInactiveFromAdmin();
-        } else {
-            getAllClinicPending();
-        }
-    }, [statusToFilter])
+  
 
     const statusName = (status: number) => {
         switch (status) {
@@ -44,9 +47,12 @@ const ManageClinic = () => {
     }
     const getAllClinicActiveAndInactiveFromAdmin = async () => {
         const res = await getAllClinic();
+        const sortedBookings = res.sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
         if (res) {
             console.log("res: ", res)
-            setClinics(res);
+            setClinics(sortedBookings);
         }
     }
 
@@ -54,7 +60,10 @@ const ManageClinic = () => {
         const res = await getAllClinicPending();
         if (res) {
             console.log("res: ", res)
-            setClinics(res);
+            const sortedBookings = res.sort((a, b) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            });
+            setClinics(sortedBookings);
         }
     }
     const status = (status: number) => {
@@ -120,6 +129,14 @@ const ManageClinic = () => {
             dataIndex: ['owner', 'fullName'], // Assuming owner is an object with a fullName property
             key: 'owner',
         },
+        {
+            title: 'Create At',
+            render: (record: Clinic) => (
+                <>
+                     {format(new Date(record?.createAt), "dd/MM/yyyy")}
+                </>
+            ),
+        },
     ];
 
     const columnsClinicPending = [
@@ -155,6 +172,7 @@ const ManageClinic = () => {
             dataIndex: ['owner', 'fullName'], // Assuming owner is an object with a fullName property
             key: 'owner',
         },
+        
         {
             title: 'Hành động',
             width: "15%",
