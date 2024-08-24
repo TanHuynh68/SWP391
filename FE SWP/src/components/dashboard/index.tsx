@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+    CalendarOutlined,
     DesktopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
@@ -50,6 +51,7 @@ const Dashboard: React.FC = () => {
                 getItem('Quản lý bác sĩ', '/clinic-owner/manage-doctor', <UserOutlined />),
                 getItem('Quản lý bệnh nhân', '/clinic-owner/manage-patient', <UserOutlined />),
                 getItem('Quản lý lịch khám bệnh', '/clinic-owner/manage-medical-examination-schedule', <UserOutlined />),
+                getItem('Quản lý lịch hẹn', '/clinic-owner/manage-appointment-schedule', <CalendarOutlined />),
             ]);
         }else if(currentPath.startsWith('/doctor')) {
             setItems([
