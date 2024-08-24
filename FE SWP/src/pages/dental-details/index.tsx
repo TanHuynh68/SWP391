@@ -4,6 +4,7 @@ import styles from './styles.module.css';
 import img1 from '@assets/home-img/search.png';
 import { Affix } from 'antd';
 import { Link } from 'react-router-dom';
+import { getUserDataFromLocalStorage } from '@/constants/consts';
 
 const DentalDetails: React.FC = () => {
   const [bottom, setBottom] = React.useState<number>(100);
@@ -12,7 +13,7 @@ const DentalDetails: React.FC = () => {
   const handleBackToHome = () => {
     navigate('/');
   };
-
+  const user = getUserDataFromLocalStorage();
   return (
     <div className={styles.container}>
       <button onClick={handleBackToHome} className={styles.homeButton}>
@@ -89,7 +90,7 @@ const DentalDetails: React.FC = () => {
       <div className={styles.bookingSection}>
         <Affix offsetBottom={bottom}>
           <button className={styles.bookingButton}>
-            <Link to={`/customer/booking-page/${id}`}>Đặt lịch khám ngay</Link>
+            <Link to={user ? `/customer/booking-page/${id}`: "/login"}>Đặt lịch khám ngay</Link>
           </button>
         </Affix>
       </div>

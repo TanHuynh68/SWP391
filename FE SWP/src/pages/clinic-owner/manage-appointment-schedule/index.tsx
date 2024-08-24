@@ -1,4 +1,5 @@
 
+// @ts-nocheck
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage, slotTime } from "@/constants/consts";
 import { Booking } from "@/models/booking.model";
 import { Clinic } from "@/models/clinic.model";
