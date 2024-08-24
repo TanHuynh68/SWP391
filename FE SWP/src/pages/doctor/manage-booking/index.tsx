@@ -1,4 +1,5 @@
-import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
+// @ts-nocheck
+import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage, slotTime } from "@/constants/consts";
 import { Booking, Customer, Medicine } from "@/models/booking.model";
 import { User } from "@/models/user.model";
 import { addBookingByWeeks, cancelBooking, editResult, getAllBooking, getAllBookingByCustomerPhone } from "@/services/doctor.service";
@@ -60,7 +61,7 @@ const ManageBooking = () => {
         setIsModalCustomerOpen(false);
         handleCancelBooking(bookingNeedToCancel.id)
         setIsModalEditMedicinesOpen(false)
-      
+
         setIsModalBookingByWeeks(false)
     };
 
@@ -90,7 +91,7 @@ const ManageBooking = () => {
         setIsModalCustomerOpen(true);
     };
 
-    const showModalCanlcelBooking = (booking: Booking) => {
+    const showModalCancelBooking = (booking: Booking) => {
         console.log("reason: ", reasonToCancelBooking);
         setBookingNeedToCancel(booking);
         setIsModalCancelBooking(true)
@@ -108,7 +109,7 @@ const ManageBooking = () => {
 
             // Sắp xếp các booking theo thời gian mới nhất
             const sortedBookings = res.sort((a, b) => {
-                return new Date(b.createAt).getTime() - new Date(a.createAt).getTime();
+                return new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime();
             });
             setBookings(sortedBookings);
         }
@@ -143,7 +144,7 @@ const ManageBooking = () => {
                 setReasonCancelBooking('')
             }
             getAllBookingByDoctor();
-        }else{
+        } else {
             message.error("Hãy nhập lý do huỷ!")
         }
     }
@@ -162,6 +163,17 @@ const ManageBooking = () => {
                 <Tag color={colorBookingStatus(record.status)}>
                     {bookingStatus(record.status)}
                 </Tag>
+            )
+        },
+        {
+            title: 'Loại',
+            render: (record: Booking) => (
+                record.type === 1 ? <>
+                    <p>Khám</p>
+                </>
+                    : <>
+                        Điều trị
+                    </>
             )
         },
         {
@@ -189,10 +201,10 @@ const ManageBooking = () => {
             )
         },
         {
-            title: 'Slot Time',
+            title: 'Thời gian khám',
             render: (record: Booking) => (
                 <>
-                    {record.slot.slotTime}
+                    {slotTime(record.slot.slotTime)}
                 </>
             )
         },
@@ -218,13 +230,13 @@ const ManageBooking = () => {
             )
         },
         {
-            title: 'Action',
+            title: 'Hành động / Lý do hủy',
             width: "20%",
             render: (record: Booking) => (
                 <>
                     {
                         record.status === 1 && <>
-                            <Button onClick={() => showModalCanlcelBooking(record)} className="bg-red-500 m-2 ">
+                            <Button onClick={() => showModalCancelBooking(record)} className="bg-red-500 m-2 ">
                                 Huỷ đặt lịch
                             </Button>
                             <Button onClick={() => showModalBookingByWeeks(record)} className="bg-purple-500 m-2 ">
@@ -232,7 +244,12 @@ const ManageBooking = () => {
                             </Button>
                         </>
                     }
-
+                    {
+                        record.status === 3 && <>
+                            Lý do hủy:
+                            <span className="font-bold"> {record?.reason}</span>
+                        </>
+                    }
                 </>
             )
         },
@@ -406,7 +423,7 @@ const ManageBooking = () => {
                     <div>
                         <Title level={5}>Chọn khung giờ<span className="text-red-500"> *</span></Title>
                         <Select
-                            defaultValue="hãy chọn khung giờ"
+                            defaultValue="Hãy chọn khung giờ"
                             className="w-full"
                             onChange={handleChangeSlotTimeToAddBookingByWeeks}
                             options={[

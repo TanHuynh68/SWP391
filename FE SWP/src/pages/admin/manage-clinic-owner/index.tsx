@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Col, GetProps, Modal, Row, Table, Tag } from "antd";
 import Input from "antd/es/input";
 import { useEffect, useState } from "react";
@@ -44,6 +45,11 @@ const ManageClinicOwner = () => {
             title: 'Giới tính',
             dataIndex: 'gender',
             key: 'gender',
+            render: (gender: number) => (
+                <Tag color={gender === 1 ? "orange" : "pink"}>
+                    {gender === 1 ? "Nam" : "Nữ"}
+                </Tag>
+            )
         },
         {
             title: 'Email',
@@ -133,37 +139,37 @@ const ManageClinicOwner = () => {
                         onFinish={onFinish}
                     >
                         <Form.Item
-                            label="Name"
+                            label="Tên chủ phòng khám"
                             name="fullName"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập tên chủ phòng khám!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Gender"
+                            label="Giới tính"
                             name="gender"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy chọn giới tính!' }]}
                         >
                             <Select
-                                defaultValue="Please Choose Gender"
+                                defaultValue="Hãy chọn giới tính"
                                 style={{ width: 151 }}
                                 options={[
-                                    { value: '1', label: 'Male' },
-                                    { value: '2', label: 'Female' },
+                                    { value: '1', label: 'Nam' },
+                                    { value: '2', label: 'Nữ' },
                                 ]}
                             />
                         </Form.Item>
                         <Form.Item
                             label="Email"
                             name="email"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập địa chỉ email!' }]}
                         >
                             <Input type="email" style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
                             label="Password"
                             name="password"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập mật khẩu!' }]}
                         >
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>

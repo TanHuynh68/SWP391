@@ -14,7 +14,7 @@ export class ClinicOwner {
       fullName: string | null = null,
       password: string = "",
       email: string = "",
-      gender: string | null = null,
+      gender: number | null = null,
       image: string | null = null,
       status: number = 2,
       updateAt: string = "",

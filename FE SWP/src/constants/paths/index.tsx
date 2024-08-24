@@ -20,7 +20,7 @@ const Paths = {
    MANAGE_PATIENT: "manage-patient",
    CUSTOMER_CLINIC_PAGE: "clinic",
    MANAGE_MEDICAL_EXAMINATION_SCHEDULE: "manage-medical-examination-schedule",
-
+   MANAGE_APPOINTMENT_SCHEDULE: "manage-appointment-schedule",
    /* DENTIST PATHS */
    DENTIST_DASHBOARD: "dashboard",
    DENTIST_CHAT_WINDOW: "chat-window",

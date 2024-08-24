@@ -47,18 +47,18 @@ export class Role {
   
   export class Doctor {
     id: number;
-    doB: string;
+    description: string;
     account: Account;
     clinicsId: number;
   
     constructor(
       id: number = 0,
-      doB: string = "2024-08-14T15:04:20.158Z",
+      description: string = "2024-08-14T15:04:20.158Z",
       account: Account = new Account(),
       clinicsId: number = 0
     ) {
       this.id = id;
-      this.doB = doB;
+      this.description = description;
       this.account = account;
       this.clinicsId = clinicsId;
     }

@@ -185,7 +185,7 @@ export class Booking {
     bookingName: string;
     result: string | null;
     medicines: Medicine[];
-
+    reason: string | null;
     constructor(
         id: number = 0,
         status: number = 0,
@@ -200,7 +200,8 @@ export class Booking {
         bookingAddress: string = "",
         bookingName: string = "",
         result: string | null = null,
-        medicines: Medicine[] = []
+        medicines: Medicine[] = [],
+        reason: string | null = null,
     ) {
         this.id = id;
         this.status = status;
@@ -215,6 +216,7 @@ export class Booking {
         this.bookingAddress = bookingAddress;
         this.bookingName = bookingName;
         this.result = result;
+        this.reason = reason;
         this.medicines = medicines;
     }
 }

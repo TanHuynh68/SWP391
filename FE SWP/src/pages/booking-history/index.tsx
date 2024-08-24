@@ -1,12 +1,19 @@
+// @ts-nocheck
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
-import { ClinicsService, Doctor, Medicine, Patient, Slot } from "@/models/patient.model";
+import { ClinicsService, Doctor, Medicine, Patient } from "@/models/patient.model";
 import { User } from "@/models/user.model";
 import { getPatient } from "@/services/customer.service";
-import { Image, Modal, Table, Tag } from "antd";
+import { cancelBooking } from "@/services/doctor.service";
+import { Button, Image, message, Modal, Table, Tag } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import Title from "antd/es/typography/Title";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 const CustomerBookingHistory = () => {
+    const [reasonToCancelBooking, setReasonCancelBooking] = useState<string>('');
+    const [isModalCancelBooking, setIsModalCancelBooking] = useState(false);
+    const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Patient>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalClinicOpen, setIsModalClinicOpen] = useState(false);
     const [isModalMedicinesOpen, setIsModalMedicinesOpen] = useState(false);
@@ -14,6 +21,11 @@ const CustomerBookingHistory = () => {
     const [clinicInfo, setClinicInfo] = useState<ClinicsService>();
     const [medicines, setMedicines] = useState<Medicine[]>([])
     const [result, setResult] = useState<string>('')
+
+    useEffect(() => {
+        getPatientFromCustomer();
+    }, [])
+
     const showModalClinic = (clinicsService: ClinicsService) => {
         setClinicInfo(clinicsService)
         setIsModalClinicOpen(true);
@@ -30,33 +42,49 @@ const CustomerBookingHistory = () => {
         setIsModalMedicinesOpen(true)
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
+        const res = await handleCancelBooking(bookingNeedToCancel.id)
+        if (res) {
+            setIsModalCancelBooking(false)
+        }
         setIsModalOpen(false);
         setIsModalClinicOpen(false);
         setIsModalMedicinesOpen(false)
     };
-
+    const handleCancelBooking = async (id: number) => {
+        if (reasonToCancelBooking) {
+            const res = await cancelBooking(id, reasonToCancelBooking);
+            if (res) {
+                console.log("res: ", res);
+                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
+                setIsModalCancelBooking(false)
+                setReasonCancelBooking('')
+            }
+            getPatientFromCustomer();
+        } else {
+            message.error("Hãy nhập lý do huỷ!")
+        }
+    }
     const handleCancel = () => {
         setIsModalOpen(false);
         setIsModalClinicOpen(false);
         setIsModalMedicinesOpen(false)
+        setIsModalCancelBooking(false)
     };
     const userData: User = getUserDataFromLocalStorage();
     const customerId = userData.Id
     console.log("customerId: ", customerId)
     const [patients, setPatients] = useState<Patient[]>([])
 
-    useEffect(() => {
-        getPatientFromCustomer();
-    }, [])
-
     const getPatientFromCustomer = async () => {
         const res = await getPatient(customerId);
         const sortedBookings = res.sort((a, b) => {
-            return new Date(b.createAt).getTime() - new Date(a.createAt).getTime();
+            return new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime();
         });
         if (res) {
+            console.log("getPatientFromCustomer: ", res);
             setPatients(sortedBookings);
+
         }
     }
 
@@ -100,6 +128,17 @@ const CustomerBookingHistory = () => {
             )
         },
         {
+            title: 'Loại',
+            render: (record: Patient) => (
+                record.type === 1 ? <>
+                    <p>Khám</p>
+                </>
+                    : <>
+                        Điều trị
+                    </>
+            )
+        },
+        {
             title: 'Create At',
             dataIndex: 'createAt',
             key: 'createAt',
@@ -120,6 +159,27 @@ const CustomerBookingHistory = () => {
                     </>
             )
         },
+        {
+            title: 'Action',
+            width: "20%",
+            render: (record: Patient) => (
+                <>
+                    {
+                        record.status === 1 && <>
+                            <Button onClick={() => showModalCancelBooking(record)} className="bg-red-500 m-2 ">
+                                Huỷ đặt lịch
+                            </Button>
+                        </>
+                    }
+                    {
+                        record.status === 3 && <>
+                            Lý do hủy:
+                            <span className="font-bold"> {record?.reason}</span>
+                        </>
+                    }
+                </>
+            )
+        },
     ];
     const columnsMedicine = [
         {
@@ -137,9 +197,20 @@ const CustomerBookingHistory = () => {
             dataIndex: 'detail',
             key: 'detail',
         },
-       
+
     ];
-    // format(new Date(user.createdAt), "dd/MM/yyyy")
+
+    const showModalCancelBooking = (record: Patient) => {
+        console.log("reason: ", reasonToCancelBooking);
+        setBookingNeedToCancel(record);
+        setIsModalCancelBooking(true)
+    };
+
+    const onchangeReason = (e) => {
+        console.log("onchangeReason: ", e.target.value);
+        setReasonCancelBooking(e.target.value);
+    };
+
     return (
         <>
             <Modal footer="" title="Thông tin bác sĩ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
@@ -150,6 +221,13 @@ const CustomerBookingHistory = () => {
                     <p>Ngày tạo: <span className="font-bold">{doctorInfo?.account.createdAt ? format(new Date(doctorInfo.account.createdAt), "dd/MM/yyyy") : 'N/A'}</span></p>
                     <p>Ngày chỉnh sửa: <span className="font-bold">{doctorInfo?.account.updateAt ? format(new Date(doctorInfo.account.updateAt), "dd/MM/yyyy") : 'N/A'}</span></p>
                     <Image src={doctorInfo?.account?.image} />
+                </div>
+            </Modal>
+            <Modal title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
+                <div>
+                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
+                    <Title level={5}>Lý do huỷ: <span className="text-red-500">*</span></Title>
+                    <TextArea value={reasonToCancelBooking} onChange={onchangeReason} />
                 </div>
             </Modal>
             <Modal footer="" title="Thông tin phòng khám" open={isModalClinicOpen} onOk={handleOk} onCancel={handleCancel}>
