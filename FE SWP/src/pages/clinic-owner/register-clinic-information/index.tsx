@@ -1,44 +1,75 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload } from "antd";
-import { useState } from "react";
-
-interface ClinicData {
-    key: string;
-    no: string;
-    name: string;
-    address: string;
-}
+import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, message } from "antd";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerClinic, fetchAllClinics } from "@redux/Slice/registerClinicSlice";
+import { RootState, AppDispatch } from "@redux/Store/store";
+import { fetchSevicesAllServices } from '@redux/Slice/servicesRegisterClinicSlice';
 
 const RegisterClinic = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form] = Form.useForm(); 
+    const [form] = Form.useForm();
+    const [token, setToken] = useState<string | null>(null);
+    const [ownerId, setOwnerId] = useState<number | null>(null);
+
+    const dispatch: AppDispatch = useDispatch();
+    const { clinics, loading, error } = useSelector((state: RootState) => state.registerClinic);
+    const { services } = useSelector((state: RootState) => state.servicesRegisterClinic);
+
+    useEffect(() => {
+        const tokenWithBearer = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        const userData = user ? JSON.parse(user) : null;
+
+        setToken(tokenWithBearer?.replace('Bearer ', '') || null);
+        setOwnerId(userData?.Id || null);
+
+        if (token && ownerId) {
+            dispatch(fetchAllClinics({ ownerId, token }));
+            dispatch(fetchSevicesAllServices());
+        }
+    }, [dispatch, token, ownerId]);
 
     const showModal = () => {
         setIsModalOpen(true);
-    };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
-    const dataSource: ClinicData[] = [
-        {
-            key: '1',
-            no: '1',
-            name: "Phòng Khám Bình An",
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            no: '1',
-            name: "Phòng Khám An Hòa",
-            address: '10 Downing Street',
-        },
-    ];
+    const handleSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+            if (token && ownerId) {
+                const clinicData = {
+                    clinicName: values.name,
+                    description: values.description,
+                    address: values.address,
+                    serviceIdList: values.specialty.map(Number),
+                    image: "",
+                    ownerId: ownerId,
+                    token: token,
+                };
+
+                console.log("Clinic Data:", clinicData);
+                dispatch(registerClinic(clinicData))
+                    .unwrap()
+                    .then(() => {
+                        message.success("Phòng khám đã được đăng ký thành công!");
+                        setIsModalOpen(false);
+                        form.resetFields();
+                        dispatch(fetchAllClinics({ ownerId, token }));
+                    })
+                    .catch((err) => {
+                        message.error(`Đăng ký phòng khám thất bại: ${JSON.stringify(err)}`);
+                    });
+            }
+        } catch (err) {
+            console.error("Error:", err);
+            message.error("Có lỗi xảy ra khi nộp form.");
+        }
+    };
 
     const columns = [
         {
@@ -56,7 +87,30 @@ const RegisterClinic = () => {
             dataIndex: 'address',
             key: 'address',
         },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: number) => {
+                switch(status) {
+                    case 1:
+                        return "Chờ Duyệt";
+                    case 2:
+                        return "Đang Hoạt Động";
+                    case 3:
+                        return "Không Hoạt Động";
+                }
+            },
+        }
     ];
+
+    const dataSource = clinics.map((clinic, index) => ({
+        key: clinic.id,
+        no: index + 1,
+        name: clinic.name,
+        address: clinic.address,
+        status: clinic.status,
+    }));
 
     const formItemLayout = {
         labelCol: {
@@ -69,15 +123,16 @@ const RegisterClinic = () => {
         },
     };
 
-    const options = [
-        { value: 'dentistry', label: 'Nha khoa' },
-        { value: 'cardiology', label: 'Tim mạch' },
-        { value: 'neurology', label: 'Thần kinh' },
-        { value: 'orthopedics', label: 'Chấn thương chỉnh hình' },
-    ];
+    const options = services.map(service => ({
+        value: service.id,
+        label: service.name
+    }));
 
-    const normFile = (e: React.ChangeEvent<HTMLInputElement>): File[] => {
-        return e.target.files ? Array.from(e.target.files) : [];
+    const normFile = (e: any) => {
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
     };
 
     const handleChange = (value: string[]) => {
@@ -88,39 +143,40 @@ const RegisterClinic = () => {
 
     return (
         <div>
-            <Modal width={750} footer="" title="Đăng Ký Phòng Khám" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal width={750} footer="" title="Đăng Ký Phòng Khám" open={isModalOpen} onCancel={handleCancel}>
                 <div className="flex justify-center">
                     <Form
                         form={form}
                         className="w-full"
                         {...formItemLayout}
                         style={{ maxWidth: 650 }}
+                        onFinish={handleSubmit}
                     >
                         <Form.Item
                             label="Tên Phòng Khám"
                             name="name"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập tên phòng khám!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
                             label="Mô Tả"
                             name="description"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
                             label="Địa Chỉ"
                             name="address"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
                             label="Chuyên Khoa"
                             name="specialty"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Vui lòng chọn chuyên khoa!' }]}
                         >
                             <Select
                                 mode="multiple"
@@ -131,8 +187,8 @@ const RegisterClinic = () => {
                                 options={options}
                             />
                         </Form.Item>
-                        <Form.Item label="Hình ảnh" valuePropName="fileList" getValueFromEvent={normFile}>
-                            <Upload action="/upload.do" listType="picture-card">
+                        <Form.Item label="Hình ảnh" name="image" valuePropName="fileList" getValueFromEvent={normFile}>
+                            <Upload name="image" listType="picture-card">
                                 <button style={{ border: 0, background: 'none' }} type="button">
                                     <PlusOutlined />
                                     <div style={{ marginTop: 8 }}>Hình ảnh của phòng khám</div>
@@ -140,7 +196,7 @@ const RegisterClinic = () => {
                             </Upload>
                         </Form.Item>
                         <Form.Item className="flex justify-center" wrapperCol={{ offset: 6, span: 16 }}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" loading={loading}>
                                 Submit
                             </Button>
                         </Form.Item>
@@ -148,7 +204,7 @@ const RegisterClinic = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-               Quản Lý Phòng Khám
+                Quản Lý Phòng Khám
             </h1>
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
@@ -161,7 +217,8 @@ const RegisterClinic = () => {
                 </Col>
             </Row>
 
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={dataSource} columns={columns} loading={loading} />
+            {error && <p style={{ color: 'red' }}>Lỗi: {error}</p>}
         </div>
     );
 };

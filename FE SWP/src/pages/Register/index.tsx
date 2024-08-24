@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { AppDispatch, RootState } from '@redux/store/Store';
+import { AppDispatch, RootState } from '@redux/store/store';
 import { registerUser } from '@redux/auth/registerSlice';
 import styles from './register.module.css';
 
@@ -14,6 +14,8 @@ const SignUp: React.FC = () => {
   const [doB, setDob] = useState(''); // Thêm trường ngày sinh
   const [address, setAddress] = useState(''); // Thêm trường địa chỉ
   const [showModal, setShowModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false); // Modal để hiển thị lỗi
+  const [errorMessages, setErrorMessages] = useState<string[]>([]); // Để lưu các thông báo lỗi
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -30,6 +32,25 @@ const SignUp: React.FC = () => {
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const errors: string[] = [];
+    if (!fullName) errors.push('Vui lòng nhập Họ tên.');
+    if (!email) errors.push('Vui lòng nhập Địa chỉ Email.');
+    if (!password) errors.push('Vui lòng nhập Mật khẩu.');
+    if (!gender) errors.push('Vui lòng chọn Giới tính.');
+    if (!phone) errors.push('Vui lòng nhập Số điện thoại.');
+    if (!doB) errors.push('Vui lòng nhập Ngày sinh.');
+    if (!address) errors.push('Vui lòng nhập Địa chỉ.');
+
+    if (errors.length > 0) {
+      setErrorMessages(errors);
+      setShowErrorModal(true); // Hiển thị modal lỗi
+      return;
+    }
+
+    // Reset thông báo lỗi trước khi thực hiện đăng ký
+    setErrorMessages([]);
+
     dispatch(registerUser({ fullName, email, password, gender, phone, doB, address }))
       .then((result: any) => {
         console.log('Registration status:', result);
@@ -41,6 +62,10 @@ const SignUp: React.FC = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseErrorModal = () => {
+    setShowErrorModal(false);
   };
 
   const handleLoginRedirect = () => {
@@ -81,9 +106,8 @@ const SignUp: React.FC = () => {
             onChange={(e) => setGender(e.target.value)}
           >
             <option value="">Chọn giới tính</option>
-            <option value="0">Nam</option>
-            <option value="1">Nữ</option>
-            <option value="2">Khác</option>
+            <option value="1">Nam</option>
+            <option value="2">Nữ</option>
           </select>
           <input
             type="text"
@@ -130,6 +154,22 @@ const SignUp: React.FC = () => {
             <div className={styles.buttonContainer}>
               <button onClick={handleLoginRedirect} className={styles.loginButton}>Đăng Nhập</button>
               <button onClick={handleCloseModal} className={styles.closeButton}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modalContent}>
+            <h2>Error</h2>
+            <ul>
+              {errorMessages.map((msg, index) => (
+                <li key={index} className={styles.error}>{msg}</li>
+              ))}
+            </ul>
+            <div className={styles.buttonContainer}>
+              <button onClick={handleCloseErrorModal} className={styles.closeButton}>Close</button>
             </div>
           </div>
         </div>

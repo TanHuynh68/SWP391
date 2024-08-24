@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Col, GetProps, Modal, Row, Table, Tag } from "antd";
 import Input from "antd/es/input";
 import { useEffect, useState } from "react";
@@ -5,6 +6,7 @@ import { Form, Select } from 'antd';
 import { ClinicOwner } from "@/models/clinicOwner.model";
 import { addClinicOwner, getAllClinicOwner, searchUser } from "@/services/admin.service";
 import { statusColor, statusName } from "@/constants/consts";
+import { format } from "date-fns";
 
 const ManageClinicOwner = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,7 +20,11 @@ const ManageClinicOwner = () => {
     const getAllClinicOwnerFromAdmin = async () => {
         const res = await getAllClinicOwner("", "CLINICOWNER");
         if (res) {
-            setClinicOwner(res);
+            const sortedBookings = res.sort((a, b) => {
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            });
+            console.log("getAllClinicOwnerFromAdmin: ", res)
+            setClinicOwner(sortedBookings);
         }
     }
     const showModal = () => {
@@ -36,32 +42,27 @@ const ManageClinicOwner = () => {
     
     const columns = [
         {
-            title: 'Full Name',
+            title: 'Tên chủ phòng khám',
             dataIndex: 'fullName',
             key: 'fullName',
         },
         {
-            title: 'Gender',
+            title: 'Giới tính',
             dataIndex: 'gender',
             key: 'gender',
+            render: (gender: number) => (
+                <Tag color={gender === 1 ? "orange" : "pink"}>
+                    {gender === 1 ? "Nam" : "Nữ"}
+                </Tag>
+            )
         },
-        // {
-        //     title: 'Birth Day',
-        //     dataIndex: 'birthDay',
-        //     key: 'birthDay',
-        // },
-        // {
-        //     title: 'Phone Number',
-        //     dataIndex: 'phoneNumber',
-        //     key: 'phoneNumber',
-        // },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (status: number) => (
@@ -72,9 +73,17 @@ const ManageClinicOwner = () => {
                 </>
             )
         },
+        {
+            title: 'Create At',
+            render: (record: ClinicOwner) => (
+                <>
+                     {format(new Date(record?.createdAt), "dd/MM/yyyy")}
+                </>
+            ),
+        },
         ([
             {
-                title: 'Action',
+                title: 'Hành động',
                 render: (record: ClinicOwner) => (
                     record.status === 1 && <>
                         <Row>
@@ -143,37 +152,37 @@ const ManageClinicOwner = () => {
                         onFinish={onFinish}
                     >
                         <Form.Item
-                            label="Name"
+                            label="Tên chủ phòng khám"
                             name="fullName"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập tên chủ phòng khám!' }]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Gender"
+                            label="Giới tính"
                             name="gender"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy chọn giới tính!' }]}
                         >
                             <Select
-                                defaultValue="Please Choose Gender"
+                                defaultValue="Hãy chọn giới tính"
                                 style={{ width: 151 }}
                                 options={[
-                                    { value: '1', label: 'Male' },
-                                    { value: '2', label: 'Female' },
+                                    { value: '1', label: 'Nam' },
+                                    { value: '2', label: 'Nữ' },
                                 ]}
                             />
                         </Form.Item>
                         <Form.Item
                             label="Email"
                             name="email"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập địa chỉ email!' }]}
                         >
                             <Input type="email" style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
                             label="Password"
                             name="password"
-                            rules={[{ required: true, message: 'Please input!' }]}
+                            rules={[{ required: true, message: 'Hãy nhập mật khẩu!' }]}
                         >
                             <Input type="password" style={{ width: '100%' }} />
                         </Form.Item>
@@ -186,12 +195,12 @@ const ManageClinicOwner = () => {
                 </div>
             </Modal>
             <h1 className="font-bold text-2xl text-center">
-                Manage Clinic Owner
+                Quản lý chủ phòng khám
             </h1>
         
             <Row gutter={10} className="my-10 flex justify-between">
                 <Col span={12}>
-                    <Search style={{ width: 200 }} placeholder="input search text" onSearch={onSearch} enterButton />
+                    <Search style={{ width: 300 }} placeholder="Nhập tên chủ phòng khám" onSearch={onSearch} enterButton />
                 </Col>
                 <Col span={12}>
                     <Button onClick={showModal} type="primary" className="float-right">

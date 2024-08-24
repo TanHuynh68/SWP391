@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchServices } from '@redux/Slice/servicesSlice';
-import { RootState, AppDispatch } from '@redux/store/store';
+import { RootState, AppDispatch } from '@redux/Store/store';
 import { useNavigate } from 'react-router-dom'; 
-import { useSpring, animated } from 'react-spring'; 
+import { animated } from 'react-spring'; 
 import styles from './Services.module.css';
 
 const Services: React.FC = () => {

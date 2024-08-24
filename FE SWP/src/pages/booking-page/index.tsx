@@ -1,11 +1,12 @@
+// @ts-nocheck
 import { isPastSlotTimeToday, slotTime } from "@/constants/consts";
 import { Clinic } from "@/models/clinic.model";
 import { Doctor } from "@/models/doctor.model";
 import { WorkingTime } from "@/models/workingTime.model";
 import { createBooking, getAllDoctorByClinic, getAllServicesOfClinic, getClinicById } from "@/services/customer.service";
-import { getWorkingOfDoctor, getWorkingTimeDoctor } from "@/services/workingTime.service";
+import {  getWorkingTimeDoctor } from "@/services/workingTime.service";
 import { CalendarOutlined } from "@ant-design/icons";
-import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message } from "antd";
+import { Card, Col, Button, Image, Row, Select, Typography, DatePicker, message, Checkbox, CheckboxProps } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import dayjs from 'dayjs';
@@ -23,16 +24,16 @@ const CustomerBookingPage = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [accountIdDoctor, setAccountIdDoctor] = useState<number>(0);
     const [doctorIdSelected, setDoctorIdSelected] = useState<number>(0);
-    const [workingTimeA, setWorkingTimeA] = useState<WorkingTime[]>([]);
+    // const [workingTimeA, setWorkingTimeA] = useState<WorkingTime[]>([]);
     const [workingTimeB, setWorkingTimeB] = useState<WorkingTime[]>([]);
     const [workingDayOfWeek, setWorkingDayOfWeek] = useState<number>(0);
     const [service, setService] = useState<string>('');
     const [services, setServices] = useState<ServiceDetail[]>([]);
     const [slotChecked, setSlotChecked] = useState<number>(-1);
-    const [dayChecked, setDayChecked] = useState<dayjs.Dayjs| null>(null);
-    const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
+    const [dayChecked, setDayChecked] = useState<dayjs.Dayjs | null>(null);
+    // const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-   
+    const [type, setType] = useState<number>(1);
     const user = localStorage.getItem("user");
     const userData: User = JSON.parse(user)
     const customerId = userData.Id;
@@ -63,9 +64,10 @@ const CustomerBookingPage = () => {
         console.log("clinic_id", clinic_id)
         console.log("service", service)
         console.log("doctorIdSelected", doctorIdSelected)
-         if (!service) {
+        console.log("type", type)
+        if (!service) {
             return message.error("Hãy chọn chuyên khoa")
-        } 
+        }
         else if (!doctorIdSelected) {
             return message.error("Hãy chọn bác sĩ")
         }
@@ -77,10 +79,12 @@ const CustomerBookingPage = () => {
         }
         const vnTimePlusOneDay = selectedDate.tz("Asia/Ho_Chi_Minh").add(1, 'day').format('YYYY-MM-DDTHH:mm:ss');
 
-        const res = await createBooking(slotChecked, 0, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
-        console.log("handleAddBooking: ", res);
-        if (res) {
+        const res = await createBooking(slotChecked, type, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
+        if (res.length > 0) {
+            console.log("handleAddBooking: ", res)
             message.success("Đặt lịch thành công")
+        } else {
+            message.error("" + res.response.data)
         }
     }
     useEffect(() => {
@@ -91,11 +95,11 @@ const CustomerBookingPage = () => {
         }
     }, [clinic_id]);
 
-    useEffect(() => {
-        if (doctorIdSelected) {
-            getWorkingTimeDoctorByCustomer();
-        }
-    }, [doctorIdSelected]);
+    // useEffect(() => {
+    //     if (doctorIdSelected) {
+    //         getWorkingTimeDoctorByCustomer();
+    //     }
+    // }, [doctorIdSelected]);
 
     useEffect(() => {
         if (selectedDate && doctorIdSelected) {
@@ -107,6 +111,7 @@ const CustomerBookingPage = () => {
 
     const getAllServicesOfClinicFromCustomer = async () => {
         const res = await getAllServicesOfClinic(parseInt(clinic_id));
+        console.log("getAllServicesOfClinicFromCustomer: ", res);
         setServices(res);
     };
 
@@ -117,12 +122,13 @@ const CustomerBookingPage = () => {
         }
     };
 
-    const getWorkingTimeDoctorByCustomer = async () => {
-        const res = await getWorkingOfDoctor(doctorIdSelected);
-        if (res) {
-            setWorkingTimeA(res);
-        }
-    };
+    // const getWorkingTimeDoctorByCustomer = async () => {
+    //     const res = await getWorkingOfDoctor(doctorIdSelected);
+    //     if (res) {
+    //         console.log("getWorkingTimeDoctorByCustomer: ", res)
+    //         setWorkingTimeA(res);
+    //     }
+    // };
 
     const getWorkingTimeDoctorFromCustomer = async () => {
         if (selectedDate && doctorIdSelected) {
@@ -138,6 +144,7 @@ const CustomerBookingPage = () => {
 
     const getAllDoctorsOfClinicFromCustomer = async () => {
         const res = await getAllDoctorByClinic(parseInt(clinic_id));
+        console.log("getAllDoctorsOfClinicFromCustomer: ", res);
         setDoctors(res);
     };
 
@@ -150,7 +157,7 @@ const CustomerBookingPage = () => {
         }
     };
 
-    const handleSetSlotTime = (workingTime: WorkingTime, selectedDate:dayjs.Dayjs) => {
+    const handleSetSlotTime = (workingTime: WorkingTime, selectedDate: dayjs.Dayjs) => {
         if (!isPastSlotTimeToday(workingTime.slot.slotTime, workingTime.workingDayOfWeek, selectedDate)) {
             setSlotChecked(workingTime.slot.slotTime);
             setDayChecked(selectedDate)
@@ -165,20 +172,30 @@ const CustomerBookingPage = () => {
         // Disable dates before today
         return current && current < dayjs().startOf('day');
     };
-
+    const onChangeCheck: CheckboxProps['onChange'] = (e) => {
+        console.log(`checked = ${e.target.checked}`);
+        if (e.target.checked === true) {
+            setType(2);
+        } else {
+            setType(1);
+        }
+    };
     return (
         <div>
             <div className="pt-20">
                 <div>
-                    <Row gutter={10} className="">
-                        <Col span={6}>
-                            <Image width={200} src={clinic?.image} />
-                        </Col>
-                        <Col span={18} className="mt-10">
-                            <div><p className="m-0">{clinic?.name}</p></div>
+                    <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1">
+                        <div >
+                            <Image width={400} src={clinic?.image} />
+                        </div>
+                        <div className="mt-10">
+                            <div><h3 className="m-0">{clinic?.name}</h3></div>
                             <div>{clinic?.address}</div>
-                        </Col>
-                    </Row>
+                        </div>
+                        <div className="mt-10">
+                            <div><p className="m-0">{clinic?.description}</p></div>
+                        </div>
+                    </div>
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 my-3">
                         <div>
                             <Title level={5}>Chọn chuyên khoa<span className="text-red-500"> *</span></Title>
@@ -187,7 +204,7 @@ const CustomerBookingPage = () => {
                                 className="w-full"
                                 onChange={handleChangeService}
                                 options={services?.map(service => (
-                                    { label: service.services.name, value: service.id }
+                                    { label: service.services.name, value: service.services.id }
                                 ))}
                             />
                         </div>
@@ -213,6 +230,9 @@ const CustomerBookingPage = () => {
                                 disabled={doctorIdSelected ? false : true}
                             />
                         </div>
+                    </div>
+                    <div>
+                        <Checkbox className="my-2 font-bold" onChange={onChangeCheck}>Đặt lịch điều trị</Checkbox>
                     </div>
                     <Row className="mt-2">
                         <Col span={1}>
@@ -254,22 +274,20 @@ const CustomerBookingPage = () => {
                                 <Row>
                                     <Col span={12}>
                                         <Image
-                                            style={{ height: "67px" }}
+                                            style={{ height: "87px" }}
                                             width={100}
                                             src={doctor?.account?.image}
                                         />
                                     </Col>
                                     <Col className="mt-3" span={12}>
                                         <p>Bác Sĩ {doctor?.account?.fullName}</p>
+                                        <p>{doctor?.description}</p>
                                     </Col>
                                 </Row>
                             </Card>
                         </div>
                     ))
                 }
-            </div>
-            <div className="my-5">
-                {clinic?.description}
             </div>
         </div>
     );

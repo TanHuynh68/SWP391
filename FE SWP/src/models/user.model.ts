@@ -1,28 +1,29 @@
 export class User {
-  Id: number;
+  id: number;
   fullName: string | null;
   password: string;
   email: string;
-  gender: string | null;
+  gender: number | null;
   image: string;
   status: number;
   updateAt: string;
   createdAt: string;
   role: Role;
-
+  given_name?: string;
   constructor(
-    Id: number = 1,
+    id: number = 1,
     fullName: string | null = null,
     password: string = "",
     email: string = "",
-    gender: string | null = null,
+    gender: number | null = null,
     image: string | null = null,
     status: number = 2,
     updatedAt: string = "",
+    given_name: string = "",
     createdAt: string = "",
     role: Role = new Role()
   ) {
-    this.Id = Id;
+    this.id = id;
     this.fullName = fullName;
     this.password = password;
     this.email = email;
@@ -32,6 +33,7 @@ export class User {
     this.updateAt = updatedAt;
     this.createdAt = createdAt;
     this.role = role;
+    this.given_name = given_name;
   }
 }
 

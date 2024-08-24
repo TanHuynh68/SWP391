@@ -1,50 +1,47 @@
-import { GetProps, Input, Select, Table } from "antd";
+import { useEffect } from "react";
+import { Input, Select, Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClinics, fetchPatients } from "@redux/Slice/managePatientSlice";
+import { RootState, AppDispatch } from "@redux/Store/store";
+
 const ManagePatient = () => {
-    const dataSource = [
-        {
-            key: '1',
-            no: '1',
-            name: "Trương Mỹ Lan",
-            birthday: '10/9/1978',
-            gender: "Nữ",
-            phoneNumber: "0900011333",
-            address: "159/12 Nguyễn Bá Ngọc, Q2, Tp.HCM"
-        },
-        {
-            key: '2',
-            no: '1',
-            name: "Lê Thị Hồng Gấm",
-            birthday: '9/10/1975',
-            gender: "Nữ",
-            phoneNumber: "0900011332",
-            address: "152/22 Nguyễn Văn Tăng, Q9 Tp.HCM"
-        },
-    ];
+    const dispatch: AppDispatch = useDispatch();
+    const { clinics, patients, loading } = useSelector((state: RootState) => state.managePatient);
+
+    useEffect(() => {
+        dispatch(fetchClinics());
+    }, [dispatch]);
+
+    const handleClinicChange = (clinicId: number) => {
+        dispatch(fetchPatients(clinicId));
+    };
 
     const columns = [
         {
             title: 'STT',
-            dataIndex: 'no',
-            key: 'no',
+            dataIndex: 'id',
+            key: 'id',
+            render: (_text, _record, index) => index + 1,
         },
         {
             title: 'Tên Bệnh Nhân',
-            dataIndex: 'name',
+            dataIndex: ['account', 'fullName'],
             key: 'name',
         },
         {
             title: 'Ngày Tháng Năm Sinh',
-            dataIndex: 'birthday',
+            dataIndex: 'doB',
             key: 'birthday',
         },
         {
             title: 'Giới Tính',
-            dataIndex: 'gender',
+            dataIndex: ['account', 'gender'],
             key: 'gender',
+            render: gender => (gender === 1 ? 'Nam' : 'Nữ'),
         },
         {
             title: 'Số Điện Thoại',
-            dataIndex: 'phoneNumber',
+            dataIndex: 'phone',
             key: 'phoneNumber',
         },
         {
@@ -52,42 +49,37 @@ const ManagePatient = () => {
             dataIndex: 'address',
             key: 'address',
         },
-
     ];
-    type SearchProps = GetProps<typeof Input.Search>;
+
+    type SearchProps = Input.Search['props'];
     const { Search } = Input;
-    const handleChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
     return (
         <div>
             <h1 className="font-bold text-2xl text-center">
                 Quản Lý Bệnh Nhân
             </h1>
-            <div  className="my-10 flex justify-between">
-                <div >
+            <div className="my-10 flex justify-between">
+                <div>
                     <Search style={{ width: 200 }} placeholder="Nhập từ khóa" onSearch={onSearch} enterButton />
                 </div>
                 <div>
-                        {/* <Title level={5}>Chọn phòng khám</Title> */}
-                        <Select
-                            style={{ width: 200 }}
-                            defaultValue="Chọn Phòng Khám"
-                            onChange={handleChange}
-                            options={[
-                                { value: 'jack', label: 'Jack' },
-                                { value: 'lucy', label: 'Lucy' },
-                                { value: 'Yiminghe', label: 'yiminghe' },
-                            ]}
-                        />
-                    </div>
+                    <Select
+                        style={{ width: 200 }}
+                        placeholder="Chọn Phòng Khám"
+                        onChange={handleClinicChange}
+                        loading={loading}
+                        options={clinics.map(clinic => ({
+                            value: clinic.id,
+                            label: clinic.name
+                        }))}
+                    />
+                </div>
             </div>
-
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={patients} columns={columns} rowKey="id" />
         </div>
-    )
-
+    );
 }
 
 export default ManagePatient;

@@ -1,65 +1,91 @@
-import React, { useEffect } from 'react';
-import { Button, Card, Select, Typography, message } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Button, Card, Select, Typography } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
-import { fetchClinics, fetchDoctors, fetchWorkingTimes, setSelectedDoctorId } from '@redux/Slice/clinicManagementSlice';
-import { RootState, AppDispatch } from '@redux/store/store';
-import { User } from '@/models/user.model';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@redux/Store/store';
+import { fetchClinicsByOwnerId, fetchDoctorsByClinicId, fetchWorkingTimesByDoctorId, updateWorkingTimeForDoctor } from '@redux/Slice/clinicManagementtSlice';
 
 const ManageMedicalExaminationSchedule = () => {
     const { Title } = Typography;
     const dispatch: AppDispatch = useDispatch();
-    const { clinics, doctors, workingTimes, loading } = useSelector((state: RootState) => state.clinicManagement);
-    const user = localStorage.getItem("user");
-    const userData: User = user ? JSON.parse(user) : null;
-    const customerId = userData?.Id;
-
-    const { handleSubmit, control, setValue } = useForm();
-    const [selectedSlots, setSelectedSlots] = React.useState<number[]>([]);
+    const { handleSubmit, control, setValue, watch } = useForm();
+    const clinics = useSelector((state: RootState) => state.clinicManagement.clinics);
+    const doctors = useSelector((state: RootState) => state.clinicManagement.doctors);
+    const workingTimes = useSelector((state: RootState) => state.clinicManagement.workingTimes);
+    const [selectedSlots, setSelectedSlots] = useState<{ [day: number]: number[] }>({});
+    const selectedDay = watch('dayOfWeek');  
+    const selectedDoctor = watch('doctorId');  
 
     useEffect(() => {
-        if (customerId) {
-            dispatch(fetchClinics());
+        dispatch(fetchClinicsByOwnerId());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedDoctor) {
+            dispatch(fetchWorkingTimesByDoctorId(selectedDoctor));
         }
-    }, [dispatch, customerId]);
+    }, [selectedDoctor, dispatch]);
+
+    useEffect(() => {
+        if (workingTimes.length && selectedDay !== undefined) {
+            const daySlots = workingTimes
+                .filter((wt) => wt.workingDayOfWeek === selectedDay)
+                .map((wt) => wt.slot.slotTime);
+            setSelectedSlots((prev) => ({
+                ...prev,
+                [selectedDay]: daySlots,
+            }));
+        }
+    }, [workingTimes, selectedDay]);
 
     const handleClinicChange = (clinicId: number) => {
-        dispatch(fetchDoctors(clinicId));
-        const clinicName = clinics.find(clinic => clinic.id === clinicId)?.name;
-        setValue('clinicName', clinicName); // Lưu tên phòng khám
+        setValue('clinicName', `Clinic ${clinicId}`);
+        dispatch(fetchDoctorsByClinicId(clinicId));
     };
 
     const handleDoctorChange = (doctorId: number) => {
-        dispatch(setSelectedDoctorId(doctorId));
-        dispatch(fetchWorkingTimes(doctorId));
-        const doctorName = doctors.find(doctor => doctor.id === doctorId)?.account.fullName;
-        setValue('doctorName', doctorName); // Lưu tên bác sĩ
+        setValue('doctorName', `Doctor ${doctorId}`);
+        dispatch(fetchWorkingTimesByDoctorId(doctorId));
     };
 
-    const onSlotSelect = (slotTime: number) => {
+    const onSlotSelect = (slotId: number) => {
         setSelectedSlots((prevSelectedSlots) => {
-            if (prevSelectedSlots.includes(slotTime)) {
-                return prevSelectedSlots.filter((slot) => slot !== slotTime); // Bỏ chọn nếu đã chọn trước đó
+            const daySlots = prevSelectedSlots[selectedDay] || [];
+            if (daySlots.includes(slotId)) {
+                return {
+                    ...prevSelectedSlots,
+                    [selectedDay]: daySlots.filter((slot) => slot !== slotId),
+                };
             } else {
-                return [...prevSelectedSlots, slotTime]; // Thêm vào nếu chưa chọn
+                return {
+                    ...prevSelectedSlots,
+                    [selectedDay]: [...daySlots, slotId],
+                };
             }
         });
     };
 
     const onSubmit = (data: any) => {
-        if (selectedSlots.length === 0) {
-            message.warning('Vui lòng chọn ít nhất một khung thời gian trước khi lưu!');
+        const daySlots = selectedSlots[selectedDay];
+        if (!daySlots || daySlots.length === 0) {
+            alert('Vui lòng chọn ít nhất một khung thời gian trước khi lưu!');
             return;
         }
 
-        const formData = {
-            ...data,
-            selectedSlots,
+        const workingTimeData = {
+            doctorId: data.doctorId,
+            workingDayOfWeek: data.dayOfWeek,
+            slotId: daySlots,
         };
 
-        console.log("Form data:", formData);
-
-        message.success('Thông tin đã được lưu thành công!');
+        dispatch(updateWorkingTimeForDoctor(workingTimeData))
+            .unwrap()
+            .then(() => {
+                alert('Thông tin đã được lưu thành công!');
+            })
+            .catch(() => {
+                alert('Đã xảy ra lỗi khi lưu thông tin.');
+            });
     };
 
     const daysOfWeek = [
@@ -72,7 +98,7 @@ const ManageMedicalExaminationSchedule = () => {
         { value: 0, label: 'Chủ nhật' },
     ];
 
-    const defaultSlotTimes = {
+    const slotTimes = {
         1: '8:00 - 8:45',
         2: '8:45 - 9:30',
         3: '9:30 - 10:15',
@@ -85,11 +111,16 @@ const ManageMedicalExaminationSchedule = () => {
         10: '16:00 - 16:45',
     };
 
+    const slotColumns = [
+        [1, 5, 9], // First Column: 8:00 - 8:45, 11:00 - 11:45, 15:15 - 16:00
+        [2, 6, 10], // Second Column: 8:45 - 9:30, 12:30 - 13:45, 16:00 - 16:45
+        [3, 7], // Third Column: 9:30 - 10:15, 13:45 - 14:30
+        [4, 8], // Fourth Column: 10:15 - 11:00, 14:30 - 15:15
+    ];
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <h1 className="font-bold text-2xl text-center">
-                Quản Lý Lịch Khám
-            </h1>
+            <h1 className="font-bold text-2xl text-center">Quản Lý Lịch Khám</h1>
             <div className="grid grid-cols-3 gap-10 mt-10">
                 <div>
                     <Title level={5}>Chọn phòng khám</Title>
@@ -100,16 +131,12 @@ const ManageMedicalExaminationSchedule = () => {
                             <Select
                                 {...field}
                                 className="w-full"
-                                loading={loading}
                                 placeholder="Chọn phòng khám"
                                 onChange={(value) => {
                                     field.onChange(value);
                                     handleClinicChange(value);
                                 }}
-                                options={clinics.map(clinic => ({
-                                    value: clinic.id,
-                                    label: clinic.name
-                                }))}
+                                options={clinics.map(clinic => ({ value: clinic.id, label: clinic.name }))}
                             />
                         )}
                     />
@@ -123,16 +150,12 @@ const ManageMedicalExaminationSchedule = () => {
                             <Select
                                 {...field}
                                 className="w-full"
-                                loading={loading}
                                 placeholder="Chọn bác sĩ"
                                 onChange={(value) => {
                                     field.onChange(value);
                                     handleDoctorChange(value);
                                 }}
-                                options={doctors.map(doctor => ({
-                                    value: doctor.id,
-                                    label: doctor.account.fullName
-                                }))}
+                                options={doctors.map(doctor => ({ value: doctor.id, label: doctor.account.fullName }))}
                             />
                         )}
                     />
@@ -153,18 +176,22 @@ const ManageMedicalExaminationSchedule = () => {
                     />
                 </div>
             </div>
-            <div className="grid 2xl:grid-cols-8 xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 mt-10">
-                {workingTimes?.map((slot: any) => (
-                    <Card
-                        key={slot.id}
-                        className={`bg-gray-200 hover:border-blue-500 cursor-pointer ${selectedSlots.includes(slot.slot.slotTime) ? 'border-blue-500' : ''}`}
-                        style={{ width: 150 }}
-                        onClick={() => onSlotSelect(slot.slot.slotTime)}
-                    >
-                        <div className="text-center">
-                            {defaultSlotTimes[slot.slot.slotTime] || 'Thời gian không xác định'}
-                        </div>
-                    </Card>
+            <div className="flex justify-center gap-5 mt-10">
+                {slotColumns.map((column, colIndex) => (
+                    <div key={colIndex} className="flex flex-col gap-2">
+                        {column.map((slotId) => (
+                            <Card
+                                key={slotId}
+                                className={`bg-gray-200 hover:border-blue-500 cursor-pointer ${selectedSlots[selectedDay]?.includes(slotId) ? 'border-blue-500' : ''}`}
+                                style={{ width: 150 }}
+                                onClick={() => onSlotSelect(slotId)}
+                            >
+                                <div className="text-center">
+                                    {slotTimes[slotId]}
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
                 ))}
             </div>
             <div className="text-center my-2">
