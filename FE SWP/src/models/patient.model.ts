@@ -155,6 +155,7 @@ export class Role {
     bookingAddress: string;
     bookingName: string;
     result: string | null;
+    reason: string | null;
     medicines: Medicine[]; // Assuming medicines is an array of any type
   
     constructor(
@@ -171,6 +172,7 @@ export class Role {
         bookingAddress: string = "",
         bookingName: string = "",
         result: string | null = null,
+        reason: string | null = null,
         medicines: Medicine[] = []
     ) {
         this.id = id;
@@ -186,6 +188,7 @@ export class Role {
         this.bookingAddress = bookingAddress;
         this.bookingName = bookingName;
         this.result = result;
+        this.reason = reason;
         this.medicines = medicines;
     }
   }

@@ -32,7 +32,7 @@ const CustomerBookingPage = () => {
     const [dayChecked, setDayChecked] = useState<dayjs.Dayjs | null>(null);
     const [slotTimeToBooking, setSlotTimeToBooking] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-    const [type ,setType] =  useState<number>(1);
+    const [type, setType] = useState<number>(1);
     const user = localStorage.getItem("user");
     const userData: User = JSON.parse(user)
     const customerId = userData.Id;
@@ -79,11 +79,11 @@ const CustomerBookingPage = () => {
         const vnTimePlusOneDay = selectedDate.tz("Asia/Ho_Chi_Minh").add(1, 'day').format('YYYY-MM-DDTHH:mm:ss');
 
         const res = await createBooking(slotChecked, type, new Date(vnTimePlusOneDay), customerId, accountIdDoctor, parseInt(clinic_id), parseInt(service))
-        if (res.length >0) {
-            console.log("handleAddBooking: ", res )
+        if (res.length > 0) {
+            console.log("handleAddBooking: ", res)
             message.success("Đặt lịch thành công")
         } else {
-            message.error(""+ res.response.data)
+            message.error("" + res.response.data)
         }
     }
     useEffect(() => {
@@ -143,6 +143,7 @@ const CustomerBookingPage = () => {
 
     const getAllDoctorsOfClinicFromCustomer = async () => {
         const res = await getAllDoctorByClinic(parseInt(clinic_id));
+        console.log("getAllDoctorsOfClinicFromCustomer: ", res);
         setDoctors(res);
     };
 
@@ -172,28 +173,28 @@ const CustomerBookingPage = () => {
     };
     const onChangeCheck: CheckboxProps['onChange'] = (e) => {
         console.log(`checked = ${e.target.checked}`);
-        if(e.target.checked === true){
+        if (e.target.checked === true) {
             setType(2);
-        }else{
-            setType(1); 
+        } else {
+            setType(1);
         }
-      };
+    };
     return (
         <div>
             <div className="pt-20">
                 <div>
-                    <Row gutter={10} className="">
-                        <Col span={6}>
-                            <Image width={200} src={clinic?.image} />
-                        </Col>
-                        <Col span={6} className="mt-10">
+                    <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1">
+                        <div >
+                            <Image width={400} src={clinic?.image} />
+                        </div>
+                        <div className="mt-10">
                             <div><h3 className="m-0">{clinic?.name}</h3></div>
                             <div>{clinic?.address}</div>
-                        </Col>
-                        <Col span={12} className="mt-10">
+                        </div>
+                        <div className="mt-10">
                             <div><p className="m-0">{clinic?.description}</p></div>
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 my-3">
                         <div>
                             <Title level={5}>Chọn chuyên khoa<span className="text-red-500"> *</span></Title>
@@ -230,7 +231,7 @@ const CustomerBookingPage = () => {
                         </div>
                     </div>
                     <div>
-                    <Checkbox onChange={onChangeCheck}>Checkbox</Checkbox>
+                        <Checkbox className="my-2 font-bold" onChange={onChangeCheck}>Đặt lịch điều trị</Checkbox>
                     </div>
                     <Row className="mt-2">
                         <Col span={1}>
@@ -272,13 +273,14 @@ const CustomerBookingPage = () => {
                                 <Row>
                                     <Col span={12}>
                                         <Image
-                                            style={{ height: "67px" }}
+                                            style={{ height: "87px" }}
                                             width={100}
                                             src={doctor?.account?.image}
                                         />
                                     </Col>
                                     <Col className="mt-3" span={12}>
                                         <p>Bác Sĩ {doctor?.account?.fullName}</p>
+                                        <p>{doctor?.description}</p>
                                     </Col>
                                 </Row>
                             </Card>

@@ -1,5 +1,4 @@
 import { bookingStatus, colorBookingStatus, getUserDataFromLocalStorage } from "@/constants/consts";
-import { Booking } from "@/models/booking.model";
 import { ClinicsService, Doctor, Medicine, Patient } from "@/models/patient.model";
 import { User } from "@/models/user.model";
 import { getPatient } from "@/services/customer.service";
@@ -13,7 +12,7 @@ import { useEffect, useState } from "react";
 const CustomerBookingHistory = () => {
     const [reasonToCancelBooking, setReasonCancelBooking] = useState<string>('');
     const [isModalCancelBooking, setIsModalCancelBooking] = useState(false);
-    const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Booking>();
+    const [bookingNeedToCancel, setBookingNeedToCancel] = useState<Patient>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalClinicOpen, setIsModalClinicOpen] = useState(false);
     const [isModalMedicinesOpen, setIsModalMedicinesOpen] = useState(false);
@@ -56,7 +55,7 @@ const CustomerBookingHistory = () => {
             const res = await cancelBooking(id, reasonToCancelBooking);
             if (res) {
                 console.log("res: ", res);
-                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.account?.fullName} thành công`)
+                message.success(`Xoá đặt lịch ${bookingNeedToCancel?.customer?.fullName} thành công`)
                 setIsModalCancelBooking(false)
                 setReasonCancelBooking('')
             }
@@ -79,10 +78,12 @@ const CustomerBookingHistory = () => {
     const getPatientFromCustomer = async () => {
         const res = await getPatient(customerId);
         const sortedBookings = res.sort((a, b) => {
-            return new Date(b.createAt).getTime() - new Date(a.createAt).getTime();
+            return new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime();
         });
         if (res) {
+            console.log("getPatientFromCustomer: ", res);
             setPatients(sortedBookings);
+
         }
     }
 
@@ -126,6 +127,17 @@ const CustomerBookingHistory = () => {
             )
         },
         {
+            title: 'Loại',
+            render: (record: Patient) => (
+                record.type === 1 ? <>
+                    <p>Khám</p>
+                </>
+                    : <>
+                        Điều trị
+                    </>
+            )
+        },
+        {
             title: 'Create At',
             dataIndex: 'createAt',
             key: 'createAt',
@@ -149,7 +161,7 @@ const CustomerBookingHistory = () => {
         {
             title: 'Action',
             width: "20%",
-            render: (record: Booking) => (
+            render: (record: Patient) => (
                 <>
                     {
                         record.status === 1 && <>
@@ -158,7 +170,12 @@ const CustomerBookingHistory = () => {
                             </Button>
                         </>
                     }
-
+                    {
+                        record.status === 3 && <>
+                            Lý do hủy:
+                            <span className="font-bold"> {record?.reason}</span>
+                        </>
+                    }
                 </>
             )
         },
@@ -182,9 +199,9 @@ const CustomerBookingHistory = () => {
 
     ];
 
-    const showModalCancelBooking = (booking: Booking) => {
+    const showModalCancelBooking = (record: Patient) => {
         console.log("reason: ", reasonToCancelBooking);
-        setBookingNeedToCancel(booking);
+        setBookingNeedToCancel(record);
         setIsModalCancelBooking(true)
     };
 
@@ -207,7 +224,7 @@ const CustomerBookingHistory = () => {
             </Modal>
             <Modal title="Xác nhận huỷ đặt lịch" open={isModalCancelBooking} onOk={handleOk} onCancel={handleCancel}>
                 <div>
-                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.account?.fullName}</span></p>
+                    <p>Bạn có chắc muốn huỷ đặt lịch của <span>{bookingNeedToCancel?.customer?.fullName}</span></p>
                     <Title level={5}>Lý do huỷ: <span className="text-red-500">*</span></Title>
                     <TextArea value={reasonToCancelBooking} onChange={onchangeReason} />
                 </div>
