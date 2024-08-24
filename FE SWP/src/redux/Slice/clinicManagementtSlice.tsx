@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+const BASE_URL = 'http://localhost:5105';
+
 
 interface ClinicManagementState {
   clinics: any[];
@@ -30,7 +32,7 @@ export const fetchClinicsByOwnerId = createAsyncThunk(
       const tokenWithBearer = localStorage.getItem('token');
       const token = tokenWithBearer?.replace('Bearer ', '');
 
-      const response = await axios.get(`http://localhost:5105/ClinicOwner/GetAllClinicsByOwnerId?ownerId=${ownerId}`, {
+      const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllClinicsByOwnerId?ownerId=${ownerId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           accept: 'text/plain',
@@ -52,7 +54,7 @@ export const fetchDoctorsByClinicId = createAsyncThunk(
       const tokenWithBearer = localStorage.getItem('token');
       const token = tokenWithBearer?.replace('Bearer ', '');
 
-      const response = await axios.get(`http://localhost:5105/ClinicOwner/GetAllDoctorsOfClinic?clinicId=${clinicId}`, {
+      const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllDoctorsOfClinic?clinicId=${clinicId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           accept: 'text/plain',
@@ -74,7 +76,7 @@ export const fetchWorkingTimesByDoctorId = createAsyncThunk(
       const tokenWithBearer = localStorage.getItem('token');
       const token = tokenWithBearer?.replace('Bearer ', '');
 
-      const response = await axios.get(`http://localhost:5105/ClinicOwner/GetAllWorkingTimeOfDoctor?doctorId=${doctorId}`, {
+      const response = await axios.get(`${BASE_URL}/ClinicOwner/GetAllWorkingTimeOfDoctor?doctorId=${doctorId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           accept: 'text/plain',
