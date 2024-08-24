@@ -2,8 +2,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, message } from "antd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchClinics, fetchDoctors, addDoctor } from "@redux/Slice/manageDoctorSlice";  // Removed assignClinic
-import { RootState, AppDispatch } from "@redux/store/store";
+import { fetchClinics, fetchDoctors, addDoctor } from "@redux/Slice/manageDoctorSlice";  
+import { RootState, AppDispatch } from "@redux/Store/store";
 
 const ManageDoctor = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -137,7 +137,7 @@ const ManageDoctor = () => {
         gender: doctors.account.gender === 0 ? "Nữ" : "Nam",
         description: doctors.account.email,
         status: doctors.account.status,
-        clinicsId: doctors.clinicsId,  // Assuming this is provided in the patient object
+        clinicsId: doctors.clinicsId,  
     })) : [];
 
     const formItemLayout = {

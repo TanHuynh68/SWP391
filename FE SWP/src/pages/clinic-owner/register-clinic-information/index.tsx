@@ -3,7 +3,7 @@ import { Button, Col, Input, Modal, Row, Table, Form, Select, Upload, message } 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerClinic, fetchAllClinics } from "@redux/Slice/registerClinicSlice";
-import { RootState, AppDispatch } from "@redux/store/store";
+import { RootState, AppDispatch } from "@redux/Store/store";
 import { fetchSevicesAllServices } from '@redux/Slice/servicesRegisterClinicSlice';
 
 const RegisterClinic = () => {
