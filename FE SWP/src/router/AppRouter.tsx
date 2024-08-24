@@ -27,18 +27,16 @@ const AppRouter: React.FC = () => {
       <Route path={paths.DENTAL_DETAILS} element={<DentalDetails />} />
       <Route path={paths.DENTAL_HANDBOOK} element={<DentalHandbook />} />
       <Route path={paths.SPECIAL_PACKAGE} element={<SpecialtyPage />} />
-
+      <Route path={paths.CLINIC_DETAIL} element={<DentalDetails />} />
 
       {/* Customer */}
-      <Route path="/customer/*" element={canAccess([role.CUSTOMER]) ? <CustomerLayout /> : <Navigate to={paths.HOME}/>}>
-        <Route path={paths.BOOKING_PAGE} element={canAccess([role.CUSTOMER]) ? <CustomerBookingPage /> : <Navigate to={paths.HOME}/>} />
-        <Route path={paths.BOOKING_HISTORY} element={canAccess([role.CUSTOMER]) ? <CustomerBookingHistory /> : <Navigate to={paths.HOME}/>} />        
-        <Route path={paths.CUSTOMER_CLINIC_PAGE}element={canAccess([role.CUSTOMER]) ? <ClinicPage /> : <Navigate to={paths.HOME}/>} />
-        
-        <Route path={paths.CLINIC_DETAIL} element={ canAccess([role.CUSTOMER]) ? <DentalDetails/> : <Navigate to={paths.HOME}/>} />
-      <Route path={paths.DENTAL_HANDBOOK} element={ canAccess([role.CUSTOMER]) ? <DentalHandbook /> : <Navigate to={paths.HOME}/>} />
-      <Route path={paths.SPECIAL_PACKAGE} element={ canAccess([role.CUSTOMER]) ?<SpecialtyPage/> : <Navigate to={paths.HOME}/>} />
-        
+      <Route path="/customer/*" element={canAccess([role.CUSTOMER]) ? <CustomerLayout /> : <Navigate to={paths.HOME} />}>
+        <Route path={paths.BOOKING_PAGE} element={canAccess([role.CUSTOMER]) ? <CustomerBookingPage /> : <Navigate to={paths.HOME} />} />
+        <Route path={paths.BOOKING_HISTORY} element={canAccess([role.CUSTOMER]) ? <CustomerBookingHistory /> : <Navigate to={paths.HOME} />} />
+        <Route path={paths.CUSTOMER_CLINIC_PAGE} element={canAccess([role.CUSTOMER]) ? <ClinicPage /> : <Navigate to={paths.HOME} />} />
+        <Route path={paths.CUSTOMER_CLINIC_DETAIL} element={canAccess([role.CUSTOMER]) ? <DentalDetails /> : <Navigate to={paths.HOME} />} />
+        <Route path={paths.DENTAL_HANDBOOK} element={canAccess([role.CUSTOMER]) ? <DentalHandbook /> : <Navigate to={paths.HOME} />} />
+        <Route path={paths.SPECIAL_PACKAGE} element={canAccess([role.CUSTOMER]) ? <SpecialtyPage /> : <Navigate to={paths.HOME} />} />
 
       </Route>
       {/* Clinic Owner */}
