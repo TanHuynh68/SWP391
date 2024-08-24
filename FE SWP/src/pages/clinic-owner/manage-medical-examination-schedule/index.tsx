@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Select, Typography } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '@redux/store/store';
+import { RootState, AppDispatch } from '@redux/Store/store';
 import { fetchClinicsByOwnerId, fetchDoctorsByClinicId, fetchWorkingTimesByDoctorId, updateWorkingTimeForDoctor } from '@redux/Slice/clinicManagementtSlice';
 
 const ManageMedicalExaminationSchedule = () => {
@@ -13,8 +13,8 @@ const ManageMedicalExaminationSchedule = () => {
     const doctors = useSelector((state: RootState) => state.clinicManagement.doctors);
     const workingTimes = useSelector((state: RootState) => state.clinicManagement.workingTimes);
     const [selectedSlots, setSelectedSlots] = useState<{ [day: number]: number[] }>({});
-    const selectedDay = watch('dayOfWeek');  // Theo dõi ngày đã chọn
-    const selectedDoctor = watch('doctorId');  // Theo dõi bác sĩ đã chọn
+    const selectedDay = watch('dayOfWeek');  
+    const selectedDoctor = watch('doctorId');  
 
     useEffect(() => {
         dispatch(fetchClinicsByOwnerId());
@@ -54,12 +54,12 @@ const ManageMedicalExaminationSchedule = () => {
             if (daySlots.includes(slotId)) {
                 return {
                     ...prevSelectedSlots,
-                    [selectedDay]: daySlots.filter((slot) => slot !== slotId), // Deselect slot
+                    [selectedDay]: daySlots.filter((slot) => slot !== slotId),
                 };
             } else {
                 return {
                     ...prevSelectedSlots,
-                    [selectedDay]: [...daySlots, slotId], // Select slot
+                    [selectedDay]: [...daySlots, slotId],
                 };
             }
         });

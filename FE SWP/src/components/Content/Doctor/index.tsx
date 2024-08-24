@@ -4,7 +4,7 @@ import { fetchDoctors } from '@redux/Slice/doctorSlice';
 import { RootState, AppDispatch } from '@redux/store/store';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import styles from './Doctor.module.css';
 
 const Doctor: React.FC = () => {
@@ -14,7 +14,7 @@ const Doctor: React.FC = () => {
   const [props, set] = useSpring(() => ({
     x: 0,
   }));
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     dispatch(fetchDoctors());
@@ -23,7 +23,7 @@ const Doctor: React.FC = () => {
   const DoctorCard: React.FC<{ name: string; imageUrl: string }> = ({ name, imageUrl }) => (
     <div 
       className={styles.doctorCard} 
-      onClick={() => navigate('/dental-details')} // Navigate to a static path
+      onClick={() => navigate('/dental-details')} 
     >
       <img src={imageUrl} alt={name} className={styles.icon} />
       <p>{`Bác sĩ ${name}`}</p>
