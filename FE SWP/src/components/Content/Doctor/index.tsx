@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDoctors } from '@redux/Slice/doctorSlice';
-import { RootState, AppDispatch } from '@redux/store/store';
+import { RootState, AppDispatch } from '@redux/Store/store';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { useNavigate } from 'react-router-dom'; 
