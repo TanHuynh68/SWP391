@@ -138,9 +138,24 @@ export class Role {
         this.id = id;
         this.status = status;
         this.name = name;
+       
     }
   }
   
+  
+  export class Customer {
+    id: number;
+    address: string;
+    phone: string;
+    account: Account;
+  
+    constructor(id: number = 0, phone: string = "", address: string = "",   account: Account = new Account()) {
+        this.id = id;
+        this.phone = phone;
+        this.address = address;
+        this.account = account;
+    }
+  }
   export class Patient {
     id: number;
     status: number;
@@ -149,12 +164,13 @@ export class Role {
     createAt: string;
     updateAt: string;
     bookingDate: string;
-    customer: Account;
+    customer: Customer;
     doctor: Doctor;
     clinicsService: ClinicsService;
     bookingAddress: string;
     bookingName: string;
     result: string | null;
+    reason: string | null;
     medicines: Medicine[]; // Assuming medicines is an array of any type
   
     constructor(
@@ -165,12 +181,13 @@ export class Role {
         createAt: string = "",
         updateAt: string = "",
         bookingDate: string = "",
-        customer: Account = new Account(),
+        customer: Customer = new Customer(),
         doctor: Doctor = new Doctor(),
         clinicsService: ClinicsService = new ClinicsService(),
         bookingAddress: string = "",
         bookingName: string = "",
         result: string | null = null,
+        reason: string | null = null,
         medicines: Medicine[] = []
     ) {
         this.id = id;
@@ -186,6 +203,7 @@ export class Role {
         this.bookingAddress = bookingAddress;
         this.bookingName = bookingName;
         this.result = result;
+        this.reason = reason;
         this.medicines = medicines;
     }
   }

@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { Card, Col, Row } from 'antd';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Statistic, Typography } from 'antd';

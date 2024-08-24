@@ -5,6 +5,7 @@ import { RootState, AppDispatch } from '@redux/store/store';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 import styles from './Specialty.module.css';
+import { Link } from 'react-router-dom';
 
 const Specialty: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,6 +17,7 @@ const Specialty: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchSpecialties());
+    console.log("specialties: ", specialties)
   }, [dispatch]);
 
   const SpecialtyCard: React.FC<{ name: string; imageUrl: string }> = ({ name, imageUrl }) => (
@@ -47,7 +49,9 @@ const Specialty: React.FC = () => {
       <div className={styles.carouselContainer}>
         <animated.div {...bind()} className={styles.specialtyList} style={{ x: props.x }}>
           {specialties.map((specialty, i) => (
+            <Link to={`/customer/clinic/${specialty.id}`}>
             <SpecialtyCard key={i} name={specialty.name} imageUrl={specialty.image} />
+            </Link>
           ))}
         </animated.div>
       </div>

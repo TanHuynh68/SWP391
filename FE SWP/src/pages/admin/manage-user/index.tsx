@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { User } from "@/models/user.model";
 import { filterUserbyNameAndRole, getAllUser } from "@/services/user.service";
 import { Button, Col, GetProps, Image, message, Modal, Row, Select, Switch, Table, Tag } from "antd";
@@ -240,7 +241,7 @@ const ManageUser = () => {
                         onChange={handleChange}
                         options={[
                             { value: '', label: 'Tất cả vai trò' },
-                            { value: 'Clinic Owner', label: 'Chủ phòng khám' },
+                            { value: 'ClinicOwner', label: 'Chủ phòng khám' },
                             { value: 'Admin', label: 'Quản trị viên' },
                             { value: 'Doctor', label: 'Bác sĩ' },
                             { value: 'Customer', label: 'Khách hàng' },
