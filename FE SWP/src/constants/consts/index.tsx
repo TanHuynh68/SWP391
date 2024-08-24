@@ -20,22 +20,22 @@ export const statusColor = (status: number) => {
 export const statusName = (status: number) => {
     switch (status) {
         case 1:
-            return "Pending"
+            return "Đang chờ xử lý"
         case 2:
-            return "Active"
+            return "Đang hoạt động"
         case 3:
-            return "Inactive"
+            return "Không hoạt động"
     }
 }
 
 export const bookingStatus = (status: number) => {
     switch (status) {
         case 1:
-            return "Booking"
+            return "Đặt lịch"
         case 2:
-            return "Completed"
+            return "Hoàn thành"
         case 3:
-            return "Canceled"
+            return "Đã hủy"
     }
 }
 

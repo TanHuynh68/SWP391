@@ -143,7 +143,7 @@ const ManageUser = () => {
             )
         },
         {
-            title: 'Create At',
+            title: 'Ngày tạo',
             render: (record: User) => (
                 <>
                      {format(new Date(record?.createdAt), "dd/MM/yyyy")}
@@ -182,11 +182,11 @@ const ManageUser = () => {
     const statusName = (status: number) => {
         switch (status) {
             case 1:
-                return "Pending"
+                return "Đang chờ xử lý"
             case 2:
-                return "Active"
+                return "Đang hoạt động"
             case 3:
-                return "Inactive"
+                return "Không hoạt động"
         }
     }
     const roleNameColor = (roleName: string) => {
