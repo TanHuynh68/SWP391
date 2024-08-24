@@ -29,7 +29,6 @@ const Search: React.FC = () => {
                 <div className={styles.searchContent}>
                     <h1 className={styles.title}>CHUYÊN TRANG NHA KHOA</h1>
                     <div ref={searchBoxRef} className={styles.searchBox} onClick={handleSearchClick}>
-                        {/* <img src={searchIcon} alt="Search Icon" className={styles.searchIcon} /> */}
                         <input type="text" placeholder="Tìm kiếm Nha sĩ" className={styles.searchInput} />
                     </div>
                     {isDropdownVisible && (

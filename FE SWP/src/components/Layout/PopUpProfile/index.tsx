@@ -3,7 +3,7 @@ import styles from "./PopUpProfile.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { FaCheck } from "react-icons/fa6";
-import type { RootState } from "@redux/store/store";
+import type { RootState } from "@redux/Store/store";
 import { logout } from '@redux/auth/logoutSlice';
 import { getUserDataFromLocalStorage } from "@/constants/consts";
 import { Col, Row } from "antd";
@@ -13,15 +13,15 @@ export const ProfilePopUp: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.profile.user);
-  const token = localStorage.getItem('token'); // Lấy token từ localStorage
+  const token = localStorage.getItem('token'); 
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
 
   const handleSignOut = () => {
-    dispatch(logout()); // Thực hiện hành động logout
-    navigate("/login"); // Điều hướng đến trang đăng nhập
+    dispatch(logout()); 
+    navigate("/login");
   };
 
   const user = getUserDataFromLocalStorage();

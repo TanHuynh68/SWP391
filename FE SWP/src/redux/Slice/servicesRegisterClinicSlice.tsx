@@ -11,7 +11,7 @@ const servicesRegisterClinicSlice = createSlice({
     name: 'servicesRegisterClinic',
     initialState: {
         clinics: [],
-        services: [],  // Thêm mảng services vào state
+        services: [], 
         loading: false,
         error: null,
     },
@@ -23,7 +23,7 @@ const servicesRegisterClinicSlice = createSlice({
             })
             .addCase(fetchSevicesAllServices.fulfilled, (state, action) => {
                 state.loading = false;
-                state.services = action.payload;  // Lưu dữ liệu services vào state
+                state.services = action.payload; 
             })
             .addCase(fetchSevicesAllServices.rejected, (state, action) => {
                 state.loading = false;

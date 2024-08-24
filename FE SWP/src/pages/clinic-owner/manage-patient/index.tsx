@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Input, Select, Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchClinics, fetchPatients } from "@redux/Slice/managePatientSlice";
-import { RootState, AppDispatch } from "@redux/store/store";
+import { RootState, AppDispatch } from "@redux/Store/store";
 
 const ManagePatient = () => {
     const dispatch: AppDispatch = useDispatch();
