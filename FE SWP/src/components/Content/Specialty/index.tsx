@@ -6,6 +6,7 @@ import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 import styles from './Specialty.module.css';
 import { Link } from 'react-router-dom';
+import { getUserDataFromLocalStorage } from '@/constants/consts';
 
 const Specialty: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -39,7 +40,7 @@ const Specialty: React.FC = () => {
 
     set({ x: -index * (window.innerWidth / 4) });
   });
-
+  const user = getUserDataFromLocalStorage();
   return (
     <div className={styles.specialtyContainer}>
       <div className={styles.head}>
@@ -49,7 +50,7 @@ const Specialty: React.FC = () => {
       <div className={styles.carouselContainer}>
         <animated.div {...bind()} className={styles.specialtyList} style={{ x: props.x }}>
           {specialties.map((specialty, i) => (
-            <Link to={`/customer/clinic/${specialty.id}`}>
+            <Link to={user ?`/customer/clinic/${specialty.id}`: `/clinic/${specialty.id}`}>
             <SpecialtyCard key={i} name={specialty.name} imageUrl={specialty.image} />
             </Link>
           ))}

@@ -5,11 +5,11 @@ const Paths = {
    ABOUT: "/about",
    REGISTER: "/sign-up",
    CLINIC_PAGE: "/clinic",
-   
+   CLINIC_DETAIL: "/clinic/:id",
 
    // CUSTOMER
    BOOKING_HISTORY: "booking-history",
-   CLINIC_DETAIL: "clinic/:id",
+   CUSTOMER_CLINIC_DETAIL: "clinic/:id",
    DENTAL_DETAILS: "dental-details",
    DENTAL_HANDBOOK: "dental-handbook",
    SPECIAL_PACKAGE: "specialty",
